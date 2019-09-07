@@ -8,6 +8,27 @@ data
 │   ├── [1.3G]  enwiki-20190820-page.sql.bz2
 │   ├── [5.0G]  enwiki-20190820-pagelinks.sql.bz2
 │   └── [101M]  enwiki-20190820-redirect.sql.bz2
+├── [ 192]  enwiki
+│   ├── [ 256]  categorylinks
+│   │   ├── [   0]  _SUCCESS
+│   │   ├── [222M]  part-00000-5c4ff747-a7d2-48b6-8e21-e82a4b8840dd-c000.snappy.parquet
+│   │   └── [233M]  part-00001-5c4ff747-a7d2-48b6-8e21-e82a4b8840dd-c000.snappy.parquet
+│   ├── [ 192]  categorypages
+│   │   ├── [   0]  _SUCCESS
+│   │   └── [ 32M]  part-00000-e856fb1e-f22c-4c36-9ed1-5621bab499a9-c000.snappy.parquet
+│   ├── [ 640]  pagelinks
+│   │   ├── [   0]  _SUCCESS
+│   │   ├── [248M]  part-00000-3255198c-5b01-46f9-9a29-0e7e6c3d24c1-c000.snappy.parquet
+│   │   ├── [231M]  part-00001-3255198c-5b01-46f9-9a29-0e7e6c3d24c1-c000.snappy.parquet
+│   │   ├── [245M]  part-00002-3255198c-5b01-46f9-9a29-0e7e6c3d24c1-c000.snappy.parquet
+│   │   ├── [247M]  part-00003-3255198c-5b01-46f9-9a29-0e7e6c3d24c1-c000.snappy.parquet
+│   │   ├── [248M]  part-00004-3255198c-5b01-46f9-9a29-0e7e6c3d24c1-c000.snappy.parquet
+│   │   ├── [247M]  part-00005-3255198c-5b01-46f9-9a29-0e7e6c3d24c1-c000.snappy.parquet
+│   │   ├── [251M]  part-00006-3255198c-5b01-46f9-9a29-0e7e6c3d24c1-c000.snappy.parquet
+│   │   └── [240M]  part-00007-3255198c-5b01-46f9-9a29-0e7e6c3d24c1-c000.snappy.parquet
+│   └── [ 192]  pages
+│       ├── [   0]  _SUCCESS
+│       └── [117M]  part-00000-210e029a-635e-4a0e-9f69-7e7d135072bd-c000.snappy.parquet
 ├── [ 160]  processed
 │   ├── [ 13K]  categorylinks
 │   │   ├── [   0]  _SUCCESS
@@ -505,5 +526,5 @@ data
     ├── [6.0G]  enwiki-20190820-pagelinks.sql.gz
     └── [126M]  enwiki-20190820-redirect.sql.gz
 
-8 directories, 494 files
+13 directories, 510 files
 ```
