@@ -43,3 +43,16 @@ data/processed/
 +--------+--------------------+--------+------+
 
 ```
+
+```bash
+pipenv shell
+python -m site
+# choose the location of the local site-packages
+
+export SPARK_HOME=$(python -c "import pyspark as _; print(_.__path__[0])")
+export PYSPARK_DRIVER_PYTHON=jupyter
+export PYSPARK_DRIVER_PYTHON_OPTS=notebook
+pyspark \
+    --conf spark.driver.memory=4g \
+    --conf spark.executor.memory=4g
+```
