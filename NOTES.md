@@ -15,19 +15,6 @@ spark-submit \
 ```
 
 ```bash
-pipenv shell
-python -m site
-# choose the location of the local site-packages
-
-export SPARK_HOME=$(python -c "import pyspark as _; print(_.__path__[0])")
-export PYSPARK_DRIVER_PYTHON=jupyter
-export PYSPARK_DRIVER_PYTHON_OPTS=notebook
-pyspark \
-    --conf spark.driver.memory=4g \
-    --conf spark.executor.memory=4g
-```
-
-```bash
 spark-submit \
     --class ch.epfl.lts2.wikipedia.DumpParser \
     --master 'local[*]' \
@@ -62,10 +49,10 @@ start = end - timedelta(days)
 print(dt.strftime(start, fmt))
 ```
 
-```
-wget -r -np -nH --cut-dirs=3 https://dumps.wikimedia.org/other/pagecounts-ez/merged/2018/
-wget -r -np -nH --cut-dirs=3 https://dumps.wikimedia.org/other/pagecounts-ez/merged/2019/
-
+```bash
+# warning, this will take a long time (est 16 hours at 2MB/s)
+wget -c -r -np -nH --cut-dirs=3 https://dumps.wikimedia.org/other/pagecounts-ez/merged/2018/
+wget -c -r -np -nH --cut-dirs=3 https://dumps.wikimedia.org/other/pagecounts-ez/merged/2019/
 ```
 
 ```
