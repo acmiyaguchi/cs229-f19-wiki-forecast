@@ -8,7 +8,7 @@ data
 │   ├── [1.3G]  enwiki-20190820-page.sql.bz2
 │   ├── [5.0G]  enwiki-20190820-pagelinks.sql.bz2
 │   └── [101M]  enwiki-20190820-redirect.sql.bz2
-├── [ 192]  enwiki
+├── [ 224]  enwiki
 │   ├── [ 256]  categorylinks
 │   │   ├── [   0]  _SUCCESS
 │   │   ├── [222M]  part-00000-5c4ff747-a7d2-48b6-8e21-e82a4b8840dd-c000.snappy.parquet
@@ -16,6 +16,12 @@ data
 │   ├── [ 192]  categorypages
 │   │   ├── [   0]  _SUCCESS
 │   │   └── [ 32M]  part-00000-e856fb1e-f22c-4c36-9ed1-5621bab499a9-c000.snappy.parquet
+│   ├── [ 384]  page_parquet
+│   │   ├── [   0]  _SUCCESS
+│   │   ├── [179M]  part-00000-e97ee0ca-9896-4efe-88a7-8cf2080e6443-c000.snappy.parquet
+│   │   ├── [175M]  part-00001-e97ee0ca-9896-4efe-88a7-8cf2080e6443-c000.snappy.parquet
+│   │   ├── [181M]  part-00002-e97ee0ca-9896-4efe-88a7-8cf2080e6443-c000.snappy.parquet
+│   │   └── [182M]  part-00003-e97ee0ca-9896-4efe-88a7-8cf2080e6443-c000.snappy.parquet
 │   ├── [ 640]  pagelinks
 │   │   ├── [   0]  _SUCCESS
 │   │   ├── [248M]  part-00000-3255198c-5b01-46f9-9a29-0e7e6c3d24c1-c000.snappy.parquet
@@ -29,7 +35,7 @@ data
 │   └── [ 192]  pages
 │       ├── [   0]  _SUCCESS
 │       └── [117M]  part-00000-210e029a-635e-4a0e-9f69-7e7d135072bd-c000.snappy.parquet
-├── [ 160]  processed
+├── [ 192]  processed
 │   ├── [ 13K]  categorylinks
 │   │   ├── [   0]  _SUCCESS
 │   │   ├── [2.2M]  part-00000-3c91fb13-be76-49d9-8a1c-fa168cc8f1dd-c000.csv.gz
@@ -317,6 +323,48 @@ data
 │   │       ├── [1.3M]  part-00037-4dc2ee3e-a72a-4725-8bdb-e66b69e24276-c000.csv.gz
 │   │       ├── [1.2M]  part-00038-4dc2ee3e-a72a-4725-8bdb-e66b69e24276-c000.csv.gz
 │   │       └── [1.3M]  part-00039-4dc2ee3e-a72a-4725-8bdb-e66b69e24276-c000.csv.gz
+│   ├── [2.6K]  page_parquet
+│   │   ├── [   0]  _SUCCESS
+│   │   ├── [ 27M]  part-00000-dafb471a-f403-44e1-8b43-5ee7478e8c63-c000.gz.parquet
+│   │   ├── [ 23M]  part-00001-dafb471a-f403-44e1-8b43-5ee7478e8c63-c000.gz.parquet
+│   │   ├── [ 18M]  part-00002-dafb471a-f403-44e1-8b43-5ee7478e8c63-c000.gz.parquet
+│   │   ├── [ 15M]  part-00003-dafb471a-f403-44e1-8b43-5ee7478e8c63-c000.gz.parquet
+│   │   ├── [ 14M]  part-00004-dafb471a-f403-44e1-8b43-5ee7478e8c63-c000.gz.parquet
+│   │   ├── [ 12M]  part-00005-dafb471a-f403-44e1-8b43-5ee7478e8c63-c000.gz.parquet
+│   │   ├── [ 15M]  part-00006-dafb471a-f403-44e1-8b43-5ee7478e8c63-c000.gz.parquet
+│   │   ├── [ 14M]  part-00007-dafb471a-f403-44e1-8b43-5ee7478e8c63-c000.gz.parquet
+│   │   ├── [ 14M]  part-00008-dafb471a-f403-44e1-8b43-5ee7478e8c63-c000.gz.parquet
+│   │   ├── [ 12M]  part-00009-dafb471a-f403-44e1-8b43-5ee7478e8c63-c000.gz.parquet
+│   │   ├── [ 13M]  part-00010-dafb471a-f403-44e1-8b43-5ee7478e8c63-c000.gz.parquet
+│   │   ├── [ 11M]  part-00011-dafb471a-f403-44e1-8b43-5ee7478e8c63-c000.gz.parquet
+│   │   ├── [ 12M]  part-00012-dafb471a-f403-44e1-8b43-5ee7478e8c63-c000.gz.parquet
+│   │   ├── [ 14M]  part-00013-dafb471a-f403-44e1-8b43-5ee7478e8c63-c000.gz.parquet
+│   │   ├── [ 12M]  part-00014-dafb471a-f403-44e1-8b43-5ee7478e8c63-c000.gz.parquet
+│   │   ├── [ 12M]  part-00015-dafb471a-f403-44e1-8b43-5ee7478e8c63-c000.gz.parquet
+│   │   ├── [ 13M]  part-00016-dafb471a-f403-44e1-8b43-5ee7478e8c63-c000.gz.parquet
+│   │   ├── [ 12M]  part-00017-dafb471a-f403-44e1-8b43-5ee7478e8c63-c000.gz.parquet
+│   │   ├── [ 12M]  part-00018-dafb471a-f403-44e1-8b43-5ee7478e8c63-c000.gz.parquet
+│   │   ├── [ 12M]  part-00019-dafb471a-f403-44e1-8b43-5ee7478e8c63-c000.gz.parquet
+│   │   ├── [ 12M]  part-00020-dafb471a-f403-44e1-8b43-5ee7478e8c63-c000.gz.parquet
+│   │   ├── [ 12M]  part-00021-dafb471a-f403-44e1-8b43-5ee7478e8c63-c000.gz.parquet
+│   │   ├── [ 13M]  part-00022-dafb471a-f403-44e1-8b43-5ee7478e8c63-c000.gz.parquet
+│   │   ├── [ 13M]  part-00023-dafb471a-f403-44e1-8b43-5ee7478e8c63-c000.gz.parquet
+│   │   ├── [ 12M]  part-00024-dafb471a-f403-44e1-8b43-5ee7478e8c63-c000.gz.parquet
+│   │   ├── [ 12M]  part-00025-dafb471a-f403-44e1-8b43-5ee7478e8c63-c000.gz.parquet
+│   │   ├── [ 12M]  part-00026-dafb471a-f403-44e1-8b43-5ee7478e8c63-c000.gz.parquet
+│   │   ├── [ 11M]  part-00027-dafb471a-f403-44e1-8b43-5ee7478e8c63-c000.gz.parquet
+│   │   ├── [8.8M]  part-00028-dafb471a-f403-44e1-8b43-5ee7478e8c63-c000.gz.parquet
+│   │   ├── [ 11M]  part-00029-dafb471a-f403-44e1-8b43-5ee7478e8c63-c000.gz.parquet
+│   │   ├── [ 11M]  part-00030-dafb471a-f403-44e1-8b43-5ee7478e8c63-c000.gz.parquet
+│   │   ├── [ 12M]  part-00031-dafb471a-f403-44e1-8b43-5ee7478e8c63-c000.gz.parquet
+│   │   ├── [ 11M]  part-00032-dafb471a-f403-44e1-8b43-5ee7478e8c63-c000.gz.parquet
+│   │   ├── [ 11M]  part-00033-dafb471a-f403-44e1-8b43-5ee7478e8c63-c000.gz.parquet
+│   │   ├── [ 11M]  part-00034-dafb471a-f403-44e1-8b43-5ee7478e8c63-c000.gz.parquet
+│   │   ├── [ 11M]  part-00035-dafb471a-f403-44e1-8b43-5ee7478e8c63-c000.gz.parquet
+│   │   ├── [ 11M]  part-00036-dafb471a-f403-44e1-8b43-5ee7478e8c63-c000.gz.parquet
+│   │   ├── [9.9M]  part-00037-dafb471a-f403-44e1-8b43-5ee7478e8c63-c000.gz.parquet
+│   │   ├── [ 10M]  part-00038-dafb471a-f403-44e1-8b43-5ee7478e8c63-c000.gz.parquet
+│   │   └── [ 11M]  part-00039-dafb471a-f403-44e1-8b43-5ee7478e8c63-c000.gz.parquet
 │   └── [ 13K]  pagelinks
 │       ├── [   0]  _SUCCESS
 │       ├── [ 11M]  part-00000-d51952cc-1f4a-46a1-aba5-023a3f5777d3-c000.csv.gz
@@ -519,12 +567,161 @@ data
 │       ├── [ 11M]  part-00197-d51952cc-1f4a-46a1-aba5-023a3f5777d3-c000.csv.gz
 │       ├── [ 11M]  part-00198-d51952cc-1f4a-46a1-aba5-023a3f5777d3-c000.csv.gz
 │       └── [ 11M]  part-00199-d51952cc-1f4a-46a1-aba5-023a3f5777d3-c000.csv.gz
-└── [ 224]  raw
+└── [ 256]  raw
     ├── [ 24M]  enwiki-20190820-category.sql.gz
     ├── [2.5G]  enwiki-20190820-categorylinks.sql.gz
     ├── [1.6G]  enwiki-20190820-page.sql.gz
     ├── [6.0G]  enwiki-20190820-pagelinks.sql.gz
-    └── [126M]  enwiki-20190820-redirect.sql.gz
+    ├── [126M]  enwiki-20190820-redirect.sql.gz
+    └── [4.7K]  pagecounts
+        ├── [1011]  index.html.tmp
+        ├── [343M]  pagecounts-2018-01-01.bz2
+        ├── [378M]  pagecounts-2018-01-02.bz2
+        ├── [387M]  pagecounts-2018-01-03.bz2
+        ├── [378M]  pagecounts-2018-01-04.bz2
+        ├── [373M]  pagecounts-2018-01-05.bz2
+        ├── [386M]  pagecounts-2018-01-06.bz2
+        ├── [383M]  pagecounts-2018-01-07.bz2
+        ├── [389M]  pagecounts-2018-01-08.bz2
+        ├── [387M]  pagecounts-2018-01-09.bz2
+        ├── [384M]  pagecounts-2018-01-10.bz2
+        ├── [387M]  pagecounts-2018-01-11.bz2
+        ├── [384M]  pagecounts-2018-01-12.bz2
+        ├── [375M]  pagecounts-2018-01-13.bz2
+        ├── [392M]  pagecounts-2018-01-14.bz2
+        ├── [404M]  pagecounts-2018-01-15.bz2
+        ├── [389M]  pagecounts-2018-01-16.bz2
+        ├── [394M]  pagecounts-2018-01-17.bz2
+        ├── [389M]  pagecounts-2018-01-18.bz2
+        ├── [368M]  pagecounts-2018-01-19.bz2
+        ├── [359M]  pagecounts-2018-01-20.bz2
+        ├── [369M]  pagecounts-2018-01-21.bz2
+        ├── [380M]  pagecounts-2018-01-22.bz2
+        ├── [378M]  pagecounts-2018-01-23.bz2
+        ├── [375M]  pagecounts-2018-01-24.bz2
+        ├── [374M]  pagecounts-2018-01-25.bz2
+        ├── [370M]  pagecounts-2018-01-26.bz2
+        ├── [358M]  pagecounts-2018-01-27.bz2
+        ├── [376M]  pagecounts-2018-01-28.bz2
+        ├── [384M]  pagecounts-2018-01-29.bz2
+        ├── [378M]  pagecounts-2018-01-30.bz2
+        ├── [381M]  pagecounts-2018-01-31.bz2
+        ├── [384M]  pagecounts-2018-02-01.bz2
+        ├── [373M]  pagecounts-2018-02-02.bz2
+        ├── [366M]  pagecounts-2018-02-03.bz2
+        ├── [377M]  pagecounts-2018-02-04.bz2
+        ├── [381M]  pagecounts-2018-02-05.bz2
+        ├── [383M]  pagecounts-2018-02-06.bz2
+        ├── [381M]  pagecounts-2018-02-07.bz2
+        ├── [378M]  pagecounts-2018-02-08.bz2
+        ├── [364M]  pagecounts-2018-02-09.bz2
+        ├── [359M]  pagecounts-2018-02-10.bz2
+        ├── [368M]  pagecounts-2018-02-11.bz2
+        ├── [381M]  pagecounts-2018-02-12.bz2
+        ├── [377M]  pagecounts-2018-02-13.bz2
+        ├── [369M]  pagecounts-2018-02-14.bz2
+        ├── [374M]  pagecounts-2018-02-15.bz2
+        ├── [370M]  pagecounts-2018-02-16.bz2
+        ├── [360M]  pagecounts-2018-02-17.bz2
+        ├── [376M]  pagecounts-2018-02-18.bz2
+        ├── [388M]  pagecounts-2018-02-19.bz2
+        ├── [389M]  pagecounts-2018-02-20.bz2
+        ├── [385M]  pagecounts-2018-02-21.bz2
+        ├── [383M]  pagecounts-2018-02-22.bz2
+        ├── [375M]  pagecounts-2018-02-23.bz2
+        ├── [366M]  pagecounts-2018-02-24.bz2
+        ├── [383M]  pagecounts-2018-02-25.bz2
+        ├── [396M]  pagecounts-2018-02-26.bz2
+        ├── [388M]  pagecounts-2018-02-27.bz2
+        ├── [381M]  pagecounts-2018-02-28.bz2
+        ├── [375M]  pagecounts-2018-03-01.bz2
+        ├── [370M]  pagecounts-2018-03-02.bz2
+        ├── [356M]  pagecounts-2018-03-03.bz2
+        ├── [369M]  pagecounts-2018-03-04.bz2
+        ├── [377M]  pagecounts-2018-03-05.bz2
+        ├── [378M]  pagecounts-2018-03-06.bz2
+        ├── [379M]  pagecounts-2018-03-07.bz2
+        ├── [374M]  pagecounts-2018-03-08.bz2
+        ├── [370M]  pagecounts-2018-03-09.bz2
+        ├── [357M]  pagecounts-2018-03-10.bz2
+        ├── [379M]  pagecounts-2019-01-01.bz2
+        ├── [400M]  pagecounts-2019-01-02.bz2
+        ├── [398M]  pagecounts-2019-01-03.bz2
+        ├── [384M]  pagecounts-2019-01-04.bz2
+        ├── [383M]  pagecounts-2019-01-05.bz2
+        ├── [400M]  pagecounts-2019-01-06.bz2
+        ├── [396M]  pagecounts-2019-01-07.bz2
+        ├── [405M]  pagecounts-2019-01-08.bz2
+        ├── [406M]  pagecounts-2019-01-09.bz2
+        ├── [395M]  pagecounts-2019-01-10.bz2
+        ├── [393M]  pagecounts-2019-01-11.bz2
+        ├── [387M]  pagecounts-2019-01-12.bz2
+        ├── [397M]  pagecounts-2019-01-13.bz2
+        ├── [409M]  pagecounts-2019-01-14.bz2
+        ├── [416M]  pagecounts-2019-01-15.bz2
+        ├── [426M]  pagecounts-2019-01-16.bz2
+        ├── [427M]  pagecounts-2019-01-17.bz2
+        ├── [416M]  pagecounts-2019-01-18.bz2
+        ├── [395M]  pagecounts-2019-01-19.bz2
+        ├── [406M]  pagecounts-2019-01-20.bz2
+        ├── [412M]  pagecounts-2019-01-21.bz2
+        ├── [406M]  pagecounts-2019-01-22.bz2
+        ├── [416M]  pagecounts-2019-01-23.bz2
+        ├── [421M]  pagecounts-2019-01-24.bz2
+        ├── [410M]  pagecounts-2019-01-25.bz2
+        ├── [396M]  pagecounts-2019-01-26.bz2
+        ├── [405M]  pagecounts-2019-01-27.bz2
+        ├── [411M]  pagecounts-2019-01-28.bz2
+        ├── [418M]  pagecounts-2019-01-29.bz2
+        ├── [422M]  pagecounts-2019-01-30.bz2
+        ├── [408M]  pagecounts-2019-01-31.bz2
+        ├── [393M]  pagecounts-2019-02-01.bz2
+        ├── [385M]  pagecounts-2019-02-02.bz2
+        ├── [398M]  pagecounts-2019-02-03.bz2
+        ├── [404M]  pagecounts-2019-02-04.bz2
+        ├── [400M]  pagecounts-2019-02-05.bz2
+        ├── [397M]  pagecounts-2019-02-06.bz2
+        ├── [398M]  pagecounts-2019-02-07.bz2
+        ├── [398M]  pagecounts-2019-02-08.bz2
+        ├── [380M]  pagecounts-2019-02-09.bz2
+        ├── [399M]  pagecounts-2019-02-10.bz2
+        ├── [407M]  pagecounts-2019-02-11.bz2
+        ├── [405M]  pagecounts-2019-02-12.bz2
+        ├── [411M]  pagecounts-2019-02-13.bz2
+        ├── [399M]  pagecounts-2019-02-14.bz2
+        ├── [397M]  pagecounts-2019-02-15.bz2
+        ├── [384M]  pagecounts-2019-02-16.bz2
+        ├── [396M]  pagecounts-2019-02-17.bz2
+        ├── [407M]  pagecounts-2019-02-18.bz2
+        ├── [415M]  pagecounts-2019-02-19.bz2
+        ├── [412M]  pagecounts-2019-02-20.bz2
+        ├── [407M]  pagecounts-2019-02-21.bz2
+        ├── [399M]  pagecounts-2019-02-22.bz2
+        ├── [385M]  pagecounts-2019-02-23.bz2
+        ├── [394M]  pagecounts-2019-02-24.bz2
+        ├── [412M]  pagecounts-2019-02-25.bz2
+        ├── [410M]  pagecounts-2019-02-26.bz2
+        ├── [407M]  pagecounts-2019-02-27.bz2
+        ├── [403M]  pagecounts-2019-02-28.bz2
+        ├── [392M]  pagecounts-2019-03-01.bz2
+        ├── [383M]  pagecounts-2019-03-02.bz2
+        ├── [398M]  pagecounts-2019-03-03.bz2
+        ├── [402M]  pagecounts-2019-03-04.bz2
+        ├── [405M]  pagecounts-2019-03-05.bz2
+        ├── [400M]  pagecounts-2019-03-06.bz2
+        ├── [395M]  pagecounts-2019-03-07.bz2
+        ├── [376M]  pagecounts-2019-03-08.bz2
+        ├── [381M]  pagecounts-2019-03-09.bz2
+        ├── [393M]  pagecounts-2019-03-10.bz2
+        ├── [400M]  pagecounts-2019-03-11.bz2
+        ├── [401M]  pagecounts-2019-03-12.bz2
+        ├── [401M]  pagecounts-2019-03-13.bz2
+        ├── [398M]  pagecounts-2019-03-14.bz2
+        ├── [379M]  pagecounts-2019-03-15.bz2
+        ├── [372M]  pagecounts-2019-03-16.bz2
+        ├── [393M]  pagecounts-2019-03-17.bz2
+        ├── [410M]  pagecounts-2019-03-18.bz2
+        └── [143M]  pagecounts-2019-03-19.bz2
 
-13 directories, 510 files
+16 directories, 704 files
 ```
