@@ -46,5 +46,7 @@ PYSPARK_DRIVER_PYTHON=jupyter \
 PYSPARK_DRIVER_PYTHON_OPTS=notebook \
 pyspark \
     --conf spark.driver.memory=4g \
-    --conf spark.executor.memory=4g
+    --conf spark.executor.memory=4g \
+    --packages \
+        graphframes:graphframes:0.7.0-spark2.4-s_2.11
 ```
