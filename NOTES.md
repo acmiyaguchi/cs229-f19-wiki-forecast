@@ -82,7 +82,6 @@ spark-submit \
         --endDate 2019-03-01
 ```
 
-
 ```bash
 SPARK_HOME=$(python -c "import pyspark; print(pyspark.__path__[0])") \
 PYSPARK_DRIVER_PYTHON=jupyter \
@@ -90,4 +89,21 @@ PYSPARK_DRIVER_PYTHON_OPTS=notebook \
 pyspark \
     --conf spark.driver.memory=4g \
     --packages com.datastax.spark:spark-cassandra-connector_2.11:2.4.0
+```
+
+```bash
+spark-submit \
+    --class ch.epfl.lts2.wikipedia.PagecountProcessor \
+    --master 'local[*]' \
+    --executor-memory 4g \
+    --driver-memory 4g \
+    --packages \
+        org.rogach:scallop_2.11:3.1.5,com.datastax.spark:spark-cassandra-connector_2.11:2.4.0,com.typesafe:config:1.2.1 \
+    sparkwiki/target/scala-2.11/sparkwiki_2.11-0.9.6.jar \
+        --config sparkwiki/config/pagecount.conf \
+        --basePath data/raw/pagecounts \
+        --pageDump data/enwiki/page_parquet \
+        --outputPath data/processed/pagecount
+        --startDate 2019-01-01 \
+        --endDate 2019-01-08
 ```
