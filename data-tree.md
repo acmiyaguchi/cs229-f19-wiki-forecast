@@ -370,206 +370,206 @@ data
 │   │   └── [ 11M]  part-00039-dafb471a-f403-44e1-8b43-5ee7478e8c63-c000.gz.parquet
 │   ├── [ 13K]  pagecount
 │   │   ├── [   0]  _SUCCESS
-│   │   ├── [1.2M]  part-00000-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00001-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00002-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00003-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.1M]  part-00004-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00005-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00006-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00007-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00008-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00009-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.1M]  part-00010-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00011-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00012-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00013-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00014-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00015-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00016-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00017-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00018-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00019-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00020-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.4M]  part-00021-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00022-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.4M]  part-00023-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00024-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00025-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00026-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00027-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.1M]  part-00028-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00029-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00030-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.1M]  part-00031-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00032-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00033-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00034-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00035-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00036-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00037-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00038-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00039-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00040-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00041-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00042-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00043-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00044-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00045-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00046-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00047-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00048-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00049-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.1M]  part-00050-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00051-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.4M]  part-00052-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00053-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00054-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00055-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00056-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00057-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00058-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00059-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00060-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00061-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00062-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00063-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00064-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00065-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00066-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.1M]  part-00067-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00068-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00069-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00070-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00071-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00072-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.1M]  part-00073-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00074-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00075-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00076-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00077-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00078-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00079-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00080-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00081-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00082-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00083-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00084-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00085-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00086-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00087-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.1M]  part-00088-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00089-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00090-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00091-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00092-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00093-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00094-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00095-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00096-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.4M]  part-00097-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00098-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00099-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00100-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00101-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00102-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00103-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00104-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00105-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00106-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00107-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00108-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00109-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00110-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00111-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00112-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00113-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00114-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00115-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00116-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00117-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00118-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00119-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.1M]  part-00120-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00121-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00122-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00123-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00124-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00125-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00126-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.1M]  part-00127-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00128-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00129-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00130-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00131-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00132-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00133-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00134-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00135-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00136-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00137-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00138-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00139-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00140-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00141-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00142-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00143-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00144-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00145-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00146-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00147-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00148-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.1M]  part-00149-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00150-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00151-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00152-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00153-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00154-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00155-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00156-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00157-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00158-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.1M]  part-00159-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00160-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00161-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00162-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00163-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00164-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.1M]  part-00165-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00166-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00167-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00168-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00169-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00170-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00171-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00172-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.1M]  part-00173-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00174-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00175-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00176-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00177-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00178-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00179-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.1M]  part-00180-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00181-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00182-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00183-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00184-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00185-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00186-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00187-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00188-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00189-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00190-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00191-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00192-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00193-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00194-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00195-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00196-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.2M]  part-00197-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   ├── [1.3M]  part-00198-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
-│   │   └── [1.3M]  part-00199-122b7745-3164-4266-b9ce-7b44f015d054-c000.gz.parquet
+│   │   ├── [ 23M]  part-00000-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00001-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00002-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00003-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 21M]  part-00004-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00005-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00006-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 24M]  part-00007-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00008-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00009-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 21M]  part-00010-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00011-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00012-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00013-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 24M]  part-00014-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00015-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00016-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00017-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 21M]  part-00018-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00019-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 24M]  part-00020-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 24M]  part-00021-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00022-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00023-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00024-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00025-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00026-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 24M]  part-00027-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 21M]  part-00028-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00029-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00030-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 21M]  part-00031-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00032-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00033-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00034-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 24M]  part-00035-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 24M]  part-00036-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00037-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 24M]  part-00038-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00039-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00040-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00041-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00042-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 24M]  part-00043-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00044-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00045-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00046-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00047-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00048-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00049-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 21M]  part-00050-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00051-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 24M]  part-00052-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00053-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00054-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00055-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00056-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00057-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00058-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00059-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00060-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00061-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00062-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00063-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00064-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00065-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00066-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 21M]  part-00067-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00068-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 25M]  part-00069-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00070-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00071-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00072-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 21M]  part-00073-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00074-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00075-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00076-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 24M]  part-00077-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00078-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 24M]  part-00079-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00080-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00081-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00082-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00083-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 24M]  part-00084-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00085-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00086-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00087-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00088-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00089-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 24M]  part-00090-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00091-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 24M]  part-00092-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 24M]  part-00093-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00094-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 24M]  part-00095-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00096-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 24M]  part-00097-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 24M]  part-00098-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00099-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00100-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00101-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00102-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00103-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 24M]  part-00104-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00105-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00106-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00107-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 25M]  part-00108-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00109-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 24M]  part-00110-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00111-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00112-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 24M]  part-00113-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00114-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00115-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00116-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00117-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 24M]  part-00118-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00119-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 21M]  part-00120-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00121-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00122-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00123-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 25M]  part-00124-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00125-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 24M]  part-00126-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 21M]  part-00127-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00128-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00129-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00130-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00131-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00132-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00133-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 24M]  part-00134-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00135-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00136-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00137-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 24M]  part-00138-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00139-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00140-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00141-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00142-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00143-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00144-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00145-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00146-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00147-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00148-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 21M]  part-00149-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00150-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00151-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00152-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00153-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 24M]  part-00154-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00155-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00156-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00157-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00158-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 21M]  part-00159-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00160-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00161-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00162-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00163-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00164-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 21M]  part-00165-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00166-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00167-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00168-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00169-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00170-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00171-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00172-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 21M]  part-00173-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00174-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00175-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00176-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00177-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 24M]  part-00178-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00179-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 21M]  part-00180-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00181-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00182-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00183-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 24M]  part-00184-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00185-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00186-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00187-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 24M]  part-00188-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 21M]  part-00189-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 24M]  part-00190-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00191-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 22M]  part-00192-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 21M]  part-00193-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00194-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00195-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00196-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 23M]  part-00197-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   ├── [ 24M]  part-00198-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
+│   │   └── [ 22M]  part-00199-78235a89-2349-46ca-bba8-eee118d88359-c000.gz.parquet
 │   └── [ 13K]  pagelinks
 │       ├── [   0]  _SUCCESS
 │       ├── [ 11M]  part-00000-d51952cc-1f4a-46a1-aba5-023a3f5777d3-c000.csv.gz
@@ -778,8 +778,8 @@ data
     ├── [1.6G]  enwiki-20190820-page.sql.gz
     ├── [6.0G]  enwiki-20190820-pagelinks.sql.gz
     ├── [126M]  enwiki-20190820-redirect.sql.gz
-    └── [5.0K]  pagecounts
-        ├── [1011]  index.html.tmp
+    └── [ 19K]  pagecounts
+        ├── [4.2K]  index.html.tmp
         ├── [343M]  pagecounts-2018-01-01.bz2
         ├── [378M]  pagecounts-2018-01-02.bz2
         ├── [387M]  pagecounts-2018-01-03.bz2
@@ -849,6 +849,302 @@ data
         ├── [374M]  pagecounts-2018-03-08.bz2
         ├── [370M]  pagecounts-2018-03-09.bz2
         ├── [357M]  pagecounts-2018-03-10.bz2
+        ├── [374M]  pagecounts-2018-03-11.bz2
+        ├── [381M]  pagecounts-2018-03-12.bz2
+        ├── [378M]  pagecounts-2018-03-13.bz2
+        ├── [377M]  pagecounts-2018-03-14.bz2
+        ├── [380M]  pagecounts-2018-03-15.bz2
+        ├── [368M]  pagecounts-2018-03-16.bz2
+        ├── [362M]  pagecounts-2018-03-17.bz2
+        ├── [375M]  pagecounts-2018-03-18.bz2
+        ├── [381M]  pagecounts-2018-03-19.bz2
+        ├── [388M]  pagecounts-2018-03-20.bz2
+        ├── [391M]  pagecounts-2018-03-21.bz2
+        ├── [387M]  pagecounts-2018-03-22.bz2
+        ├── [376M]  pagecounts-2018-03-23.bz2
+        ├── [357M]  pagecounts-2018-03-24.bz2
+        ├── [373M]  pagecounts-2018-03-25.bz2
+        ├── [379M]  pagecounts-2018-03-26.bz2
+        ├── [376M]  pagecounts-2018-03-27.bz2
+        ├── [370M]  pagecounts-2018-03-28.bz2
+        ├── [365M]  pagecounts-2018-03-29.bz2
+        ├── [365M]  pagecounts-2018-03-30.bz2
+        ├── [358M]  pagecounts-2018-03-31.bz2
+        ├── [366M]  pagecounts-2018-04-01.bz2
+        ├── [382M]  pagecounts-2018-04-02.bz2
+        ├── [379M]  pagecounts-2018-04-03.bz2
+        ├── [375M]  pagecounts-2018-04-04.bz2
+        ├── [375M]  pagecounts-2018-04-05.bz2
+        ├── [364M]  pagecounts-2018-04-06.bz2
+        ├── [352M]  pagecounts-2018-04-07.bz2
+        ├── [366M]  pagecounts-2018-04-08.bz2
+        ├── [381M]  pagecounts-2018-04-09.bz2
+        ├── [378M]  pagecounts-2018-04-10.bz2
+        ├── [380M]  pagecounts-2018-04-11.bz2
+        ├── [376M]  pagecounts-2018-04-12.bz2
+        ├── [365M]  pagecounts-2018-04-13.bz2
+        ├── [352M]  pagecounts-2018-04-14.bz2
+        ├── [380M]  pagecounts-2018-04-15.bz2
+        ├── [388M]  pagecounts-2018-04-16.bz2
+        ├── [388M]  pagecounts-2018-04-17.bz2
+        ├── [383M]  pagecounts-2018-04-18.bz2
+        ├── [376M]  pagecounts-2018-04-19.bz2
+        ├── [369M]  pagecounts-2018-04-20.bz2
+        ├── [355M]  pagecounts-2018-04-21.bz2
+        ├── [374M]  pagecounts-2018-04-22.bz2
+        ├── [386M]  pagecounts-2018-04-23.bz2
+        ├── [380M]  pagecounts-2018-04-24.bz2
+        ├── [383M]  pagecounts-2018-04-25.bz2
+        ├── [378M]  pagecounts-2018-04-26.bz2
+        ├── [362M]  pagecounts-2018-04-27.bz2
+        ├── [343M]  pagecounts-2018-04-28.bz2
+        ├── [355M]  pagecounts-2018-04-29.bz2
+        ├── [366M]  pagecounts-2018-04-30.bz2
+        ├── [371M]  pagecounts-2018-05-01.bz2
+        ├── [375M]  pagecounts-2018-05-02.bz2
+        ├── [375M]  pagecounts-2018-05-03.bz2
+        ├── [366M]  pagecounts-2018-05-04.bz2
+        ├── [353M]  pagecounts-2018-05-05.bz2
+        ├── [366M]  pagecounts-2018-05-06.bz2
+        ├── [384M]  pagecounts-2018-05-07.bz2
+        ├── [379M]  pagecounts-2018-05-08.bz2
+        ├── [370M]  pagecounts-2018-05-09.bz2
+        ├── [374M]  pagecounts-2018-05-10.bz2
+        ├── [365M]  pagecounts-2018-05-11.bz2
+        ├── [352M]  pagecounts-2018-05-12.bz2
+        ├── [367M]  pagecounts-2018-05-13.bz2
+        ├── [385M]  pagecounts-2018-05-14.bz2
+        ├── [386M]  pagecounts-2018-05-15.bz2
+        ├── [385M]  pagecounts-2018-05-16.bz2
+        ├── [383M]  pagecounts-2018-05-17.bz2
+        ├── [366M]  pagecounts-2018-05-18.bz2
+        ├── [348M]  pagecounts-2018-05-19.bz2
+        ├── [365M]  pagecounts-2018-05-20.bz2
+        ├── [381M]  pagecounts-2018-05-21.bz2
+        ├── [379M]  pagecounts-2018-05-22.bz2
+        ├── [383M]  pagecounts-2018-05-23.bz2
+        ├── [375M]  pagecounts-2018-05-24.bz2
+        ├── [363M]  pagecounts-2018-05-25.bz2
+        ├── [347M]  pagecounts-2018-05-26.bz2
+        ├── [366M]  pagecounts-2018-05-27.bz2
+        ├── [377M]  pagecounts-2018-05-28.bz2
+        ├── [379M]  pagecounts-2018-05-29.bz2
+        ├── [377M]  pagecounts-2018-05-30.bz2
+        ├── [371M]  pagecounts-2018-05-31.bz2
+        ├── [366M]  pagecounts-2018-06-01.bz2
+        ├── [356M]  pagecounts-2018-06-02.bz2
+        ├── [376M]  pagecounts-2018-06-03.bz2
+        ├── [383M]  pagecounts-2018-06-04.bz2
+        ├── [379M]  pagecounts-2018-06-05.bz2
+        ├── [383M]  pagecounts-2018-06-06.bz2
+        ├── [380M]  pagecounts-2018-06-07.bz2
+        ├── [369M]  pagecounts-2018-06-08.bz2
+        ├── [357M]  pagecounts-2018-06-09.bz2
+        ├── [369M]  pagecounts-2018-06-10.bz2
+        ├── [379M]  pagecounts-2018-06-11.bz2
+        ├── [373M]  pagecounts-2018-06-12.bz2
+        ├── [377M]  pagecounts-2018-06-13.bz2
+        ├── [361M]  pagecounts-2018-06-14.bz2
+        ├── [362M]  pagecounts-2018-06-15.bz2
+        ├── [344M]  pagecounts-2018-06-16.bz2
+        ├── [359M]  pagecounts-2018-06-17.bz2
+        ├── [368M]  pagecounts-2018-06-18.bz2
+        ├── [369M]  pagecounts-2018-06-19.bz2
+        ├── [365M]  pagecounts-2018-06-20.bz2
+        ├── [362M]  pagecounts-2018-06-21.bz2
+        ├── [359M]  pagecounts-2018-06-22.bz2
+        ├── [353M]  pagecounts-2018-06-23.bz2
+        ├── [364M]  pagecounts-2018-06-24.bz2
+        ├── [370M]  pagecounts-2018-06-25.bz2
+        ├── [366M]  pagecounts-2018-06-26.bz2
+        ├── [359M]  pagecounts-2018-06-27.bz2
+        ├── [363M]  pagecounts-2018-06-28.bz2
+        ├── [358M]  pagecounts-2018-06-29.bz2
+        ├── [356M]  pagecounts-2018-06-30.bz2
+        ├── [360M]  pagecounts-2018-07-01.bz2
+        ├── [371M]  pagecounts-2018-07-02.bz2
+        ├── [366M]  pagecounts-2018-07-03.bz2
+        ├── [361M]  pagecounts-2018-07-04.bz2
+        ├── [366M]  pagecounts-2018-07-05.bz2
+        ├── [357M]  pagecounts-2018-07-06.bz2
+        ├── [350M]  pagecounts-2018-07-07.bz2
+        ├── [363M]  pagecounts-2018-07-08.bz2
+        ├── [376M]  pagecounts-2018-07-09.bz2
+        ├── [378M]  pagecounts-2018-07-10.bz2
+        ├── [392M]  pagecounts-2018-07-11.bz2
+        ├── [387M]  pagecounts-2018-07-12.bz2
+        ├── [367M]  pagecounts-2018-07-13.bz2
+        ├── [348M]  pagecounts-2018-07-14.bz2
+        ├── [360M]  pagecounts-2018-07-15.bz2
+        ├── [369M]  pagecounts-2018-07-16.bz2
+        ├── [372M]  pagecounts-2018-07-17.bz2
+        ├── [367M]  pagecounts-2018-07-18.bz2
+        ├── [365M]  pagecounts-2018-07-19.bz2
+        ├── [357M]  pagecounts-2018-07-20.bz2
+        ├── [344M]  pagecounts-2018-07-21.bz2
+        ├── [361M]  pagecounts-2018-07-22.bz2
+        ├── [371M]  pagecounts-2018-07-23.bz2
+        ├── [369M]  pagecounts-2018-07-24.bz2
+        ├── [368M]  pagecounts-2018-07-25.bz2
+        ├── [364M]  pagecounts-2018-07-26.bz2
+        ├── [356M]  pagecounts-2018-07-27.bz2
+        ├── [351M]  pagecounts-2018-07-28.bz2
+        ├── [361M]  pagecounts-2018-07-29.bz2
+        ├── [375M]  pagecounts-2018-07-30.bz2
+        ├── [373M]  pagecounts-2018-07-31.bz2
+        ├── [370M]  pagecounts-2018-08-01.bz2
+        ├── [370M]  pagecounts-2018-08-02.bz2
+        ├── [365M]  pagecounts-2018-08-03.bz2
+        ├── [354M]  pagecounts-2018-08-04.bz2
+        ├── [359M]  pagecounts-2018-08-05.bz2
+        ├── [372M]  pagecounts-2018-08-06.bz2
+        ├── [372M]  pagecounts-2018-08-07.bz2
+        ├── [364M]  pagecounts-2018-08-08.bz2
+        ├── [363M]  pagecounts-2018-08-09.bz2
+        ├── [357M]  pagecounts-2018-08-10.bz2
+        ├── [341M]  pagecounts-2018-08-11.bz2
+        ├── [354M]  pagecounts-2018-08-12.bz2
+        ├── [372M]  pagecounts-2018-08-13.bz2
+        ├── [368M]  pagecounts-2018-08-14.bz2
+        ├── [375M]  pagecounts-2018-08-15.bz2
+        ├── [378M]  pagecounts-2018-08-16.bz2
+        ├── [373M]  pagecounts-2018-08-17.bz2
+        ├── [355M]  pagecounts-2018-08-18.bz2
+        ├── [374M]  pagecounts-2018-08-19.bz2
+        ├── [391M]  pagecounts-2018-08-20.bz2
+        ├── [386M]  pagecounts-2018-08-21.bz2
+        ├── [393M]  pagecounts-2018-08-22.bz2
+        ├── [384M]  pagecounts-2018-08-23.bz2
+        ├── [384M]  pagecounts-2018-08-24.bz2
+        ├── [364M]  pagecounts-2018-08-25.bz2
+        ├── [375M]  pagecounts-2018-08-26.bz2
+        ├── [392M]  pagecounts-2018-08-27.bz2
+        ├── [390M]  pagecounts-2018-08-28.bz2
+        ├── [395M]  pagecounts-2018-08-29.bz2
+        ├── [383M]  pagecounts-2018-08-30.bz2
+        ├── [377M]  pagecounts-2018-08-31.bz2
+        ├── [354M]  pagecounts-2018-09-01.bz2
+        ├── [365M]  pagecounts-2018-09-02.bz2
+        ├── [384M]  pagecounts-2018-09-03.bz2
+        ├── [398M]  pagecounts-2018-09-04.bz2
+        ├── [393M]  pagecounts-2018-09-05.bz2
+        ├── [391M]  pagecounts-2018-09-06.bz2
+        ├── [392M]  pagecounts-2018-09-07.bz2
+        ├── [362M]  pagecounts-2018-09-08.bz2
+        ├── [365M]  pagecounts-2018-09-09.bz2
+        ├── [391M]  pagecounts-2018-09-10.bz2
+        ├── [393M]  pagecounts-2018-09-11.bz2
+        ├── [389M]  pagecounts-2018-09-12.bz2
+        ├── [391M]  pagecounts-2018-09-13.bz2
+        ├── [371M]  pagecounts-2018-09-14.bz2
+        ├── [376M]  pagecounts-2018-09-15.bz2
+        ├── [387M]  pagecounts-2018-09-16.bz2
+        ├── [405M]  pagecounts-2018-09-17.bz2
+        ├── [392M]  pagecounts-2018-09-18.bz2
+        ├── [394M]  pagecounts-2018-09-19.bz2
+        ├── [404M]  pagecounts-2018-09-20.bz2
+        ├── [391M]  pagecounts-2018-09-21.bz2
+        ├── [363M]  pagecounts-2018-09-22.bz2
+        ├── [372M]  pagecounts-2018-09-23.bz2
+        ├── [389M]  pagecounts-2018-09-24.bz2
+        ├── [383M]  pagecounts-2018-09-25.bz2
+        ├── [390M]  pagecounts-2018-09-26.bz2
+        ├── [378M]  pagecounts-2018-09-27.bz2
+        ├── [366M]  pagecounts-2018-09-28.bz2
+        ├── [355M]  pagecounts-2018-09-29.bz2
+        ├── [375M]  pagecounts-2018-09-30.bz2
+        ├── [384M]  pagecounts-2018-10-01.bz2
+        ├── [393M]  pagecounts-2018-10-02.bz2
+        ├── [401M]  pagecounts-2018-10-03.bz2
+        ├── [391M]  pagecounts-2018-10-04.bz2
+        ├── [385M]  pagecounts-2018-10-05.bz2
+        ├── [370M]  pagecounts-2018-10-06.bz2
+        ├── [385M]  pagecounts-2018-10-07.bz2
+        ├── [398M]  pagecounts-2018-10-08.bz2
+        ├── [399M]  pagecounts-2018-10-09.bz2
+        ├── [387M]  pagecounts-2018-10-10.bz2
+        ├── [382M]  pagecounts-2018-10-11.bz2
+        ├── [372M]  pagecounts-2018-10-12.bz2
+        ├── [360M]  pagecounts-2018-10-13.bz2
+        ├── [374M]  pagecounts-2018-10-14.bz2
+        ├── [397M]  pagecounts-2018-10-15.bz2
+        ├── [390M]  pagecounts-2018-10-16.bz2
+        ├── [383M]  pagecounts-2018-10-17.bz2
+        ├── [388M]  pagecounts-2018-10-18.bz2
+        ├── [372M]  pagecounts-2018-10-19.bz2
+        ├── [358M]  pagecounts-2018-10-20.bz2
+        ├── [384M]  pagecounts-2018-10-21.bz2
+        ├── [412M]  pagecounts-2018-10-22.bz2
+        ├── [398M]  pagecounts-2018-10-23.bz2
+        ├── [423M]  pagecounts-2018-10-24.bz2
+        ├── [388M]  pagecounts-2018-10-25.bz2
+        ├── [368M]  pagecounts-2018-10-26.bz2
+        ├── [358M]  pagecounts-2018-10-27.bz2
+        ├── [379M]  pagecounts-2018-10-28.bz2
+        ├── [391M]  pagecounts-2018-10-29.bz2
+        ├── [389M]  pagecounts-2018-10-30.bz2
+        ├── [378M]  pagecounts-2018-10-31.bz2
+        ├── [378M]  pagecounts-2018-11-01.bz2
+        ├── [376M]  pagecounts-2018-11-02.bz2
+        ├── [363M]  pagecounts-2018-11-03.bz2
+        ├── [380M]  pagecounts-2018-11-04.bz2
+        ├── [394M]  pagecounts-2018-11-05.bz2
+        ├── [387M]  pagecounts-2018-11-06.bz2
+        ├── [387M]  pagecounts-2018-11-07.bz2
+        ├── [380M]  pagecounts-2018-11-08.bz2
+        ├── [380M]  pagecounts-2018-11-09.bz2
+        ├── [375M]  pagecounts-2018-11-10.bz2
+        ├── [396M]  pagecounts-2018-11-11.bz2
+        ├── [407M]  pagecounts-2018-11-12.bz2
+        ├── [407M]  pagecounts-2018-11-13.bz2
+        ├── [418M]  pagecounts-2018-11-14.bz2
+        ├── [413M]  pagecounts-2018-11-15.bz2
+        ├── [408M]  pagecounts-2018-11-16.bz2
+        ├── [383M]  pagecounts-2018-11-17.bz2
+        ├── [396M]  pagecounts-2018-11-18.bz2
+        ├── [404M]  pagecounts-2018-11-19.bz2
+        ├── [402M]  pagecounts-2018-11-20.bz2
+        ├── [389M]  pagecounts-2018-11-21.bz2
+        ├── [385M]  pagecounts-2018-11-22.bz2
+        ├── [380M]  pagecounts-2018-11-23.bz2
+        ├── [362M]  pagecounts-2018-11-24.bz2
+        ├── [380M]  pagecounts-2018-11-25.bz2
+        ├── [398M]  pagecounts-2018-11-26.bz2
+        ├── [397M]  pagecounts-2018-11-27.bz2
+        ├── [400M]  pagecounts-2018-11-28.bz2
+        ├── [395M]  pagecounts-2018-11-29.bz2
+        ├── [379M]  pagecounts-2018-11-30.bz2
+        ├── [365M]  pagecounts-2018-12-01.bz2
+        ├── [377M]  pagecounts-2018-12-02.bz2
+        ├── [393M]  pagecounts-2018-12-03.bz2
+        ├── [395M]  pagecounts-2018-12-04.bz2
+        ├── [408M]  pagecounts-2018-12-05.bz2
+        ├── [405M]  pagecounts-2018-12-06.bz2
+        ├── [399M]  pagecounts-2018-12-07.bz2
+        ├── [396M]  pagecounts-2018-12-08.bz2
+        ├── [414M]  pagecounts-2018-12-09.bz2
+        ├── [416M]  pagecounts-2018-12-10.bz2
+        ├── [407M]  pagecounts-2018-12-11.bz2
+        ├── [388M]  pagecounts-2018-12-12.bz2
+        ├── [394M]  pagecounts-2018-12-13.bz2
+        ├── [381M]  pagecounts-2018-12-14.bz2
+        ├── [375M]  pagecounts-2018-12-15.bz2
+        ├── [395M]  pagecounts-2018-12-16.bz2
+        ├── [399M]  pagecounts-2018-12-17.bz2
+        ├── [396M]  pagecounts-2018-12-18.bz2
+        ├── [398M]  pagecounts-2018-12-19.bz2
+        ├── [389M]  pagecounts-2018-12-20.bz2
+        ├── [383M]  pagecounts-2018-12-21.bz2
+        ├── [374M]  pagecounts-2018-12-22.bz2
+        ├── [365M]  pagecounts-2018-12-23.bz2
+        ├── [377M]  pagecounts-2018-12-24.bz2
+        ├── [368M]  pagecounts-2018-12-25.bz2
+        ├── [382M]  pagecounts-2018-12-26.bz2
+        ├── [385M]  pagecounts-2018-12-27.bz2
+        ├── [382M]  pagecounts-2018-12-28.bz2
+        ├── [379M]  pagecounts-2018-12-29.bz2
+        ├── [384M]  pagecounts-2018-12-30.bz2
+        ├── [375M]  pagecounts-2018-12-31.bz2
         ├── [379M]  pagecounts-2019-01-01.bz2
         ├── [400M]  pagecounts-2019-01-02.bz2
         ├── [398M]  pagecounts-2019-01-03.bz2
@@ -935,7 +1231,169 @@ data
         ├── [408M]  pagecounts-2019-03-25.bz2
         ├── [408M]  pagecounts-2019-03-26.bz2
         ├── [403M]  pagecounts-2019-03-27.bz2
-        └── [ 44M]  pagecounts-2019-03-28.bz2
+        ├── [402M]  pagecounts-2019-03-28.bz2
+        ├── [391M]  pagecounts-2019-03-29.bz2
+        ├── [380M]  pagecounts-2019-03-30.bz2
+        ├── [392M]  pagecounts-2019-03-31.bz2
+        ├── [400M]  pagecounts-2019-04-01.bz2
+        ├── [398M]  pagecounts-2019-04-02.bz2
+        ├── [403M]  pagecounts-2019-04-03.bz2
+        ├── [409M]  pagecounts-2019-04-04.bz2
+        ├── [397M]  pagecounts-2019-04-05.bz2
+        ├── [379M]  pagecounts-2019-04-06.bz2
+        ├── [395M]  pagecounts-2019-04-07.bz2
+        ├── [417M]  pagecounts-2019-04-08.bz2
+        ├── [410M]  pagecounts-2019-04-09.bz2
+        ├── [400M]  pagecounts-2019-04-10.bz2
+        ├── [400M]  pagecounts-2019-04-11.bz2
+        ├── [392M]  pagecounts-2019-04-12.bz2
+        ├── [381M]  pagecounts-2019-04-13.bz2
+        ├── [394M]  pagecounts-2019-04-14.bz2
+        ├── [398M]  pagecounts-2019-04-15.bz2
+        ├── [401M]  pagecounts-2019-04-16.bz2
+        ├── [420M]  pagecounts-2019-04-17.bz2
+        ├── [396M]  pagecounts-2019-04-18.bz2
+        ├── [385M]  pagecounts-2019-04-19.bz2
+        ├── [371M]  pagecounts-2019-04-20.bz2
+        ├── [380M]  pagecounts-2019-04-21.bz2
+        ├── [398M]  pagecounts-2019-04-22.bz2
+        ├── [405M]  pagecounts-2019-04-23.bz2
+        ├── [407M]  pagecounts-2019-04-24.bz2
+        ├── [401M]  pagecounts-2019-04-25.bz2
+        ├── [404M]  pagecounts-2019-04-26.bz2
+        ├── [396M]  pagecounts-2019-04-27.bz2
+        ├── [398M]  pagecounts-2019-04-28.bz2
+        ├── [406M]  pagecounts-2019-04-29.bz2
+        ├── [398M]  pagecounts-2019-04-30.bz2
+        ├── [403M]  pagecounts-2019-05-01.bz2
+        ├── [400M]  pagecounts-2019-05-02.bz2
+        ├── [396M]  pagecounts-2019-05-03.bz2
+        ├── [389M]  pagecounts-2019-05-04.bz2
+        ├── [402M]  pagecounts-2019-05-05.bz2
+        ├── [406M]  pagecounts-2019-05-06.bz2
+        ├── [401M]  pagecounts-2019-05-07.bz2
+        ├── [408M]  pagecounts-2019-05-08.bz2
+        ├── [391M]  pagecounts-2019-05-09.bz2
+        ├── [384M]  pagecounts-2019-05-10.bz2
+        ├── [372M]  pagecounts-2019-05-11.bz2
+        ├── [384M]  pagecounts-2019-05-12.bz2
+        ├── [398M]  pagecounts-2019-05-13.bz2
+        ├── [402M]  pagecounts-2019-05-14.bz2
+        ├── [394M]  pagecounts-2019-05-15.bz2
+        ├── [403M]  pagecounts-2019-05-16.bz2
+        ├── [377M]  pagecounts-2019-05-17.bz2
+        ├── [362M]  pagecounts-2019-05-18.bz2
+        ├── [376M]  pagecounts-2019-05-19.bz2
+        ├── [394M]  pagecounts-2019-05-20.bz2
+        ├── [390M]  pagecounts-2019-05-21.bz2
+        ├── [388M]  pagecounts-2019-05-22.bz2
+        ├── [384M]  pagecounts-2019-05-23.bz2
+        ├── [369M]  pagecounts-2019-05-24.bz2
+        ├── [355M]  pagecounts-2019-05-25.bz2
+        ├── [369M]  pagecounts-2019-05-26.bz2
+        ├── [386M]  pagecounts-2019-05-27.bz2
+        ├── [393M]  pagecounts-2019-05-28.bz2
+        ├── [382M]  pagecounts-2019-05-29.bz2
+        ├── [375M]  pagecounts-2019-05-30.bz2
+        ├── [364M]  pagecounts-2019-05-31.bz2
+        ├── [348M]  pagecounts-2019-06-01.bz2
+        ├── [362M]  pagecounts-2019-06-02.bz2
+        ├── [381M]  pagecounts-2019-06-03.bz2
+        ├── [380M]  pagecounts-2019-06-04.bz2
+        ├── [392M]  pagecounts-2019-06-05.bz2
+        ├── [380M]  pagecounts-2019-06-06.bz2
+        ├── [376M]  pagecounts-2019-06-07.bz2
+        ├── [362M]  pagecounts-2019-06-08.bz2
+        ├── [372M]  pagecounts-2019-06-09.bz2
+        ├── [385M]  pagecounts-2019-06-10.bz2
+        ├── [386M]  pagecounts-2019-06-11.bz2
+        ├── [389M]  pagecounts-2019-06-12.bz2
+        ├── [387M]  pagecounts-2019-06-13.bz2
+        ├── [372M]  pagecounts-2019-06-14.bz2
+        ├── [359M]  pagecounts-2019-06-15.bz2
+        ├── [371M]  pagecounts-2019-06-16.bz2
+        ├── [386M]  pagecounts-2019-06-17.bz2
+        ├── [380M]  pagecounts-2019-06-18.bz2
+        ├── [378M]  pagecounts-2019-06-19.bz2
+        ├── [374M]  pagecounts-2019-06-20.bz2
+        ├── [366M]  pagecounts-2019-06-21.bz2
+        ├── [349M]  pagecounts-2019-06-22.bz2
+        ├── [362M]  pagecounts-2019-06-23.bz2
+        ├── [375M]  pagecounts-2019-06-24.bz2
+        ├── [378M]  pagecounts-2019-06-25.bz2
+        ├── [369M]  pagecounts-2019-06-26.bz2
+        ├── [357M]  pagecounts-2019-06-27.bz2
+        ├── [348M]  pagecounts-2019-06-28.bz2
+        ├── [337M]  pagecounts-2019-06-29.bz2
+        ├── [353M]  pagecounts-2019-06-30.bz2
+        ├── [365M]  pagecounts-2019-07-01.bz2
+        ├── [370M]  pagecounts-2019-07-02.bz2
+        ├── [366M]  pagecounts-2019-07-03.bz2
+        ├── [371M]  pagecounts-2019-07-04.bz2
+        ├── [369M]  pagecounts-2019-07-05.bz2
+        ├── [370M]  pagecounts-2019-07-06.bz2
+        ├── [379M]  pagecounts-2019-07-07.bz2
+        ├── [395M]  pagecounts-2019-07-08.bz2
+        ├── [387M]  pagecounts-2019-07-09.bz2
+        ├── [388M]  pagecounts-2019-07-10.bz2
+        ├── [382M]  pagecounts-2019-07-11.bz2
+        ├── [375M]  pagecounts-2019-07-12.bz2
+        ├── [365M]  pagecounts-2019-07-13.bz2
+        ├── [370M]  pagecounts-2019-07-14.bz2
+        ├── [386M]  pagecounts-2019-07-15.bz2
+        ├── [386M]  pagecounts-2019-07-16.bz2
+        ├── [387M]  pagecounts-2019-07-17.bz2
+        ├── [384M]  pagecounts-2019-07-18.bz2
+        ├── [375M]  pagecounts-2019-07-19.bz2
+        ├── [355M]  pagecounts-2019-07-20.bz2
+        ├── [366M]  pagecounts-2019-07-21.bz2
+        ├── [381M]  pagecounts-2019-07-22.bz2
+        ├── [374M]  pagecounts-2019-07-23.bz2
+        ├── [376M]  pagecounts-2019-07-24.bz2
+        ├── [369M]  pagecounts-2019-07-25.bz2
+        ├── [353M]  pagecounts-2019-07-26.bz2
+        ├── [348M]  pagecounts-2019-07-27.bz2
+        ├── [360M]  pagecounts-2019-07-28.bz2
+        ├── [371M]  pagecounts-2019-07-29.bz2
+        ├── [379M]  pagecounts-2019-07-30.bz2
+        ├── [376M]  pagecounts-2019-07-31.bz2
+        ├── [374M]  pagecounts-2019-08-01.bz2
+        ├── [375M]  pagecounts-2019-08-02.bz2
+        ├── [365M]  pagecounts-2019-08-03.bz2
+        ├── [369M]  pagecounts-2019-08-04.bz2
+        ├── [375M]  pagecounts-2019-08-05.bz2
+        ├── [378M]  pagecounts-2019-08-06.bz2
+        ├── [380M]  pagecounts-2019-08-07.bz2
+        ├── [383M]  pagecounts-2019-08-08.bz2
+        ├── [378M]  pagecounts-2019-08-09.bz2
+        ├── [372M]  pagecounts-2019-08-10.bz2
+        ├── [366M]  pagecounts-2019-08-11.bz2
+        ├── [393M]  pagecounts-2019-08-12.bz2
+        ├── [386M]  pagecounts-2019-08-13.bz2
+        ├── [371M]  pagecounts-2019-08-14.bz2
+        ├── [372M]  pagecounts-2019-08-15.bz2
+        ├── [364M]  pagecounts-2019-08-16.bz2
+        ├── [358M]  pagecounts-2019-08-17.bz2
+        ├── [369M]  pagecounts-2019-08-18.bz2
+        ├── [385M]  pagecounts-2019-08-19.bz2
+        ├── [395M]  pagecounts-2019-08-20.bz2
+        ├── [384M]  pagecounts-2019-08-21.bz2
+        ├── [388M]  pagecounts-2019-08-22.bz2
+        ├── [377M]  pagecounts-2019-08-23.bz2
+        ├── [360M]  pagecounts-2019-08-24.bz2
+        ├── [378M]  pagecounts-2019-08-25.bz2
+        ├── [388M]  pagecounts-2019-08-26.bz2
+        ├── [392M]  pagecounts-2019-08-27.bz2
+        ├── [390M]  pagecounts-2019-08-28.bz2
+        ├── [391M]  pagecounts-2019-08-29.bz2
+        ├── [386M]  pagecounts-2019-08-30.bz2
+        ├── [366M]  pagecounts-2019-08-31.bz2
+        ├── [375M]  pagecounts-2019-09-01.bz2
+        ├── [379M]  pagecounts-2019-09-02.bz2
+        ├── [394M]  pagecounts-2019-09-03.bz2
+        ├── [375M]  pagecounts-2019-09-04.bz2
+        ├── [381M]  pagecounts-2019-09-05.bz2
+        └── [359M]  pagecounts-2019-09-06.bz2
 
-18 directories, 916 files
+18 directories, 1374 files
 ```

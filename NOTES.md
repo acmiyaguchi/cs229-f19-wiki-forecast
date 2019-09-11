@@ -103,7 +103,11 @@ spark-submit \
         --config sparkwiki/config/pagecount.conf \
         --basePath data/raw/pagecounts \
         --pageDump data/enwiki/page_parquet \
-        --outputPath data/processed/pagecount
+        --outputPath data/processed/pagecount \
         --startDate 2019-01-01 \
-        --endDate 2019-01-08
+        --endDate 2019-03-01
+```
+
+```bash
+gsutil rsync -d -r enwiki gs://wiki-forecast-data/enwiki
 ```
