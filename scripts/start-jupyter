@@ -1,0 +1,13 @@
+#!/bin/bash
+
+set -x
+
+SPARK_HOME=$(python -c "import pyspark; print(pyspark.__path__[0])") \
+PYSPARK_DRIVER_PYTHON=jupyter \
+PYSPARK_DRIVER_PYTHON_OPTS=notebook \
+pyspark \
+    --master 'local[*]' \
+    --conf spark.driver.memory=4g \
+    --conf spark.executor.memory=2g \
+    --packages \
+        graphframes:graphframes:0.7.0-spark2.4-s_2.11

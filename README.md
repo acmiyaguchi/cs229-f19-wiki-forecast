@@ -32,7 +32,8 @@ pipenv shell
 ```
 
 Once in the shell, several spark variables should be set to keep the working
-environment consistent across machines.
+environment consistent across machines. For convenience, run
+`scripts/start-jupyter`.
 
 ```bash
 # export variables for local spark package in the site-packages folder
