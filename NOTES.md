@@ -104,8 +104,8 @@ spark-submit \
         --basePath data/raw/pagecounts \
         --pageDump data/enwiki/page_parquet \
         --outputPath data/processed/pagecount \
-        --startDate 2019-01-01 \
-        --endDate 2019-03-01
+        --startDate 2018-01-01 \
+        --endDate 2019-09-01
 ```
 
 ```bash
