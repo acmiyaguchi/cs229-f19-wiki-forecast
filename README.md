@@ -4,6 +4,15 @@ A machine learning project for CS229 Fall '19.
 
 ## Quickstart
 
+### Checkout the repository
+
+```bash
+git clone --recursive https://github.com/acmiyaguchi/cs229-f19-wiki-forecast.git
+
+# if you have already checked out the repo and need to initialize submodules
+git submodule update --init --recursive
+```
+
 ### Download the data
 
 The data has been preprocessed into compact Parquet datasets using the
