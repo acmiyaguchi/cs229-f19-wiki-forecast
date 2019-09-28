@@ -94,7 +94,9 @@ def sample_induced_subgraph(
     symbols = string.ascii_letters
     motif_edges = [(symbols[i], symbols[i + 1]) for i in range(k_hops)]
     paths = graph.find(";".join([f"({e1})-[]->({e2})" for e1, e2 in motif_edges]))
-    centered_paths = paths.where(f"{symbols[k_hops//2]}.id = {seed}")
+    # the center of odd paths have indices greater than the midpoint
+    # this should increase the seed article's pagerank score on 1-hop networks
+    centered_paths = paths.where(f"{symbols[k_hops-k_hops//2]}.id = {seed}")
 
     vertices = centered_paths.selectExpr(f"{symbols[0]} as v")
     for i in range(1, k_hops + 1):
