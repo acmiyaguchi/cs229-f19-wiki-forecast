@@ -1,5 +1,6 @@
 import click
 from pyspark.sql import SparkSession, functions as F
+import pandas as pd
 
 
 def extract(mapping, pageview):
@@ -33,5 +34,9 @@ def main(artifact_path, mapping_basename, pageview_path):
     mapping = spark.read.csv(f"{artifact_path}/{mapping_basename}", header=True)
     pageview = spark.read.parquet(pageview_path)
 
-    df = extract(mapping, pageview)
-    df.toPandas().to_csv(f"{artifact_path}/ts.csv", index=False)
+    # order the time series by pagerank score
+    ts = extract(mapping, pageview)
+    df = mapping.select("id", "pagerank").join(ts, on="id").toPandas()
+    df.sort_values(by=["pagerank"], ascending=False).drop(columns=["pagerank"]).to_csv(
+        f"{artifact_path}/ts.csv", index=False
+    )
