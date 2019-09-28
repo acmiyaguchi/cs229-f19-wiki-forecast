@@ -11,7 +11,11 @@ import pandas as pd
 @click.option("--edges", type=str, default="edges.csv")
 def summarize_graph(artifact_path, edges):
     graph = nx.from_pandas_edgelist(
-        pd.read_csv(f"{artifact_path}/{edges}"), source="src", target="dst"
+        pd.read_csv(f"{artifact_path}/{edges}"),
+        source="src",
+        target="dst",
+        edge_attr="weight",
+        create_using=nx.DiGraph,
     )
     graph_statistics(graph, artifact_path)
 

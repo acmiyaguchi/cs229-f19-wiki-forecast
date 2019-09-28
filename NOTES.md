@@ -139,7 +139,5 @@ for i in {1..4}; do
     scripts/run-command subgraph summarize-pageview $artifact
 done
 
-for i in {0..6}; do
-    scripts/run-command subgraph pageview --artifact-path sample_data/trial_$i
-done
+for i in {0..6}; do scripts/run-command subgraph pageview --artifact-path sample_data/trial_$i; done
 ```
