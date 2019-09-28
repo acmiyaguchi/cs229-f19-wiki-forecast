@@ -121,5 +121,16 @@ for i in {2..5}; do
     python runner.py \
         subgraph summarize-pageview \
             --artifact-path ${artifact}
-done;
+done
+```
+
+```bash
+pipenv sync
+
+artifact="--artifact-path sample_data/trial_6"
+scripts/run-command subgraph sample --article-seed 26977 $artifact && \
+scripts/run-command subgraph pageview $artifact \
+scripts/run-command subgraph summarize-graph $artifact \
+scripts/run-command subgraph summarize-pageview $artifact
+
 ```
