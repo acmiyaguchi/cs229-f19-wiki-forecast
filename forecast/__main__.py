@@ -1,5 +1,5 @@
 import click
-from forecast import extract
+from .subgraph.cli import subgraph
 
 
 @click.group()
@@ -7,8 +7,7 @@ def cli():
     pass
 
 
-cli.add_command(extract.extract_subgraph)
-cli.add_command(extract.subgraph_statistics)
+cli.add_command(subgraph)
 
 if __name__ == "__main__":
     cli()
