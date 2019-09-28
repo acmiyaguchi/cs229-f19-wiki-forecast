@@ -68,7 +68,7 @@ def sample_subgraph(
 
     # write to disk
     with open(f"{artifact_path}/seed.txt", "w") as f:
-        f.write(f"{article_seed.id},{article_seed.title}")
+        f.write(f"{article_seed.id},{article_seed.title},{k_hops}")
 
     edges_df = induced_subgraph.edges.toPandas()
     edges_df.to_csv(f"{artifact_path}/edges.csv", index=False)
