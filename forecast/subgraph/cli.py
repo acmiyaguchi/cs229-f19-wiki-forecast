@@ -1,4 +1,4 @@
-from . import sample, summarize
+from . import sample, summarize, pageview
 import click
 
 
@@ -8,4 +8,5 @@ def subgraph():
 
 
 subgraph.add_command(sample.sample_subgraph, "sample")
+subgraph.add_command(pageview.main, "pageview")
 subgraph.add_command(summarize.summarize_graph, "summarize-graph")
