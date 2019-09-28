@@ -127,9 +127,19 @@ done
 ```bash
 pipenv sync
 
-artifact="--artifact-path sample_data/trial_6"
-scripts/run-command subgraph sample --article-seed 26977 --k-hops 1 $artifact
-scripts/run-command subgraph pageview $artifact
-scripts/run-command subgraph summarize-graph $artifact
-scripts/run-command subgraph summarize-pageview $artifact
+for i in {1..4}; do
+    # rerun a specific trial
+    artifact_path="sample_data/trial_$i"
+    artifact="--artifact-path $artifact_path"
+    seed=$(cat $artifact_path/seed.txt | cut -d, -f1)
+    hops=$(cat $artifact_path/seed.txt | cut -d, -f3)
+    scripts/run-command subgraph sample --article-seed $seed --k-hops $hops $artifact
+    scripts/run-command subgraph summarize-graph $artifact
+    scripts/run-command subgraph pageview $artifact
+    scripts/run-command subgraph summarize-pageview $artifact
+done
+
+for i in {0..6}; do
+    scripts/run-command subgraph pageview --artifact-path sample_data/trial_$i
+done
 ```
