@@ -1,7 +1,8 @@
 Name: 
-Type: Graph
+Type: DiGraph
 Number of nodes: 159
-Number of edges: 5135
-Average degree:  64.5912
-Clustering Coefficient: 0.7619750282274992
-Density: 0.4088050314465409
+Number of edges: 8027
+Average in degree:  50.4843
+Average out degree:  50.4843
+Clustering Coefficient: 0.6740855976865923
+Density: 0.31952073879468196
