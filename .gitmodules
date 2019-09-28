@@ -1,6 +1,3 @@
 [submodule "external/sparkwiki"]
 	path = external/sparkwiki
 	url = git@github.com:epfl-lts2/sparkwiki.git
-[submodule "external/stellar-random-walk"]
-	path = external/stellar-random-walk
-	url = git@github.com:data61/stellar-random-walk.git
