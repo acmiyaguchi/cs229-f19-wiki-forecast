@@ -59,16 +59,18 @@ def sample_subgraph(
     # extract induced subgraph
     graph = GraphFrame(pages, pagelinks.selectExpr("from as src", "dest as dst"))
     if not article_seed:
-        article_seed = (
+        seed = (
             graph.vertices.sample(False, 0.001).orderBy(F.rand()).limit(1).collect()[0]
         )
+    else:
+        seed = graph.vertices.where(f"id = {article_seed}").collect()[0]
     induced_subgraph = sample_induced_subgraph(
-        graph, article_seed.id, k_hops, pagerank_alpha, pagerank_tol
+        graph, seed.id, k_hops, pagerank_alpha, pagerank_tol
     )
 
     # write to disk
     with open(f"{artifact_path}/seed.txt", "w") as f:
-        f.write(f"{article_seed.id},{article_seed.title},{k_hops}")
+        f.write(f"{seed.id},{seed.title},{k_hops}")
 
     edges_df = induced_subgraph.edges.toPandas()
     edges_df.to_csv(f"{artifact_path}/edges.csv", index=False)
