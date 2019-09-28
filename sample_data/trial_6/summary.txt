@@ -1,0 +1,7 @@
+Name: 
+Type: Graph
+Number of nodes: 1045
+Number of edges: 48636
+Average degree:  93.0833
+Clustering Coefficient: 0.6840841998176657
+Density: 0.08916020458670186
