@@ -111,3 +111,15 @@ spark-submit \
 ```bash
 gsutil rsync -d -r enwiki gs://wiki-forecast-data/enwiki
 ```
+
+``bash
+for i in {2..5}; do
+    artifact=sample_data/trial_${i}
+    scripts/run-command \
+        subgraph pageview \
+            --artifact-path ${artifact} && \
+    python runner.py \
+        subgraph summarize-pageview \
+            --artifact-path ${artifact}
+done;
+```
