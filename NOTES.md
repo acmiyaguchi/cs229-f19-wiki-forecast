@@ -112,7 +112,7 @@ spark-submit \
 gsutil rsync -d -r enwiki gs://wiki-forecast-data/enwiki
 ```
 
-``bash
+```bash
 for i in {2..5}; do
     artifact=sample_data/trial_${i}
     scripts/run-command \
@@ -128,9 +128,8 @@ done
 pipenv sync
 
 artifact="--artifact-path sample_data/trial_6"
-scripts/run-command subgraph sample --article-seed 26977 $artifact && \
-scripts/run-command subgraph pageview $artifact \
-scripts/run-command subgraph summarize-graph $artifact \
+scripts/run-command subgraph sample --article-seed 26977 --k-hops 1 $artifact
+scripts/run-command subgraph pageview $artifact
+scripts/run-command subgraph summarize-graph $artifact
 scripts/run-command subgraph summarize-pageview $artifact
-
 ```
