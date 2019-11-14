@@ -59,11 +59,10 @@ class PoissonRegression:
             previous_delta_norm = delta_norm
             delta_norm = np.linalg.norm(self.step_size * update, ord=1)
             self.theta = self.theta + self.step_size * update
-            if iter % 250 == 0 and self.verbose:
-                print(f"{iter}: {self.theta}")
             iter += 1
-        print(f"{iter}: {self.theta}")
-
+            if iter % 250 == 0:
+                print('theta=', self.theta, 'delta=', delta_norm, 'iter=', iter)
+        print('theta=', self.theta)
     def predict(self, x):
         """Make a prediction given inputs x.
 
