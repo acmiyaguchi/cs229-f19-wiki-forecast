@@ -106,7 +106,7 @@ def run_trial(mapping, edges, ts):
     print(nx.info(g))
     plot_scree(g)
     plt.show()
-    emb = laplacian_embedding(g, 8)
+    emb = laplacian_embedding(g, embedding_size)
 
     # (n,1) column so it can be stacked using hstack
     pagerank = np.array([ts.merge(mapping).pagerank.values]).T
