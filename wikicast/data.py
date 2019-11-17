@@ -5,16 +5,11 @@ import scipy.sparse as ss
 
 
 def rmse(y, y_pred):
-    return np.sqrt(np.sum(y - y_pred) ** 2)
+    return np.sqrt(np.sum((y - y_pred) ** 2) / y.size)
 
 
 def mape(y, y_pred):
-    return np.sum(np.ma.divide(np.abs(y - y_pred), np.abs(y)).filled(0)) * 100
-
-
-def summarize(validate, train, test):
-    print("validate", rmse(validate, train), mape(validate, train))
-    print("test", rmse(test, validate), mape(test, validate))
+    return np.sum(abs(np.divide(y - y_pred, y))) / y.size * 100
 
 
 def generate_poisson(n_series, t_values, window_size, lambda_param):
