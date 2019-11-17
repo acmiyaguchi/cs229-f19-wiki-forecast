@@ -3,7 +3,7 @@ import matplotlib.pyplot as plt
 import os
 import click
 
-import util
+from . import data
 
 
 class PoissonRegression:
@@ -48,21 +48,21 @@ class PoissonRegression:
 
         previous_delta_norm = 10000 * self.eps
         delta_norm = 1000 * self.eps
-        iter = 0  
+        iter = 0
 
         y_1 = y.reshape((n_examples, 1))
         step_size = self.step_size
         while iter < self.max_iter and delta_norm > self.eps:
             z = np.exp(np.dot(x, self.theta)).reshape((n_examples, 1))
-            update = np.zeros(5)
             update = np.sum((y_1 - z) * x, axis=0)
             previous_delta_norm = delta_norm
             delta_norm = np.linalg.norm(self.step_size * update, ord=1)
             self.theta = self.theta + self.step_size * update
             iter += 1
             if iter % 250 == 0:
-                print('theta=', self.theta, 'delta=', delta_norm, 'iter=', iter)
-        print('theta=', self.theta)
+                print("theta=", self.theta, "delta=", delta_norm, "iter=", iter)
+        print("theta=", self.theta)
+
     def predict(self, x):
         """Make a prediction given inputs x.
 
@@ -85,31 +85,27 @@ def plot(eval, predict):
     plt.ylabel("Predicted")
 
 
-def main(train, eval, learning_rate, train_path, save_path=None):
+@click.command()
+@click.option("--learning-rate", default=1e-5)
+@click.option("--train-path", help="e.g. train.csv")
+@click.option("--eval-path", help="e.g. valid.csv")
+@click.option("--save-path", help="e.g. poisson_pred.txt")
+def main(learning_rate, train_path, eval_path, save_path):
     """Evaluate Poisson regression with gradient ascent with matrix solutions.
-
-    Args:
-        train:
-        eval:
-        learning_rate:
-        save_path:
     """
-    # train, validate, test = util.load_dataset(train_path, add_intercept=True)
+    # TODO: train, validate, test = util.load_dataset(train_path, add_intercept=True)
+    train, validate, test = data.generate_poisson(
+        n_series=10 ** 4, t_values=14 * 7, window_size=7, lambda_param=3
+    )
 
     poisson_reg = PoissonRegression()
-    poisson_reg.fit(x_train, y_train)
+    poisson_reg.fit(train, validate)
 
-    x_eval, y_eval = util.load_dataset(eval_path, add_intercept=True)
-    y_predict = poisson_reg.predict(x_eval)
-
-    np.savetxt(save_path, y_predict)
+    y_predict = poisson_reg.predict(validate)
+    if save_path:
+        np.savetxt(save_path, y_predict)
     plot(eval, predict)
 
 
 if __name__ == "__main__":
-    main(
-        lr=1e-5,
-        train_path="train.csv",
-        eval_path="valid.csv",
-        save_path="poisson_pred.txt",
-    )
+    main()
