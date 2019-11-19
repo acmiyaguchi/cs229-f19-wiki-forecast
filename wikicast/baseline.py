@@ -34,33 +34,45 @@ def plot_scree(g, k=64):
     plt.plot(np.arange(k), w[::-1])
 
 
-def linear_regression(train, validate, test, pagerank, emb):
+def run_ablation(name, model, train, validate, test, pagerank, emb, **kwargs):
     test_X = np.hstack([train[:, 7:], validate])
 
-    name = "linear regression"
-    model = linear_model.LinearRegression()
-
     z = np.hstack([train, pagerank, emb])
-    model.fit(z, validate)
+    model.fit(z, validate, **kwargs)
     z = np.hstack([test_X, pagerank, emb])
     summarize(f"{name}: history + pagerank + emb", test, model.predict(z))
 
     z = np.hstack([train, pagerank])
-    model.fit(z, validate)
+    model.fit(z, validate, **kwargs)
     z = np.hstack([test_X, pagerank])
     summarize(f"{name}: history + pagerank", test, model.predict(z))
 
     z = np.hstack([train, emb])
-    model.fit(train, validate)
+    model.fit(train, validate, **kwargs)
     z = np.hstack([test_X, emb])
     summarize(f"{name}: history + emb", test, model.predict(test_X))
 
     z = np.hstack([train[:, -7:], pagerank, emb])
-    model.fit(z, validate)
+    model.fit(z, validate, **kwargs)
     z = np.hstack([test_X[:, -7:], pagerank, emb])
     summarize(f"{name}: pagerank + emb", test, model.predict(z))
 
-    model.fit(train[:, -7:], validate)
+    z = np.hstack([train])
+    model.fit(train, validate, **kwargs)
+    z = np.hstack([test_X])
+    summarize(f"{name}: history", test, model.predict(test_X))
+
+    z = np.hstack([train[:, -7:], pagerank])
+    model.fit(z, validate, **kwargs)
+    z = np.hstack([test_X[:, -7:], pagerank])
+    summarize(f"{name}: pagerank", test, model.predict(z))
+
+    z = np.hstack([train[:, -7:], emb])
+    model.fit(z, validate, **kwargs)
+    z = np.hstack([test_X[:, -7:], emb])
+    summarize(f"{name}: emb", test, model.predict(z))
+
+    model.fit(train[:, -7:], validate, **kwargs)
     summarize(f"{name}: baseline", test, model.predict(test_X[:, -7:]))
 
 
@@ -112,36 +124,6 @@ def weighted_linear_regression(train, validate, test, pagerank, emb):
     run("avg emb", weights)
 
 
-def decision_tree(train, validate, test, pagerank, emb):
-    test_X = np.hstack([train[:, 7:], validate])
-
-    name = "decision tree"
-    model = DecisionTreeRegressor()
-
-    z = np.hstack([train, pagerank, emb])
-    model.fit(z, validate)
-    z = np.hstack([test_X, pagerank, emb])
-    summarize(f"{name}: history + pagerank + emb", test, model.predict(z))
-
-    z = np.hstack([train, pagerank])
-    model.fit(z, validate)
-    z = np.hstack([test_X, pagerank])
-    summarize(f"{name}: history + pagerank", test, model.predict(z))
-
-    z = np.hstack([train, emb])
-    model.fit(train, validate)
-    z = np.hstack([test_X, emb])
-    summarize(f"{name}: history + emb", test, model.predict(test_X))
-
-    z = np.hstack([train[:, -7:], pagerank, emb])
-    model.fit(z, validate)
-    z = np.hstack([test_X[:, -7:], pagerank, emb])
-    summarize(f"{name}: pagerank + emb", test, model.predict(z))
-
-    model.fit(train[:, -7:], validate)
-    summarize(f"{name}: baseline", test, model.predict(test_X[:, -7:]))
-
-
 def run_trial(mapping, edges, ts):
     embedding_size = 8
     window_size = 7
@@ -169,9 +151,15 @@ def run_trial(mapping, edges, ts):
     print("MAPE\tRMSE\tmodel name")
     summarize("persistence", test, validate)
     summarize("mean", test, (np.ones(test.shape).T * validate.mean(axis=1)).T)
-    linear_regression(train, validate, test, pagerank, emb)
+
+    model = linear_model.LinearRegression()
+    run_ablation("linear regression", model, train, validate, test, pagerank, emb)
+
+    # custom ablation
     weighted_linear_regression(train, validate, test, pagerank, emb)
-    decision_tree(train, validate, test, pagerank, emb)
+
+    model = DecisionTreeRegressor()
+    run_ablation("decision tree", model, train, validate, test, pagerank, emb)
 
 
 @click.command()
