@@ -27,8 +27,9 @@ added to the project, the files may be downloaded via `gsutil`:
 gsutil ls gs://wiki-forecast-data
 ```
 
-### Running Jupyter and Spark
+### Quickstart
 
+## Installing dependencies
 This repository uses [Pipenv](https://docs.pipenv.org/en/latest/) for managing
 the relevant Python dependencies and installing Spark.
 
@@ -40,24 +41,47 @@ pipenv sync --dev
 pipenv shell
 ```
 
+## Running the experiments
+
+Topic-specific sample data is available directly in the repository for testing.
+To run the command on the sample data, run the following command on at the project root.
+
+```
+python -m wikicast baseline
+```
+
+This section of the codebase is pure python.
+
+Download the data for running the full-scale experiment. The following folders should exist under the `data/` directory.
+
+```
+data/enwiki/pages/
+data/enwiki/pagelinks/
+data/enwiki/pagecount_daily_v2/
+```
+
+Run the following commands to run the experiments on a graph sampled randomly from articles with a connectivity contraint. This is typically around 35,000 articles. 
+
+```
+# in bash on Linux or MacOS
+scripts/run-command baseline_random
+
+# in powershell on Windows
+scripts/run-command.ps1 baseline_random
+```
+
+This requires Java 1.8 to run. Spark is installed from pip, and GraphFrames are installed from spark-packages.
+
+
+## Running Jupyter with Spark and GraphFrames
+
 Once in the shell, several spark variables should be set to keep the working
-environment consistent across machines. For convenience, run
-`scripts/start-jupyter`.
+environment consistent across machines. For convenience, run one of the following commands.
 
 ```bash
-# export variables for local spark package in the site-packages folder
-export SPARK_HOME=$(python -c "import pyspark; print(pyspark.__path__[0])")
+# in bash on Linux or MacOS
+scripts/start-jupyter`
 
-# start an interactive spark session using python 3.6
-pyspark
-
-# Start pyspark using jupyter notebook
-PYSPARK_DRIVER_PYTHON=jupyter \
-PYSPARK_DRIVER_PYTHON_OPTS=notebook \
-pyspark \
-    --master 'local[*]' \
-    --conf spark.driver.memory=4g \
-    --conf spark.executor.memory=4g \
-    --packages \
-        graphframes:graphframes:0.7.0-spark2.4-s_2.11
+# in powershell on Windows
+scripts/start-jupyter.ps1
 ```

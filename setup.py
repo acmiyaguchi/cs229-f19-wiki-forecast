@@ -4,7 +4,7 @@ setup(
     name="wiki-forecast",
     version="0.2",
     description="Forecasting models for wikipedia page views",
-    entry_points={"console_scripts": ["wiki-forecast=forecast.__main__:cli"]},
+    entry_points={"console_scripts": ["wiki-forecast=wikicast.__main__:cli"]},
     install_requires=[
         "click",
         "pyspark >= 2.4.0",
@@ -13,5 +13,5 @@ setup(
         "pandas",
         "graphframes",
     ],
-    packages=["forecast"],
+    packages=["wikicast"],
 )
