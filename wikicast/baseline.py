@@ -37,30 +37,71 @@ def plot_scree(g, k=64):
 def linear_regression(train, validate, test, pagerank, emb):
     test_X = np.hstack([train[:, 7:], validate])
 
+    name = "linear regression"
     model = linear_model.LinearRegression()
-    model.fit(train, validate)
-    summarize("linear regression", test, model.predict(test_X))
 
-    model = linear_model.LinearRegression()
+    z = np.hstack([train, pagerank, emb])
+    model.fit(z, validate)
+    z = np.hstack([test_X, pagerank, emb])
+    summarize(f"{name}: history + pagerank + emb", test, model.predict(z))
+
     z = np.hstack([train, pagerank])
     model.fit(z, validate)
     z = np.hstack([test_X, pagerank])
-    summarize("linear regression + pagerank", test, model.predict(z))
+    summarize(f"{name}: history + pagerank", test, model.predict(z))
 
-    model = linear_model.LinearRegression()
     z = np.hstack([train, emb])
-    model.fit(z, validate)
+    model.fit(train, validate)
     z = np.hstack([test_X, emb])
-    summarize("linear regression + emb", test, model.predict(z))
+    summarize(f"{name}: history + emb", test, model.predict(test_X))
+
+    z = np.hstack([train[:, -7:], pagerank, emb])
+    model.fit(z, validate)
+    z = np.hstack([test_X[:, -7:], pagerank, emb])
+    summarize(f"{name}: pagerank + emb", test, model.predict(z))
+
+    model.fit(train[:, -7:], validate)
+    summarize(f"{name}: baseline", test, model.predict(test_X[:, -7:]))
 
 
 def weighted_linear_regression(train, validate, test, pagerank, emb):
-    test_X = np.hstack([train[:, 7:], validate])
+    train_X = train[:, -7:]
+    test_X = np.hstack([validate])
 
-    # weights needs to be a 1d array
-    model = linear_model.Ridge(alpha=0)
-    model.fit(train, validate, pagerank.T[0])
-    summarize("weighted linear regression (pagerank)", test, model.predict(test_X))
+    def run(name, weights):
+        # weights needs to be a 1d array
+        model = linear_model.Ridge(alpha=0)
+
+        z = np.hstack([train_X, pagerank, emb])
+        model.fit(z, validate, weights)
+        z = np.hstack([test_X, pagerank, emb])
+        summarize(
+            f"weighted linear regression ({name}): pagerank + emb",
+            test,
+            model.predict(z),
+        )
+
+        z = np.hstack([train_X, pagerank])
+        model.fit(z, validate, weights)
+        z = np.hstack([test_X, pagerank])
+        summarize(
+            f"weighted linear regression ({name}): pagerank", test, model.predict(z)
+        )
+
+        # weights needs to be a 1d array
+        z = np.hstack([train_X, emb])
+        model.fit(z, validate, weights)
+        z = np.hstack([test_X, emb])
+        summarize(f"weighted linear regression ({name}): emb", test, model.predict(z))
+
+        model.fit(train_X, validate, weights)
+        summarize(
+            f"weighted linear regression ({name}): baseline",
+            test,
+            model.predict(test_X),
+        )
+
+    run("pagerank", pagerank.T[0])
 
     # the L2-norm of the average embedding over k-nearest neighbors
     # TODO: test over different parameters of
@@ -68,23 +109,37 @@ def weighted_linear_regression(train, validate, test, pagerank, emb):
     _, ind = tree.kneighbors(emb)
     weights = np.linalg.norm(emb[ind[:, 1:]].mean(axis=1), axis=1)
 
-    model = linear_model.Ridge(alpha=0)
-    model.fit(train, validate, weights)
-    summarize("weighted regression (avg emb)", test, model.predict(test_X))
+    run("avg emb", weights)
 
 
 def decision_tree(train, validate, test, pagerank, emb):
     test_X = np.hstack([train[:, 7:], validate])
 
+    name = "decision tree"
     model = DecisionTreeRegressor()
-    model.fit(train, validate)
-    summarize("decision tree", test, model.predict(test_X))
 
-    model = DecisionTreeRegressor()
-    z = np.hstack([train, emb])
+    z = np.hstack([train, pagerank, emb])
     model.fit(z, validate)
+    z = np.hstack([test_X, pagerank, emb])
+    summarize(f"{name}: history + pagerank + emb", test, model.predict(z))
+
+    z = np.hstack([train, pagerank])
+    model.fit(z, validate)
+    z = np.hstack([test_X, pagerank])
+    summarize(f"{name}: history + pagerank", test, model.predict(z))
+
+    z = np.hstack([train, emb])
+    model.fit(train, validate)
     z = np.hstack([test_X, emb])
-    summarize("decision tree + emb", test, model.predict(z))
+    summarize(f"{name}: history + emb", test, model.predict(test_X))
+
+    z = np.hstack([train[:, -7:], pagerank, emb])
+    model.fit(z, validate)
+    z = np.hstack([test_X[:, -7:], pagerank, emb])
+    summarize(f"{name}: pagerank + emb", test, model.predict(z))
+
+    model.fit(train[:, -7:], validate)
+    summarize(f"{name}: baseline", test, model.predict(test_X[:, -7:]))
 
 
 def run_trial(mapping, edges, ts):
