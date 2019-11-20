@@ -62,7 +62,7 @@ class PoissonRegression:
           iter = 0
 
           step_size = self.step_size
-          while iter < self.max_iter and delta_norm > self.eps:
+          while iter < self.max_iter and (np.abs(delta_norm - previous_delta_norm)/previous_delta_norm) > self.eps:
               z = np.exp(np.matmul(x, self.theta[k].T)).reshape((n_examples, 1))
               update = np.sum((y_1 - z) * x, axis=0)
               previous_delta_norm = delta_norm
@@ -115,7 +115,6 @@ def main(learning_rate, train_path, eval_path, save_path):
     y_predict = poisson_reg.predict(validate)
     if save_path:
         np.savetxt(save_path, y_predict)
-    plot(eval, predict)
 
 
 if __name__ == "__main__":
