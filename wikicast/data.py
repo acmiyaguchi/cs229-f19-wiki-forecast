@@ -14,8 +14,8 @@ def mape(y, y_pred):
 
 def generate_poisson(n_series, t_values, window_size, lambda_param):
     Y = np.random.poisson(lambda_param, (n_series, t_values))
-    t = lambda index: [np.newaxis, window_size, window_size + 1, window_size + 2][index]
-    train, validate, test = Y[:, t(0) : t(1)], Y[:, t(1) : t(2)].T, Y[:, t(2) : t(3)].T
+    t = lambda index: [np.newaxis, window_size, 2 * window_size, 3 * window_size][index]
+    train, validate, test = Y[:, t(0) : t(1)], Y[:, t(1) : t(2)], Y[:, t(2) : t(3)]
     return train, validate, test
 
 

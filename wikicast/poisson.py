@@ -37,31 +37,41 @@ class PoissonRegression:
 
         Args:
             x: Training example inputs. Shape (n_examples, dim).
-            y: Training example labels. Shape (n_examples,).
+            y: Training example labels. Shape (n_examples, output_dim), or
+                (n_examples,) if output_dim = 1.
         """
         # *** START CODE HERE ***
         n_examples = x.shape[0]
         d = x.shape[1]
         print(f"n_examples:{n_examples} d:{d}")
+        if len(y.shape) == 1:
+          output_dim = 1
+        else:
+          output_dim = y.shape[1]
+          
 
-        self.theta = np.zeros(d)
+        self.theta = np.zeros((output_dim, d))
 
-        previous_delta_norm = 10000 * self.eps
-        delta_norm = 1000 * self.eps
-        iter = 0
+        for k in range(output_dim):
+          if output_dim == 1: 
+            y_1 = y.reshape((n_examples, 1))
+          else:
+            y_1 = y[:,k].reshape((n_examples, 1))
+          previous_delta_norm = 10000 * self.eps
+          delta_norm = 1000 * self.eps
+          iter = 0
 
-        y_1 = y.reshape((n_examples, 1))
-        step_size = self.step_size
-        while iter < self.max_iter and delta_norm > self.eps:
-            z = np.exp(np.dot(x, self.theta)).reshape((n_examples, 1))
-            update = np.sum((y_1 - z) * x, axis=0)
-            previous_delta_norm = delta_norm
-            delta_norm = np.linalg.norm(self.step_size * update, ord=1)
-            self.theta = self.theta + self.step_size * update
-            iter += 1
-            if iter % 250 == 0:
-                print("theta=", self.theta, "delta=", delta_norm, "iter=", iter)
-        print("theta=", self.theta)
+          step_size = self.step_size
+          while iter < self.max_iter and (np.abs(delta_norm - previous_delta_norm)/previous_delta_norm) > self.eps:
+              z = np.exp(np.matmul(x, self.theta[k].T)).reshape((n_examples, 1))
+              update = np.sum((y_1 - z) * x, axis=0)
+              previous_delta_norm = delta_norm
+              delta_norm = np.linalg.norm(self.step_size * update, ord=1)
+              self.theta[k] = self.theta[k] + self.step_size * update
+              iter += 1
+              if iter % 250 == 0:
+                  print("theta=", self.theta[k], "delta=", delta_norm, "iter=", iter)
+          print("theta=", self.theta)
 
     def predict(self, x):
         """Make a prediction given inputs x.
@@ -70,13 +80,14 @@ class PoissonRegression:
             x: Inputs of shape (n_examples, dim).
 
         Returns:
-            Floating-point prediction for each input, shape (n_examples,).
+            Floating-point prediction for each input, shape (n_examples, output_dim).
         """
-        predict = np.exp(np.dot(x, self.theta))
+        predict = np.exp(np.matmul(x, self.theta.T))
         return predict
 
 
 def plot(eval, predict):
+    # TODO: fix this for the multi-dim case.
     plt.scatter(y_eval, y_predict)
     plt.axis(xmin=0, xmax=30, ymin=0, ymax=30)
     plt.xlim(-2, y_eval.max() + 2)
@@ -104,7 +115,6 @@ def main(learning_rate, train_path, eval_path, save_path):
     y_predict = poisson_reg.predict(validate)
     if save_path:
         np.savetxt(save_path, y_predict)
-    plot(eval, predict)
 
 
 if __name__ == "__main__":
