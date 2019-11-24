@@ -70,8 +70,9 @@ class PoissonRegression:
               self.theta[k] = self.theta[k] + self.step_size * update
               iter += 1
               if iter % 250 == 0:
-                  print("theta=", self.theta[k], "delta=", delta_norm, "iter=", iter)
-          print("theta=", self.theta)
+                  pass
+                  # print("theta=", self.theta[k], "delta=", delta_norm, "iter=", iter)
+          # print("theta=", self.theta)
 
     def predict(self, x):
         """Make a prediction given inputs x.

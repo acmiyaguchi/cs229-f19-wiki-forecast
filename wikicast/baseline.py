@@ -10,7 +10,10 @@ from sklearn.neighbors import NearestNeighbors
 from sklearn.svm import SVR
 from sklearn.tree import DecisionTreeRegressor
 
+
+from .poisson import PoissonRegression
 from .data import rmse, mape, laplacian_embedding, create_dataset
+import pdb
 
 
 def plot_top(y, y_pred):
@@ -73,6 +76,20 @@ def weighted_linear_regression(train, validate, test, pagerank, emb):
     summarize("weighted regression (avg emb)", test, model.predict(test_X))
 
 
+def poisson_regression(train, validate, test, pagerank, emb):
+ 
+    # Poisson model with the embedding as feature     
+    model = PoissonRegression()
+    model.fit(emb, validate)
+    summarize("poisson regression emb", test, model.predict(emb))
+
+    # Poisson model with pagerank + embedding as feature
+    model = PoissonRegression()
+    z = np.hstack([pagerank, emb])
+    model.fit(z, validate)
+    summarize("poisson regression pagerank + emb", test, model.predict(z))
+
+
 def decision_tree(train, validate, test, pagerank, emb):
     test_X = np.hstack([train[:, 7:], validate])
 
@@ -116,6 +133,7 @@ def run_trial(mapping, edges, ts):
     summarize("mean", test, (np.ones(test.shape).T * validate.mean(axis=1)).T)
     linear_regression(train, validate, test, pagerank, emb)
     weighted_linear_regression(train, validate, test, pagerank, emb)
+    poisson_regression(train, validate, test, pagerank, emb)
     decision_tree(train, validate, test, pagerank, emb)
 
 
