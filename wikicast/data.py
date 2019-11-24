@@ -1,7 +1,9 @@
-import numpy as np
 import matplotlib.pyplot as plt
 import networkx as nx
+import numpy as np
 import scipy.sparse as ss
+from pyspark.ml.linalg import Vectors, VectorUDT
+from pyspark.sql.functions import udf, col
 
 
 def rmse(y, y_pred):
@@ -10,6 +12,21 @@ def rmse(y, y_pred):
 
 def mape(y, y_pred):
     return np.sum(abs(np.divide(y - y_pred, y))) / y.size * 100
+
+
+def rmse_df(df, y="label", y_pred="prediction"):
+    return (
+        df.selectExpr(
+            f"sqrt(sum(pow({y} - {y_pred}, 2)))/count(distinct page_id)) as rmse"
+        )
+        .first()
+        .rmse
+    )
+    return np.sqrt(np.sum((y - y_pred) ** 2) / y.size)
+
+
+def mape_df(df, y="label", y_pred="prediction"):
+    return df.selectExpr(f"avg(abs({y} - {y_pred})/{y})*100 as mape").first().mape
 
 
 def generate_poisson(n_series, t_values, window_size, lambda_param):
@@ -49,6 +66,30 @@ def create_dataset(ts, window_size=7, n_panes=14):
     test = panes[:, n_panes, :]
 
     return train, validate, test
+
+
+@udf(VectorUDT())
+def fill_nan(vec: np.array, num=0):
+    return Vectors.dense(np.nan_to_num(vec, num))
+
+
+@udf(VectorUDT())
+def denoise(vec: np.array, window_size=7, scale=True):
+    # Create a new matrix for every row that is matrix of size (T//window_size, window_size)
+    T = vec.shape[0]
+    indexer = np.arange(window_size).reshape(1, -1) + window_size * np.arange(
+        T // window_size
+    ).reshape(-1, 1)
+
+    # A page is made up of many windows
+    page = vec[indexer]
+    imputed = np.nan_to_num(page)
+    if scale:
+        scaled = imputed - imputed.mean(axis=0)
+    u, s, vh = np.linalg.svd(scaled, full_matrices=False)
+
+    k = window_size - 1
+    return Vectors.dense(u[:, :k].dot(np.diag(s[:k])).dot(vh[:k]).reshape(-1))
 
 
 # TODO

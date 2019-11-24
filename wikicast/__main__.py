@@ -1,8 +1,6 @@
 import click
 
-from .baseline import main as baseline
-from .baseline_random import main as baseline_random
-from .poisson import main as poisson
+from . import baseline, baseline_random, poisson, pipeline
 from .subgraph.cli import subgraph
 
 
@@ -12,10 +10,10 @@ def cli():
 
 
 cli.add_command(subgraph)
-cli.add_command(poisson, "poisson")
-cli.add_command(baseline, "baseline")
-cli.add_command(baseline_random, "baseline-random")
-
+cli.add_command(poisson.main, "poisson")
+cli.add_command(baseline.main, "baseline")
+cli.add_command(baseline_random.main, "baseline-random")
+cli.add_command(pipeline.main, "pipeline")
 
 if __name__ == "__main__":
     cli()
