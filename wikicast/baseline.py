@@ -13,7 +13,6 @@ from sklearn.tree import DecisionTreeRegressor
 
 from .poisson import PoissonRegression
 from .data import rmse, mape, laplacian_embedding, create_dataset
-import pdb
 
 
 def plot_top(y, y_pred):
@@ -123,15 +122,12 @@ def weighted_linear_regression(train, validate, test, pagerank, emb):
     tree = NearestNeighbors(n_neighbors=10, algorithm="ball_tree").fit(emb)
     _, ind = tree.kneighbors(emb)
     weights = np.linalg.norm(emb[ind[:, 1:]].mean(axis=1), axis=1)
-
-    model = linear_model.Ridge(alpha=0)
-    model.fit(train, validate, weights)
-    summarize("weighted regression (avg emb)", test, model.predict(test_X))
+    run("avg emb", weights)
 
 
 def poisson_regression(train, validate, test, pagerank, emb):
- 
-    # Poisson model with the embedding as feature     
+
+    # Poisson model with the embedding as feature
     model = PoissonRegression()
     model.fit(emb, validate)
     summarize("poisson regression emb", test, model.predict(emb))
@@ -192,3 +188,7 @@ def main(mapping_path, edges_path, ts_path):
     edges = pd.read_csv(edges_path)
     ts = pd.read_csv(ts_path)
     run_trial(mapping, edges, ts)
+
+
+if __name__ == "__main__":
+    main()

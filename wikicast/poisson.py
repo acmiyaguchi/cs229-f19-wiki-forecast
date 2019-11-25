@@ -43,36 +43,34 @@ class PoissonRegression:
         # *** START CODE HERE ***
         n_examples = x.shape[0]
         d = x.shape[1]
-        print(f"n_examples:{n_examples} d:{d}")
         if len(y.shape) == 1:
-          output_dim = 1
+            output_dim = 1
         else:
-          output_dim = y.shape[1]
-          
+            output_dim = y.shape[1]
 
         self.theta = np.zeros((output_dim, d))
 
         for k in range(output_dim):
-          if output_dim == 1: 
-            y_1 = y.reshape((n_examples, 1))
-          else:
-            y_1 = y[:,k].reshape((n_examples, 1))
-          previous_delta_norm = 10000 * self.eps
-          delta_norm = 1000 * self.eps
-          iter = 0
+            if output_dim == 1:
+                y_1 = y.reshape((n_examples, 1))
+            else:
+                y_1 = y[:, k].reshape((n_examples, 1))
+            previous_delta_norm = 10000 * self.eps
+            delta_norm = 1000 * self.eps
+            iter = 0
 
-          step_size = self.step_size
-          while iter < self.max_iter and (np.abs(delta_norm - previous_delta_norm)/previous_delta_norm) > self.eps:
-              z = np.exp(np.matmul(x, self.theta[k].T)).reshape((n_examples, 1))
-              update = np.sum((y_1 - z) * x, axis=0)
-              previous_delta_norm = delta_norm
-              delta_norm = np.linalg.norm(self.step_size * update, ord=1)
-              self.theta[k] = self.theta[k] + self.step_size * update
-              iter += 1
-              if iter % 250 == 0:
-                  pass
-                  # print("theta=", self.theta[k], "delta=", delta_norm, "iter=", iter)
-          # print("theta=", self.theta)
+            step_size = self.step_size
+            while (
+                iter < self.max_iter
+                and (np.abs(delta_norm - previous_delta_norm) / previous_delta_norm)
+                > self.eps
+            ):
+                z = np.exp(np.matmul(x, self.theta[k].T)).reshape((n_examples, 1))
+                update = np.sum((y_1 - z) * x, axis=0)
+                previous_delta_norm = delta_norm
+                delta_norm = np.linalg.norm(self.step_size * update, ord=1)
+                self.theta[k] = self.theta[k] + self.step_size * update
+                iter += 1
 
     def predict(self, x):
         """Make a prediction given inputs x.
