@@ -59,6 +59,8 @@ def create_dataset_from_parquet(pages, links, views):
 @click.option("--pagelinks-path", default="data/enwiki/pagelinks")
 @click.option("--pageviews-path", default="data/enwiki/pagecount_daily_v2")
 def main(pages_path, pagelinks_path, pageviews_path):
+    pd.set_option("display.max_colwidth", -1)
+
     spark = SparkSession.builder.getOrCreate()
 
     pages = spark.read.parquet(pages_path)
@@ -69,4 +71,5 @@ def main(pages_path, pagelinks_path, pageviews_path):
     mapping, edges, ts = create_dataset_from_parquet(pages, pagelinks, pageviews)
     print(f"sampling took {time.time() - start} seconds")
 
-    run_trial(mapping, edges, ts)
+    results = run_trial(mapping, edges, ts)
+    print(pd.DataFrame(results)[["name", "mape", "rmse"]])
