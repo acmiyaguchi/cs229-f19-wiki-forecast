@@ -161,7 +161,7 @@ def poisson_regression(train, validate, test, pagerank, emb):
     return results
 
 
-def run_trial(mapping, edges, ts):
+def run_trial(mapping, edges, ts, plot_scree=False):
     embedding_size = 8
     window_size = 7
     num_windows = 54
@@ -178,8 +178,9 @@ def run_trial(mapping, edges, ts):
         ts.id,
     )
     print(nx.info(g))
-    plot_scree(g)
-    plt.show()
+    if plot_scree:
+        plot_scree(g)
+        plt.show()
     emb = laplacian_embedding(g, embedding_size)
 
     # (n,1) column so it can be stacked using hstack
