@@ -43,7 +43,6 @@ class PoissonRegression:
         # *** START CODE HERE ***
         n_examples = x.shape[0]
         d = x.shape[1]
-        print(f"n_examples:{n_examples} d:{d}")
         if len(y.shape) == 1:
             output_dim = 1
         else:
@@ -72,9 +71,6 @@ class PoissonRegression:
                 delta_norm = np.linalg.norm(self.step_size * update, ord=1)
                 self.theta[k] = self.theta[k] + self.step_size * update
                 iter += 1
-                if iter % 250 == 0:
-                    print("theta=", self.theta[k], "delta=", delta_norm, "iter=", iter)
-            print("theta=", self.theta)
 
     def predict(self, x):
         """Make a prediction given inputs x.
