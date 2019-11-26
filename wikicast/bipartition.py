@@ -90,7 +90,8 @@ def recursive_bipartition(graph: GraphFrame, max_iter: int = 2) -> GraphFrame:
 
         # relabel all partitions and compute the fiedler vector for each one
         induced = induce_graph(graph, True, partitions)
-        induced.cache()
+        induced.edges.cache()
+        induced.edges.checkpoint()
 
         fiedler = (
             induced.edges.groupBy(*partitions)
@@ -101,6 +102,7 @@ def recursive_bipartition(graph: GraphFrame, max_iter: int = 2) -> GraphFrame:
 
         vertices = induced.vertices.join(fiedler, on="id", how="outer")
         vertices.cache()
+        vertices.checkpoint()
 
         # reverse the relabeling process and add the new partition to edge
         # attributes
@@ -142,8 +144,6 @@ def recursive_bipartition(graph: GraphFrame, max_iter: int = 2) -> GraphFrame:
         )
 
         parted_graph = GraphFrame(undo_relabel(vertices), edges)
-        induced.unpersist()
-        vertices.unpersist()
         return bipartition(parted_graph, partitions + [partition], iteration + 1)
 
     bias = "bias"
