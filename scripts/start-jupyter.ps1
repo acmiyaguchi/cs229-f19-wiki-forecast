@@ -10,7 +10,7 @@ $env:PYSPARK_DRIVER_PYTHON_OPTS = "notebook"
 
 pyspark `
     --master 'local[*]' `
-    --conf spark.driver.memory=4g `
-    --conf spark.executor.memory=2g `
+    --conf spark.driver.memory=8g `
+    --conf spark.sql.shuffle.partitions=8 `
     --packages `
     graphframes:graphframes:0.7.0-spark2.4-s_2.11
