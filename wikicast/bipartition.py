@@ -110,23 +110,25 @@ def recursive_bipartition(graph: GraphFrame, max_iter: int = 2) -> GraphFrame:
                     induced.edges.join(
                         vertices.selectExpr(
                             "id as src",
-                            "relabeled_id",
+                            "relabeled_id as relabaled_src",
                             f"{partition} as {partition}_left",
                             *partitions,
                         ),
                         on=["src"] + partitions,
                         how="leftouter",
-                    )
+                    ),
+                    name="src",
                 ).join(
                     vertices.selectExpr(
                         "id as dst",
-                        "relabeled_id",
+                        "relabeled_id as relabeled_dst",
                         f"{partition} as {partition}_right",
                         *partitions,
                     ),
                     on=["dst"] + partitions,
                     how="leftouter",
-                )
+                ),
+                name="dst",
             )
             .withColumn(
                 partition,
@@ -216,7 +218,8 @@ def main(
     parted.edges.repartition(4).write.parquet(f"{output_path}/edges", mode="overwrite")
     print(f"clustering took {time()-start} seconds")
 
-    parted.printSchema()
+    parted.vertices.printSchema()
+    parted.edges.printSchema()
 
     parted.vertices.groupBy(
         *(["bias"] + [c for c in parted.columns if c.startswith("sign_")])
