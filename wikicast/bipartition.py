@@ -142,6 +142,8 @@ def recursive_bipartition(graph: GraphFrame, max_iter: int = 2) -> GraphFrame:
         )
 
         parted_graph = GraphFrame(undo_relabel(vertices), edges)
+        induced.unpersist()
+        vertices.unpersist()
         return bipartition(parted_graph, partitions + [partition], iteration + 1)
 
     bias = "bias"
@@ -166,12 +168,11 @@ def sample_graph(pages, pagelinks, sampling_ratio, relabel=True, ensure_connecte
             .limit(1)
             .select("component")
         )
-        return induce_graph(
-            GraphFrame(
-                components.join(largest_component, on="component", how="inner"),
-                graph.edges,
-            )
+        vertices = components.join(largest_component, on="component", how="inner").drop(
+            "component"
         )
+        components.unpersist()
+        return induce_graph(GraphFrame(vertices, graph.edges))
     else:
         return graph
 
@@ -204,13 +205,12 @@ def main(
     pages = spark.read.parquet(pages_path)
     pagelinks = spark.read.parquet(pagelinks_path)
 
-    g = sample_graph(
+    graph = sample_graph(
         pages, pagelinks, sample_ratio, ensure_connected=not skip_connectivity_check
     )
-    g.cache()
 
-    parted = recursive_bipartition(g, max_iter)
-    parted.cache()
+    parted = recursive_bipartition(graph, max_iter)
+    parted.vertices.cache()
     start = time()
     parted.vertices.repartition(4).write.parquet(
         f"{output_path}/vertices", mode="overwrite"
@@ -223,4 +223,4 @@ def main(
 
     parted.vertices.groupBy(
         *(["bias"] + [c for c in parted.vertices.columns if c.startswith("sign_")])
-    ).count().orderBy(F.desc("count"))
+    ).count().orderBy(F.desc("count")).show()
