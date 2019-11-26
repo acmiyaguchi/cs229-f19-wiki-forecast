@@ -84,7 +84,7 @@ def recursive_bipartition(graph: GraphFrame, max_iter: int = 2) -> GraphFrame:
         print(key)
         if any(k == None for k in key):
             print("disconnected edges for this iteration")
-            return pd.DataFrame()
+            return pd.DataFrame([{"id": -1, "value": 0}])
         g = sparse_matrix_from_edgelist(pdf)
         vec = fiedler_vector(g)
         return pd.DataFrame([{"id": i, "value": v} for i, v in enumerate(vec)])
