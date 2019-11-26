@@ -1,5 +1,6 @@
 from typing import List
 from pathlib import Path
+from time import time
 
 import click
 import numpy as np
@@ -14,7 +15,7 @@ from scipy.sparse.linalg import eigsh
 
 
 def sparse_matrix_from_edgelist(edges):
-    n = edges["src"].max()
+    n = max(edges["src"].max(), edges["dst"].max())
     ones = np.ones(len(edges["dst"]))
     return sp.coo_matrix(
         (ones, (edges["src"], edges["dst"])), shape=(n + 1, n + 1)
@@ -27,13 +28,6 @@ def fiedler_vector(g):
     _, v = eigsh(L, k=2)
     # fiedler vector is the second smallest eigenvalue
     return v[:, 1]
-
-
-@pandas_udf("id long, value double", PandasUDFType.GROUPED_MAP)
-def compute_fiedler(pdf):
-    g = sparse_matrix_from_edgelist(pdf)
-    vec = fiedler_vector(g)
-    return pd.DataFrame([{"id": i, "value": v} for i, v in enumerate(vec)])
 
 
 def induce_graph(graph, relabel=True):
@@ -97,7 +91,14 @@ def recursive_bipartition(graph: GraphFrame, max_iter: int = 2) -> GraphFrame:
     def undo_relabel(vertices):
         return vertices.withColumn("id", F.col("original_id")).drop("original_id")
 
+    @pandas_udf("id long, value double", PandasUDFType.GROUPED_MAP)
+    def compute_fiedler(pdf):
+        g = sparse_matrix_from_edgelist(pdf)
+        vec = fiedler_vector(g)
+        return pd.DataFrame([{"id": i, "value": v} for i, v in enumerate(vec)])
+
     def bipartition(graph: GraphFrame, partitions: List[str] = [], iteration: int = 0):
+        graph.cache()
 
         partition = f"sign_{iteration}"
         fiedler_value = f"fiedler_{iteration}"
@@ -113,7 +114,10 @@ def recursive_bipartition(graph: GraphFrame, max_iter: int = 2) -> GraphFrame:
 
         # NOTE: assumes relabeling, reverse the relabeling process
         vertices = graph.vertices.join(fiedler, on="id", how="left")
-        parted_graph = GraphFrame(vertices, graph.edges)
+        parted_graph = GraphFrame(
+            vertices.repartitionByRange(1, partition), graph.edges
+        )
+        graph.unpersist()
         parted_graph.cache()
 
         if iteration == max_iter:
@@ -167,9 +171,8 @@ def main(
 ):
     spark = SparkSession.builder.appName("recursive bipartitioning").getOrCreate()
     spark.conf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
-    spark.conf.set("spark.sql.shuffle.partitions", "16")
     spark.conf.set("spark.sql.execution.arrow.enabled", "true")
-    spark.sc.setCheckpointDir(checkpoint_dir)
+    spark.sparkContext.setCheckpointDir(checkpoint_dir)
 
     pages = spark.read.parquet(pages_path)
     pagelinks = spark.read.parquet(pagelinks_path)
@@ -177,5 +180,7 @@ def main(
     g = sample_graph(pages, pagelinks, sample_ratio)
     g.cache()
 
-    parted = recursive_bipartition(g, max_iter=2)
-    parted.repartition(4).save.parquet(output, mode="overwrite")
+    parted = recursive_bipartition(g, max_iter)
+    start = time()
+    parted.repartition(4).write.parquet(output_path, mode="overwrite")
+    print(f"clustering took {time()-start} seconds")
