@@ -100,7 +100,7 @@ def recursive_bipartition(graph: GraphFrame, max_iter: int = 2) -> GraphFrame:
             .selectExpr("id", f"value as {fiedler_value}", partition)
         )
 
-        vertices = induced.vertices.join(fiedler, on="id", how="outer")
+        vertices = induced.vertices.join(fiedler, on="id", how="leftouter")
         vertices.cache()
         vertices.checkpoint()
 
@@ -208,6 +208,9 @@ def main(
     graph = sample_graph(
         pages, pagelinks, sample_ratio, ensure_connected=not skip_connectivity_check
     )
+    graph.cache()
+    sample_vertices_count = graph.vertices.count()
+    sample_edges_count = graph.edges.count()
 
     parted = recursive_bipartition(graph, max_iter)
     parted.vertices.cache()
@@ -224,3 +227,9 @@ def main(
     parted.vertices.groupBy(
         *(["bias"] + [c for c in parted.vertices.columns if c.startswith("sign_")])
     ).count().orderBy(F.desc("count")).show()
+    print(
+        f"partitioned graph has {parted.vertices.count()} vertices and {parted.edges.count()} edges"
+    )
+    print(
+        f"sampled graph has {sample_vertices_count} vertices and {sample_edges_count} edges"
+    )
