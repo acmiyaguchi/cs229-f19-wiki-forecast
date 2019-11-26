@@ -43,28 +43,19 @@ def induce_graph(graph, relabel=True, partitions=[]):
         "id", F.row_number().over(window).alias("rank")
     ).withColumn("rank", F.expr("rank - 1"))
 
-    vertices = graph.vertices.join(F.broadcast(rank), on="id", how="inner")
+    vertices = graph.vertices.join(rank, on="id", how="inner")
     vertices.cache()
 
     edges = graph.edges.join(
-        vertices.selectExpr("id as src", "rank as rank_left"), on="src", how="inner"
-    ).join(
-        vertices.selectExpr("id as dst", "rank as rank_right"), on="dst", how="inner"
-    )
+        vertices.selectExpr("id as src"), on="src", how="inner"
+    ).join(vertices.selectExpr("id as dst"), on="dst", how="inner")
 
     if relabel:
         vertices = vertices.withColumn("relabeled_id", F.col("id")).withColumn(
             "id", F.col("rank")
         )
-        edges = (
-            edges.withColumn("relabeled_src", F.col("src"))
-            .withColumn("relabeled_dst", F.col("dst"))
-            .withColumn("src", F.col("rank_left"))
-            .withColumn("dst", F.col("rank_right"))
-        )
 
     vertices = vertices.drop("rank")
-    edges = edges.drop("rank_left", "rank_right")
     vertices.unpersist()
     return GraphFrame(vertices, edges)
 
@@ -84,7 +75,7 @@ def recursive_bipartition(graph: GraphFrame, max_iter: int = 2) -> GraphFrame:
         print(key)
         if any(k == None for k in key):
             print("disconnected edges for this iteration")
-            return pd.DataFrame([{"id": -1, "value": 0}])
+            return pd.DataFrame([{"id": -1, "value": None}])
         g = sparse_matrix_from_edgelist(pdf)
         vec = fiedler_vector(g)
         return pd.DataFrame([{"id": i, "value": v} for i, v in enumerate(vec)])
@@ -108,7 +99,7 @@ def recursive_bipartition(graph: GraphFrame, max_iter: int = 2) -> GraphFrame:
             .selectExpr("id", f"value as {fiedler_value}", partition)
         )
 
-        vertices = induced.vertices.join(fiedler, on="id", how="left")
+        vertices = induced.vertices.join(fiedler, on="id", how="outer")
         vertices.cache()
 
         # reverse the relabeling process and add the new partition to edge
@@ -118,20 +109,24 @@ def recursive_bipartition(graph: GraphFrame, max_iter: int = 2) -> GraphFrame:
                 undo_relabel(
                     induced.edges.join(
                         vertices.selectExpr(
-                            "id as src", f"{partition} as {partition}_left", *partitions
+                            "id as src",
+                            "relabeled_id",
+                            f"{partition} as {partition}_left",
+                            *partitions,
                         ),
                         on=["src"] + partitions,
                         how="leftouter",
-                    ),
-                    name="src",
+                    )
                 ).join(
                     vertices.selectExpr(
-                        "id as dst", f"{partition} as {partition}_right", *partitions
+                        "id as dst",
+                        "relabeled_id",
+                        f"{partition} as {partition}_right",
+                        *partitions,
                     ),
                     on=["dst"] + partitions,
                     how="leftouter",
-                ),
-                name="dst",
+                )
             )
             .withColumn(
                 partition,
@@ -140,8 +135,8 @@ def recursive_bipartition(graph: GraphFrame, max_iter: int = 2) -> GraphFrame:
                     F.col(f"{partition}_left"),
                 ).otherwise(F.lit(None)),
             )
-            .drop("{partition}_left")
-            .drop("{partition}_right")
+            .drop(f"{partition}_left")
+            .drop(f"{partition}_right")
         )
 
         parted_graph = GraphFrame(undo_relabel(vertices), edges)
@@ -213,9 +208,16 @@ def main(
     g.cache()
 
     parted = recursive_bipartition(g, max_iter)
+    parted.cache()
     start = time()
     parted.vertices.repartition(4).write.parquet(
         f"{output_path}/vertices", mode="overwrite"
     )
     parted.edges.repartition(4).write.parquet(f"{output_path}/edges", mode="overwrite")
     print(f"clustering took {time()-start} seconds")
+
+    parted.printSchema()
+
+    parted.vertices.groupBy(
+        *(["bias"] + [c for c in parted.columns if c.startswith("sign_")])
+    ).count().orderBy(F.desc("count"))
