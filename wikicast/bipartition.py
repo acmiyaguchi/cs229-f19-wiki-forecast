@@ -5,10 +5,9 @@ from time import time
 import click
 import numpy as np
 import pandas as pd
-import pyspark.sql.functions as F
 import scipy.sparse as sp
 from graphframes import GraphFrame
-from pyspark.sql import SparkSession
+from pyspark.sql import SparkSession, Window, functions as F
 from pyspark.sql.functions import PandasUDFType, pandas_udf
 from scipy.sparse.csgraph import laplacian
 from scipy.sparse.linalg import eigsh
@@ -30,56 +29,48 @@ def fiedler_vector(g):
     return v[:, 1]
 
 
-def induce_graph(graph, relabel=True):
+def induce_graph(graph, relabel=True, partitions=[]):
     """Remove extra edges that do not belong to the graph"""
     # small dataframe for reindexing/relabeling
     # O(50mb)
-    rank = (
-        graph.vertices.select(
-            "id", F.expr("row_number() over (order by id)").alias("rank")
-        )
-        # ensure 0 index for mapping into a scipy.sparse matrix
-        .withColumn("rank", F.expr("rank - 1"))
-    )
+
+    window = Window.orderBy("id")
+    if partitions:
+        window = window.partitionBy(partitions)
+
+    # ensure 0 index for mapping into a scipy.sparse matrix
+    rank = graph.vertices.select(
+        "id", F.row_number().over(window).alias("rank")
+    ).withColumn("rank", F.expr("rank - 1"))
+
     vertices = graph.vertices.join(F.broadcast(rank), on="id", how="inner")
     vertices.cache()
+
     edges = graph.edges.join(
-        vertices.selectExpr("id as src", "rank as relabeled_src"), on="src", how="inner"
+        vertices.selectExpr("id as src", "rank as rank_left"), on="src", how="inner"
     ).join(
-        vertices.selectExpr("id as dst", "rank as relabeled_dst"), on="dst", how="inner"
+        vertices.selectExpr("id as dst", "rank as rank_right"), on="dst", how="inner"
     )
 
     if relabel:
-        vertices = vertices.withColumn("original_id", F.col("id")).withColumn(
+        vertices = vertices.withColumn("relabeled_id", F.col("id")).withColumn(
             "id", F.col("rank")
         )
-        edges = edges.selectExpr("relabeled_src as src", "relabeled_dst as dst")
-    vertices = vertices.drop("rank")
-    edges = edges.drop("relabeled_src").drop("relabeled_dst")
-    vertices.unpersist()
+        edges = (
+            edges.withColumn("relabeled_src", F.col("src"))
+            .withColumn("relabeled_dst", F.col("dst"))
+            .withColumn("src", F.col("rank_left"))
+            .withColumn("dst", F.col("rank_right"))
+        )
 
+    vertices = vertices.drop("rank")
+    edges = edges.drop("rank_left", "rank_right")
+    vertices.unpersist()
     return GraphFrame(vertices, edges)
 
 
-def sample_graph(pages, pagelinks, sampling_ratio, relabel=True):
-    vertices = pages.sample(sampling_ratio)
-    edges = pagelinks.selectExpr("from as src", "dest as dst")
-    graph = induce_graph(GraphFrame(vertices, edges), False)
-    # only do this when sampling, on the full dataset this is a waste of time
-    components = graph.connectedComponents()
-    components.cache()
-    largest_component = (
-        components.groupBy("component")
-        .count()
-        .orderBy(F.desc("count"))
-        .limit(1)
-        .select("component")
-    )
-    return induce_graph(
-        GraphFrame(
-            components.join(largest_component, on="component", how="inner"), graph.edges
-        )
-    )
+def undo_relabel(vertices, name="id", prefix="relabeled"):
+    return vertices.withColumn(name, F.col(f"{prefix}_{name}")).drop(f"{prefix}_{name}")
 
 
 def recursive_bipartition(graph: GraphFrame, max_iter: int = 2) -> GraphFrame:
@@ -88,72 +79,104 @@ def recursive_bipartition(graph: GraphFrame, max_iter: int = 2) -> GraphFrame:
     scipy.linalg.eigsh.
     """
 
-    def undo_relabel(vertices):
-        return vertices.withColumn("id", F.col("original_id")).drop("original_id")
-
     @pandas_udf("id long, value double", PandasUDFType.GROUPED_MAP)
-    def compute_fiedler(pdf):
+    def compute_fiedler(key, pdf):
+        print(key)
+        if any(k == None for k in key):
+            print("disconnected edges for this iteration")
+            return pd.DataFrame()
         g = sparse_matrix_from_edgelist(pdf)
         vec = fiedler_vector(g)
         return pd.DataFrame([{"id": i, "value": v} for i, v in enumerate(vec)])
 
     def bipartition(graph: GraphFrame, partitions: List[str] = [], iteration: int = 0):
-        graph.cache()
 
         partition = f"sign_{iteration}"
         fiedler_value = f"fiedler_{iteration}"
+
+        if iteration == max_iter:
+            return graph
+
+        # relabel all partitions and compute the fiedler vector for each one
+        induced = induce_graph(graph, True, partitions)
+        induced.cache()
+
         fiedler = (
-            graph.edges
-            # necessary for collecting all edges to a single worker
-            .withColumn("part", F.lit(True))
-            .groupBy("part")
+            induced.edges.groupBy(*partitions)
             .apply(compute_fiedler)
             .withColumn(partition, F.expr("value >= 0").astype("boolean"))
             .selectExpr("id", f"value as {fiedler_value}", partition)
         )
 
-        # NOTE: assumes relabeling, reverse the relabeling process
-        vertices = graph.vertices.join(fiedler, on="id", how="left")
-        parted_graph = GraphFrame(
-            vertices.repartitionByRange(1, partition), graph.edges
+        vertices = induced.vertices.join(fiedler, on="id", how="left")
+        vertices.cache()
+
+        # reverse the relabeling process and add the new partition to edge
+        # attributes
+        edges = (
+            undo_relabel(
+                undo_relabel(
+                    induced.edges.join(
+                        vertices.selectExpr(
+                            "id as src", f"{partition} as {partition}_left", *partitions
+                        ),
+                        on=["src"] + partitions,
+                        how="leftouter",
+                    ),
+                    name="src",
+                ).join(
+                    vertices.selectExpr(
+                        "id as dst", f"{partition} as {partition}_right", *partitions
+                    ),
+                    on=["dst"] + partitions,
+                    how="leftouter",
+                ),
+                name="dst",
+            )
+            .withColumn(
+                partition,
+                F.when(
+                    F.expr(f"{partition}_left = {partition}_right"),
+                    F.col(f"{partition}_left"),
+                ).otherwise(F.lit(None)),
+            )
+            .drop("{partition}_left")
+            .drop("{partition}_right")
         )
-        graph.unpersist()
-        parted_graph.cache()
 
-        if iteration == max_iter:
-            return undo_relabel(parted_graph.vertices)
-        else:
-            positive_vertices = bipartition(
-                induce_graph(
-                    GraphFrame(
-                        parted_graph.vertices.where(f"{partition}"), parted_graph.edges
-                    ),
-                    relabel=True,
-                ),
-                partitions + [partition],
-                iteration + 1,
-            )
-            negative_vertices = bipartition(
-                induce_graph(
-                    GraphFrame(
-                        parted_graph.vertices.where(f"NOT {partition}"),
-                        parted_graph.edges,
-                    ),
-                    relabel=True,
-                ),
-                partitions + [partition],
-                iteration + 1,
-            )
-            # reusing the index, should this be saved?
-            return undo_relabel(
-                positive_vertices.union(negative_vertices).join(
-                    parted_graph.vertices.select("id", "original_id"),
-                    on="id",
-                    how="inner",
-                )
-            )
+        parted_graph = GraphFrame(undo_relabel(vertices), edges)
+        return bipartition(parted_graph, partitions + [partition], iteration + 1)
 
-    return bipartition(induce_graph(graph, relabel=True))
+    bias = "bias"
+    vertices = graph.vertices.withColumn(bias, F.lit(True))
+    edges = graph.edges.withColumn(bias, F.lit(True))
+    return bipartition(GraphFrame(vertices, edges), [bias], 0)
+
+
+def sample_graph(pages, pagelinks, sampling_ratio, relabel=True, ensure_connected=True):
+    vertices = pages.sample(sampling_ratio)
+    edges = pagelinks.selectExpr("from as src", "dest as dst")
+    graph = induce_graph(GraphFrame(vertices, edges), False)
+    if ensure_connected:
+        # only do this when sampling, on the full dataset takes 12 minutes. This may
+        # be required in order to guarantee connectivity.
+        components = graph.connectedComponents()
+        components.cache()
+        largest_component = (
+            components.groupBy("component")
+            .count()
+            .orderBy(F.desc("count"))
+            .limit(1)
+            .select("component")
+        )
+        return induce_graph(
+            GraphFrame(
+                components.join(largest_component, on="component", how="inner"),
+                graph.edges,
+            )
+        )
+    else:
+        return graph
 
 
 @click.command()
@@ -162,12 +185,19 @@ def recursive_bipartition(graph: GraphFrame, max_iter: int = 2) -> GraphFrame:
 @click.option("--pages-path", default="data/enwiki/pages")
 @click.option("--pagelinks-path", default="data/enwiki/pagelinks")
 @click.option("--output-path", type=str, required=True)
+@click.option("--skip-connectivity-check/--no-skip-connectivity-check", default=False)
 @click.option(
     "--checkpoint-dir",
     default="file:///" + "/".join((Path(".").resolve() / "data/tmp").parts[1:]),
 )
 def main(
-    sample_ratio, max_iter, pages_path, output_path, pagelinks_path, checkpoint_dir
+    sample_ratio,
+    max_iter,
+    pages_path,
+    output_path,
+    pagelinks_path,
+    checkpoint_dir,
+    skip_connectivity_check,
 ):
     spark = SparkSession.builder.appName("recursive bipartitioning").getOrCreate()
     spark.conf.set("spark.serializer", "org.apache.spark.serializer.KryoSerializer")
@@ -177,10 +207,15 @@ def main(
     pages = spark.read.parquet(pages_path)
     pagelinks = spark.read.parquet(pagelinks_path)
 
-    g = sample_graph(pages, pagelinks, sample_ratio)
+    g = sample_graph(
+        pages, pagelinks, sample_ratio, ensure_connected=not skip_connectivity_check
+    )
     g.cache()
 
     parted = recursive_bipartition(g, max_iter)
     start = time()
-    parted.repartition(4).write.parquet(output_path, mode="overwrite")
+    parted.vertices.repartition(4).write.parquet(
+        f"{output_path}/vertices", mode="overwrite"
+    )
+    parted.edges.repartition(4).write.parquet(f"{output_path}/edges", mode="overwrite")
     print(f"clustering took {time()-start} seconds")
