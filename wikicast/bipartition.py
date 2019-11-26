@@ -222,5 +222,5 @@ def main(
     parted.edges.printSchema()
 
     parted.vertices.groupBy(
-        *(["bias"] + [c for c in parted.columns if c.startswith("sign_")])
+        *(["bias"] + [c for c in parted.vertices.columns if c.startswith("sign_")])
     ).count().orderBy(F.desc("count"))
