@@ -110,7 +110,7 @@ def recursive_bipartition(graph: GraphFrame, max_iter: int = 2) -> GraphFrame:
                     induced.edges.join(
                         vertices.selectExpr(
                             "id as src",
-                            "relabeled_id as relabaled_src",
+                            "relabeled_id as relabeled_src",
                             f"{partition} as {partition}_left",
                             *partitions,
                         ),
