@@ -158,9 +158,15 @@ def recursive_bipartition(graph: GraphFrame, max_iter: int = 2) -> GraphFrame:
         parted_graph = GraphFrame(vertices, graph.edges)
         return bipartition(parted_graph, partitions + [partition], iteration + 1)
 
+    # initialize the recursive function
     bias = "bias"
     vertices = graph.vertices.withColumn(bias, F.lit(True))
-    return bipartition(GraphFrame(vertices, graph.edges), [bias], 0)
+    parted = bipartition(GraphFrame(vertices, graph.edges), [bias], 0)
+
+    # reorder the columns
+    columns = graph.vertices.columns
+    clause = columns + list(sorted(set(parted.vertices.columns) - set(columns)))
+    return GraphFrame(parted.vertices.select(*clause), graph.edges)
 
 
 def sample_graph(pages, pagelinks, sampling_ratio, relabel=True, ensure_connected=True):
@@ -224,10 +230,7 @@ def main(
     parted = recursive_bipartition(graph, max_iter)
     parted.vertices.cache()
     start = time()
-    parted.vertices.repartition(4).write.parquet(
-        f"{output_path}/vertices", mode="overwrite"
-    )
-    parted.edges.repartition(4).write.parquet(f"{output_path}/edges", mode="overwrite")
+    parted.vertices.repartition(4).write.parquet(f"{output_path}", mode="overwrite")
     print(f"clustering took {time()-start} seconds")
 
     parted.vertices.printSchema()
