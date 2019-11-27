@@ -78,16 +78,6 @@ def recursive_bipartition(graph: GraphFrame, max_iter: int = 2) -> GraphFrame:
     scipy.linalg.eigsh.
     """
 
-    @pandas_udf("id long, value double", PandasUDFType.GROUPED_MAP)
-    def compute_fiedler(key, pdf):
-        print(key)
-        if any(k == None for k in key):
-            print("disconnected edges for this iteration")
-            return pd.DataFrame([{"id": -1, "value": None}])
-        g = sparse_matrix_from_edgelist(pdf)
-        vec = fiedler_vector(g)
-        return pd.DataFrame([{"id": i, "value": v} for i, v in enumerate(vec)])
-
     def bipartition(graph: GraphFrame, partitions: List[str] = [], iteration: int = 0):
 
         partition = f"sign_{iteration}"
@@ -138,16 +128,29 @@ def recursive_bipartition(graph: GraphFrame, max_iter: int = 2) -> GraphFrame:
             .where(edges_filter)
         )
 
+        part_schema = ", ".join(f"{p} boolean" for p in partitions)
+
+        @pandas_udf(f"{part_schema}, id long, value double", PandasUDFType.GROUPED_MAP)
+        def compute_fiedler(keys, pdf):
+            # unfortunately, adding the extra join key columns is the only way
+            # to map the values back to the nodes
+            g = sparse_matrix_from_edgelist(pdf)
+            vec = fiedler_vector(g)
+            df = pd.DataFrame([{"id": i, "value": v} for i, v in enumerate(vec)])
+            for name, value in zip(partitions, list(keys)):
+                df[name] = value
+            return df
+
         fiedler = (
             edges.groupBy(*partitions)
             .apply(compute_fiedler)
             .withColumn(partition, F.expr("value >= 0").astype("boolean"))
             .withColumn(fiedler_value, F.col("value"))
+            .drop("value")
         )
-        fiedler.printSchema()
 
         vertices = undo_relabel(
-            induced.vertices.join(fiedler, on=["id"] + partitions[1:], how="leftouter")
+            induced.vertices.join(fiedler, on=["id"] + partitions, how="leftouter")
         )
         vertices.cache()
         vertices.checkpoint()
