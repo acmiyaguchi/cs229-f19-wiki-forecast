@@ -222,17 +222,20 @@ def main(
     )
     graph.cache()
 
+    start = time()
     parted = recursive_bipartition(graph, max_iter)
     parted.vertices.cache()
-    start = time()
     parted.vertices.repartition(4).write.parquet(f"{output_path}", mode="overwrite")
-    print(f"clustering took {time()-start} seconds")
+    total_time = time() - start
+
+    num_vertices = parted.vertices.count()
+    num_edges = parted.edges.count()
+
+    columns = ["bias"] + [c for c in parted.vertices.columns if c.startswith("sign_")]
+    parted.vertices.groupBy(*columns).count().orderBy(*columns).show()
+    print(f"clustering took {total_time} seconds")
+    print(f"graph has {num_vertices} vertices and {num_edges} edges")
 
     parted.vertices.printSchema()
     parted.edges.printSchema()
 
-    columns = ["bias"] + [c for c in parted.vertices.columns if c.startswith("sign_")]
-    parted.vertices.groupBy(*columns).count().orderBy(*columns).show()
-    print(
-        f"partitioned graph has {parted.vertices.count()} vertices and {parted.edges.count()} edges"
-    )
