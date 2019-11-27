@@ -43,7 +43,7 @@ def induce_graph(graph, relabel=True, partitions=[]):
         "id", F.row_number().over(window).alias("rank")
     ).withColumn("rank", F.expr("rank - 1"))
 
-    vertices = graph.vertices.join(rank, on="id", how="inner")
+    vertices = graph.vertices.join(rank, on="id", how="left")
     vertices.cache()
 
     edges = graph.edges.join(
