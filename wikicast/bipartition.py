@@ -233,14 +233,8 @@ def main(
     parted.vertices.printSchema()
     parted.edges.printSchema()
 
-    parted.vertices.groupBy(
-        *(["bias"] + [c for c in parted.vertices.columns if c.startswith("sign_")])
-    ).count().orderBy(F.desc("count")).show()
+    columns = ["bias"] + [c for c in parted.vertices.columns if c.startswith("sign_")]
+    parted.vertices.groupBy(*columns).count().orderBy(*columns).show()
     print(
         f"partitioned graph has {parted.vertices.count()} vertices and {parted.edges.count()} edges"
-    )
-    sample_vertices_count = graph.vertices.count()
-    sample_edges_count = graph.edges.count()
-    print(
-        f"sampled graph has {sample_vertices_count} vertices and {sample_edges_count} edges"
     )
