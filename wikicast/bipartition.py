@@ -161,12 +161,7 @@ def recursive_bipartition(graph: GraphFrame, max_iter: int = 2) -> GraphFrame:
     # initialize the recursive function
     bias = "bias"
     vertices = graph.vertices.withColumn(bias, F.lit(True))
-    parted = bipartition(GraphFrame(vertices, graph.edges), [bias], 0)
-
-    # reorder the columns
-    columns = graph.vertices.columns
-    clause = columns + list(sorted(set(parted.vertices.columns) - set(columns)))
-    return GraphFrame(parted.vertices.select(*clause), graph.edges)
+    return bipartition(GraphFrame(vertices, graph.edges), [bias], 0)
 
 
 def sample_graph(pages, pagelinks, sampling_ratio, relabel=True, ensure_connected=True):
