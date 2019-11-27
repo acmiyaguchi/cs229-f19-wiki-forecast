@@ -1,6 +1,7 @@
 from typing import List
 from pathlib import Path
 from time import time
+import functools
 
 import click
 import numpy as np
@@ -47,15 +48,22 @@ def induce_graph(graph, relabel=True, partitions=[]):
     vertices.cache()
 
     edges = graph.edges.join(
-        vertices.selectExpr("id as src"), on="src", how="inner"
-    ).join(vertices.selectExpr("id as dst"), on="dst", how="inner")
+        vertices.selectExpr("id as src", "rank as rank_src"), on="src", how="inner"
+    ).join(vertices.selectExpr("id as dst", "rank as rank_dst"), on="dst", how="inner")
 
     if relabel:
         vertices = vertices.withColumn("relabeled_id", F.col("id")).withColumn(
             "id", F.col("rank")
         )
+        edges = (
+            edges.withColumn("relabeled_src", F.col("src"))
+            .withColumn("relabeled_dst", F.col("dst"))
+            .withColumn("src", F.col("rank_src"))
+            .withColumn("dst", F.col("rank_dst"))
+        )
 
     vertices = vertices.drop("rank")
+    edges = edges.drop("rank_src", "rank_dst")
     vertices.unpersist()
     return GraphFrame(vertices, edges)
 
@@ -90,66 +98,66 @@ def recursive_bipartition(graph: GraphFrame, max_iter: int = 2) -> GraphFrame:
 
         # relabel all partitions and compute the fiedler vector for each one
         induced = induce_graph(graph, True, partitions)
-        induced.edges.cache()
-        induced.edges.checkpoint()
+        induced.cache()
 
-        fiedler = (
-            induced.edges.groupBy(*partitions)
-            .apply(compute_fiedler)
-            .withColumn(partition, F.expr("value >= 0").astype("boolean"))
-            .selectExpr("id", f"value as {fiedler_value}", partition)
+        # Assign each edge to a partition. If the edge is between two
+        # partitions, it is removed from the set. The select and where clauses
+        # are manually specificed because two sets of joins lead to ambiguity in
+        # the partition column.
+        # e.g. Resolved attribute(s) bias#530 missing from
+        # is_new#224,bias#208,is_redirect#223,id#221,title#222 in operator
+        # !Project [id#221, bias#530]
+        partitions_src = [F.expr(f"{c} as {c}_src") for c in partitions]
+        partitions_dst = [F.expr(f"{c} as {c}_dst") for c in partitions]
+        assign_edges = [
+            F.when(F.expr(f"{part}_src = {part}_dst"), F.col(f"{part}_src"))
+            .otherwise(F.lit(None))
+            .alias(part)
+            for part in partitions
+        ]
+        edges_filter = functools.reduce(
+            lambda x, y: x & y, [F.col(c).isNotNull() for c in partitions]
         )
 
-        vertices = induced.vertices.join(fiedler, on="id", how="leftouter")
+        edges = (
+            induced.edges.join(
+                induced.vertices.select(
+                    F.expr("relabeled_id as relabeled_src"), *partitions_src
+                ),
+                on="relabeled_src",
+                how="inner",
+            )
+            .join(
+                induced.vertices.select(
+                    F.expr("relabeled_id as relabeled_dst"), *partitions_dst
+                ),
+                on="relabeled_dst",
+                how="inner",
+            )
+            .select("src", "dst", *assign_edges)
+            .where(edges_filter)
+        )
+
+        fiedler = (
+            edges.groupBy(*partitions)
+            .apply(compute_fiedler)
+            .withColumn(partition, F.expr("value >= 0").astype("boolean"))
+            .withColumn(fiedler_value, F.col("value"))
+        )
+        fiedler.printSchema()
+
+        vertices = undo_relabel(
+            induced.vertices.join(fiedler, on=["id"] + partitions[1:], how="leftouter")
+        )
         vertices.cache()
         vertices.checkpoint()
 
-        # reverse the relabeling process and add the new partition to edge
-        # attributes
-        edges = (
-            undo_relabel(
-                undo_relabel(
-                    induced.edges.join(
-                        vertices.selectExpr(
-                            "id as src",
-                            "relabeled_id as relabeled_src",
-                            f"{partition} as {partition}_left",
-                            *partitions,
-                        ),
-                        on=["src"] + partitions,
-                        how="leftouter",
-                    ),
-                    name="src",
-                ).join(
-                    vertices.selectExpr(
-                        "id as dst",
-                        "relabeled_id as relabeled_dst",
-                        f"{partition} as {partition}_right",
-                        *partitions,
-                    ),
-                    on=["dst"] + partitions,
-                    how="leftouter",
-                ),
-                name="dst",
-            )
-            .withColumn(
-                partition,
-                F.when(
-                    F.expr(f"{partition}_left = {partition}_right"),
-                    F.col(f"{partition}_left"),
-                ).otherwise(F.lit(None)),
-            )
-            .drop(f"{partition}_left")
-            .drop(f"{partition}_right")
-        )
-
-        parted_graph = GraphFrame(undo_relabel(vertices), edges)
+        parted_graph = GraphFrame(vertices, graph.edges)
         return bipartition(parted_graph, partitions + [partition], iteration + 1)
 
     bias = "bias"
     vertices = graph.vertices.withColumn(bias, F.lit(True))
-    edges = graph.edges.withColumn(bias, F.lit(True))
-    return bipartition(GraphFrame(vertices, edges), [bias], 0)
+    return bipartition(GraphFrame(vertices, graph.edges), [bias], 0)
 
 
 def sample_graph(pages, pagelinks, sampling_ratio, relabel=True, ensure_connected=True):
@@ -209,8 +217,6 @@ def main(
         pages, pagelinks, sample_ratio, ensure_connected=not skip_connectivity_check
     )
     graph.cache()
-    sample_vertices_count = graph.vertices.count()
-    sample_edges_count = graph.edges.count()
 
     parted = recursive_bipartition(graph, max_iter)
     parted.vertices.cache()
@@ -230,6 +236,8 @@ def main(
     print(
         f"partitioned graph has {parted.vertices.count()} vertices and {parted.edges.count()} edges"
     )
+    sample_vertices_count = graph.vertices.count()
+    sample_edges_count = graph.edges.count()
     print(
         f"sampled graph has {sample_vertices_count} vertices and {sample_edges_count} edges"
     )
