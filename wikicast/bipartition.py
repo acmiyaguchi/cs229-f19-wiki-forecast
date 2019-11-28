@@ -64,7 +64,6 @@ def induce_graph(graph, relabel=True, partitions=[]):
 
     vertices = vertices.drop("rank")
     edges = edges.drop("rank_src", "rank_dst")
-    vertices.unpersist()
     return GraphFrame(vertices, edges)
 
 
@@ -72,7 +71,9 @@ def undo_relabel(vertices, name="id", prefix="relabeled"):
     return vertices.withColumn(name, F.col(f"{prefix}_{name}")).drop(f"{prefix}_{name}")
 
 
-def recursive_bipartition(graph: GraphFrame, max_iter: int = 2) -> GraphFrame:
+def recursive_bipartition(
+    graph: GraphFrame, max_iter: int = 2, should_checkpoint=True, checkpoint_interval=2
+) -> GraphFrame:
     """
     Assumes the input graph has been relabeled, which is required for performance of
     scipy.linalg.eigsh.
@@ -88,7 +89,9 @@ def recursive_bipartition(graph: GraphFrame, max_iter: int = 2) -> GraphFrame:
 
         # relabel all partitions and compute the fiedler vector for each one
         induced = induce_graph(graph, True, partitions)
+
         induced.cache()
+        induced.vertices.groupBy(*partitions).count().orderBy(*partitions).show()
 
         # Assign each edge to a partition. If the edge is between two
         # partitions, it is removed from the set. The select and where clauses
@@ -115,28 +118,36 @@ def recursive_bipartition(graph: GraphFrame, max_iter: int = 2) -> GraphFrame:
                     F.expr("relabeled_id as relabeled_src"), *partitions_src
                 ),
                 on="relabeled_src",
-                how="inner",
+                how="left",
             )
             .join(
                 induced.vertices.select(
                     F.expr("relabeled_id as relabeled_dst"), *partitions_dst
                 ),
                 on="relabeled_dst",
-                how="inner",
+                how="left",
             )
             .select("src", "dst", *assign_edges)
+            .drop(*partitions_src + partitions_dst)
             .where(edges_filter)
+            .repartitionByRange(*partitions)
         )
+
+        edges.cache()
+        print(f"{edges.count()} edges in {iteration} iteration...")
 
         part_schema = ", ".join(f"{p} boolean" for p in partitions)
 
-        @pandas_udf(f"{part_schema}, id long, value double", PandasUDFType.GROUPED_MAP)
+        @pandas_udf(
+            f"{part_schema}, id long, {fiedler_value} double", PandasUDFType.GROUPED_MAP
+        )
         def compute_fiedler(keys, pdf):
             # unfortunately, adding the extra join key columns is the only way
             # to map the values back to the nodes
             g = sparse_matrix_from_edgelist(pdf)
             vec = fiedler_vector(g)
-            df = pd.DataFrame([{"id": i, "value": v} for i, v in enumerate(vec)])
+            df = pd.DataFrame(vec, columns=[fiedler_value])
+            df["id"] = np.arange(vec.size)
             for name, value in zip(partitions, list(keys)):
                 df[name] = value
             return df
@@ -144,16 +155,19 @@ def recursive_bipartition(graph: GraphFrame, max_iter: int = 2) -> GraphFrame:
         fiedler = (
             edges.groupBy(*partitions)
             .apply(compute_fiedler)
-            .withColumn(partition, F.expr("value >= 0").astype("boolean"))
-            .withColumn(fiedler_value, F.col("value"))
-            .drop("value")
+            .withColumn(partition, F.expr(f"{fiedler_value} >= 0").astype("boolean"))
         )
 
         vertices = undo_relabel(
-            induced.vertices.join(fiedler, on=["id"] + partitions, how="leftouter")
+            induced.vertices.join(
+                fiedler, on=["id"] + partitions, how="left"
+            ).repartitionByRange(*partitions + [partition])
         )
-        vertices.cache()
-        vertices.checkpoint()
+
+        # checkpoint every other step after the first
+        if should_checkpoint and iteration % checkpoint_interval == 0:
+            vertices.cache()
+            vertices.checkpoint()
 
         parted_graph = GraphFrame(vertices, graph.edges)
         return bipartition(parted_graph, partitions + [partition], iteration + 1)
@@ -225,6 +239,8 @@ def main(
     start = time()
     parted = recursive_bipartition(graph, max_iter)
     parted.vertices.cache()
+    parted.vertices.printSchema()
+    print(parted.vertices.count())
     parted.vertices.repartition(4).write.parquet(f"{output_path}", mode="overwrite")
     total_time = time() - start
 
@@ -239,3 +255,4 @@ def main(
     parted.vertices.printSchema()
     parted.edges.printSchema()
 
+    print(spark.sparkContext.show_profiles())
