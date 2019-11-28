@@ -33,7 +33,6 @@ def fiedler_vector(g):
 def induce_graph(graph, relabel=True, partitions=[]):
     """Remove extra edges that do not belong to the graph"""
     # small dataframe for reindexing/relabeling
-    # O(50mb)
 
     window = Window.orderBy("id")
     if partitions:
@@ -45,7 +44,6 @@ def induce_graph(graph, relabel=True, partitions=[]):
     ).withColumn("rank", F.expr("rank - 1"))
 
     vertices = graph.vertices.join(rank, on="id", how="left")
-    vertices.cache()
 
     edges = graph.edges.join(
         vertices.selectExpr("id as src", "rank as rank_src"), on="src", how="inner"
@@ -71,103 +69,108 @@ def undo_relabel(vertices, name="id", prefix="relabeled"):
     return vertices.withColumn(name, F.col(f"{prefix}_{name}")).drop(f"{prefix}_{name}")
 
 
+def edges_with_partitions(graph, partitions):
+    """
+    Assign each edge to a partition. If the edge is between two partitions, it
+    is removed from the set. The select and where clauses are manually
+    specificed because two sets of joins lead to ambiguity in the partition
+    column. e.g.
+
+        Resolved attribute(s) bias#530 missing from
+        is_new#224,bias#208,is_redirect#223,id#221,title#222 in operator
+        !Project [id#221, bias#530]
+    """
+    partitions_src = [F.expr(f"{c} as {c}_src") for c in partitions]
+    partitions_dst = [F.expr(f"{c} as {c}_dst") for c in partitions]
+    assign_edges = [
+        F.when(F.expr(f"{c}_src = {c}_dst"), F.col(f"{c}_src"))
+        .otherwise(F.lit(None))
+        .alias(c)
+        for c in partitions
+    ]
+    edges_filter = functools.reduce(
+        lambda x, y: x & y, [F.col(c).isNotNull() for c in partitions]
+    )
+
+    edges = (
+        graph.edges.join(
+            graph.vertices.select(
+                F.expr("relabeled_id as relabeled_src"), *partitions_src
+            ),
+            on="relabeled_src",
+            how="left",
+        )
+        .join(
+            graph.vertices.select(
+                F.expr("relabeled_id as relabeled_dst"), *partitions_dst
+            ),
+            on="relabeled_dst",
+            how="left",
+        )
+        .select("src", "dst", *assign_edges)
+        .where(edges_filter)
+        .repartitionByRange(*partitions)
+    )
+    return edges
+
+
+def compute_fiedler_udf(fiedler_value, partitions):
+    part_schema = ", ".join(f"{c} boolean" for c in partitions)
+
+    @pandas_udf(
+        f"{part_schema}, id long, {fiedler_value} double", PandasUDFType.GROUPED_MAP
+    )
+    def compute_fiedler(keys, pdf):
+        # unfortunately, adding the extra join key columns is the only way
+        # to map the values back to the nodes
+        g = sparse_matrix_from_edgelist(pdf)
+        vec = fiedler_vector(g)
+        df = pd.DataFrame(vec, columns=[fiedler_value])
+        df["id"] = np.arange(vec.size)
+        for name, value in zip(partitions, list(keys)):
+            df[name] = value
+        return df
+
+    return compute_fiedler
+
+
 def recursive_bipartition(
     graph: GraphFrame, max_iter: int = 2, should_checkpoint=True, checkpoint_interval=2
 ) -> GraphFrame:
-    """
-    Assumes the input graph has been relabeled, which is required for performance of
-    scipy.linalg.eigsh.
-    """
-
     def bipartition(graph: GraphFrame, partitions: List[str] = [], iteration: int = 0):
-
-        partition = f"sign_{iteration}"
-        fiedler_value = f"fiedler_{iteration}"
 
         if iteration == max_iter:
             return graph
 
-        # relabel all partitions and compute the fiedler vector for each one
+        if should_checkpoint:
+            # truncate logical plan to prevent out-of-memory on query plan
+            # string representation. The edges are reused every iteration
+            # and should not need to be checkpointed.
+            graph.vertices.localCheckpoint(eager=True)
+
+        # relabel all partitions for scipy.sparse performance and compute the
+        # fiedler vector for each one
         induced = induce_graph(graph, True, partitions)
 
-        induced.cache()
-        induced.vertices.groupBy(*partitions).count().orderBy(*partitions).show()
+        partition = f"sign_{iteration}"
+        fiedler_value = f"fiedler_{iteration}"
 
-        # Assign each edge to a partition. If the edge is between two
-        # partitions, it is removed from the set. The select and where clauses
-        # are manually specificed because two sets of joins lead to ambiguity in
-        # the partition column.
-        # e.g. Resolved attribute(s) bias#530 missing from
-        # is_new#224,bias#208,is_redirect#223,id#221,title#222 in operator
-        # !Project [id#221, bias#530]
-        partitions_src = [F.expr(f"{c} as {c}_src") for c in partitions]
-        partitions_dst = [F.expr(f"{c} as {c}_dst") for c in partitions]
-        assign_edges = [
-            F.when(F.expr(f"{part}_src = {part}_dst"), F.col(f"{part}_src"))
-            .otherwise(F.lit(None))
-            .alias(part)
-            for part in partitions
-        ]
-        edges_filter = functools.reduce(
-            lambda x, y: x & y, [F.col(c).isNotNull() for c in partitions]
-        )
-
-        edges = (
-            induced.edges.join(
-                induced.vertices.select(
-                    F.expr("relabeled_id as relabeled_src"), *partitions_src
-                ),
-                on="relabeled_src",
-                how="left",
-            )
-            .join(
-                induced.vertices.select(
-                    F.expr("relabeled_id as relabeled_dst"), *partitions_dst
-                ),
-                on="relabeled_dst",
-                how="left",
-            )
-            .select("src", "dst", *assign_edges)
-            .drop(*partitions_src + partitions_dst)
-            .where(edges_filter)
-            .repartitionByRange(*partitions)
-        )
-
-        edges.cache()
-        print(f"{edges.count()} edges in {iteration} iteration...")
-
-        part_schema = ", ".join(f"{p} boolean" for p in partitions)
-
-        @pandas_udf(
-            f"{part_schema}, id long, {fiedler_value} double", PandasUDFType.GROUPED_MAP
-        )
-        def compute_fiedler(keys, pdf):
-            # unfortunately, adding the extra join key columns is the only way
-            # to map the values back to the nodes
-            g = sparse_matrix_from_edgelist(pdf)
-            vec = fiedler_vector(g)
-            df = pd.DataFrame(vec, columns=[fiedler_value])
-            df["id"] = np.arange(vec.size)
-            for name, value in zip(partitions, list(keys)):
-                df[name] = value
-            return df
-
+        # The fiedler vector is the second smallest eigenvector associated with
+        # with the graph laplacian, representing the algebraic connectivity of
+        # the graph. This is used to implement spectral clustering, recursively,
+        # by partitioning by the sign of the fiedler value. The partitions are
+        # evenly distributed.
         fiedler = (
-            edges.groupBy(*partitions)
-            .apply(compute_fiedler)
+            edges_with_partitions(induced, partitions)
+            .groupBy(*partitions)
+            .apply(compute_fiedler_udf(fiedler_value, partitions))
             .withColumn(partition, F.expr(f"{fiedler_value} >= 0").astype("boolean"))
         )
-
         vertices = undo_relabel(
             induced.vertices.join(
                 fiedler, on=["id"] + partitions, how="left"
             ).repartitionByRange(*partitions + [partition])
         )
-
-        # checkpoint every other step after the first
-        if should_checkpoint and iteration % checkpoint_interval == 0:
-            vertices.cache()
-            vertices.checkpoint()
 
         parted_graph = GraphFrame(vertices, graph.edges)
         return bipartition(parted_graph, partitions + [partition], iteration + 1)
@@ -175,7 +178,9 @@ def recursive_bipartition(
     # initialize the recursive function
     bias = "bias"
     vertices = graph.vertices.withColumn(bias, F.lit(True))
-    return bipartition(GraphFrame(vertices, graph.edges), [bias], 0)
+    edges = graph.edges
+    partitioned = bipartition(GraphFrame(vertices, edges), [bias], 0)
+    return partitioned
 
 
 def sample_graph(pages, pagelinks, sampling_ratio, relabel=True, ensure_connected=True):
@@ -186,7 +191,6 @@ def sample_graph(pages, pagelinks, sampling_ratio, relabel=True, ensure_connecte
         # only do this when sampling, on the full dataset takes 12 minutes. This may
         # be required in order to guarantee connectivity.
         components = graph.connectedComponents()
-        components.cache()
         largest_component = (
             components.groupBy("component")
             .count()
@@ -197,7 +201,6 @@ def sample_graph(pages, pagelinks, sampling_ratio, relabel=True, ensure_connecte
         vertices = components.join(largest_component, on="component", how="inner").drop(
             "component"
         )
-        components.unpersist()
         return induce_graph(GraphFrame(vertices, graph.edges))
     else:
         return graph
@@ -238,21 +241,16 @@ def main(
 
     start = time()
     parted = recursive_bipartition(graph, max_iter)
-    parted.vertices.cache()
-    parted.vertices.printSchema()
-    print(parted.vertices.count())
-    parted.vertices.repartition(4).write.parquet(f"{output_path}", mode="overwrite")
+    parted.vertices.repartition(4).write.parquet(output_path, mode="overwrite")
     total_time = time() - start
 
-    num_vertices = parted.vertices.count()
-    num_edges = parted.edges.count()
+    vertices = spark.read.parquet(output_path)
+    num_vertices = vertices.count()
 
-    columns = ["bias"] + [c for c in parted.vertices.columns if c.startswith("sign_")]
-    parted.vertices.groupBy(*columns).count().orderBy(*columns).show()
+    columns = ["bias"] + [c for c in vertices.columns if c.startswith("sign_")]
+    vertices.groupBy(*columns).count().orderBy(*columns).show()
     print(f"clustering took {total_time} seconds")
-    print(f"graph has {num_vertices} vertices and {num_edges} edges")
-
-    parted.vertices.printSchema()
-    parted.edges.printSchema()
+    print(f"graph has {num_vertices} vertices")
+    vertices.printSchema()
 
     print(spark.sparkContext.show_profiles())
