@@ -142,19 +142,10 @@ def recursive_bipartition(
         if iteration == max_iter:
             return graph
 
-        old_graph = graph.cache()
-        if should_checkpoint and iteration % checkpoint_interval == 0:
-            # truncate logical plan to prevent out-of-memory on query plan
-            # string representation. The edges are reused every iteration
-            # and should not need to be checkpointed.
-            graph = GraphFrame(
-                old_graph.vertices.localCheckpoint(eager=True),
-                old_graph.edges.localCheckpoint(eager=True),
-            )
-
-        # relabel all partitions for scipy.sparse performance and compute the
-        # fiedler vector for each one
+        # relabel all partitions for scipy.sparse performance
+        graph.cache()
         induced = induce_graph(graph, True, partitions)
+        induced.cache()
 
         partition = f"sign_{iteration}"
         fiedler_value = f"fiedler_{iteration}"
@@ -176,9 +167,15 @@ def recursive_bipartition(
             ).repartitionByRange(*partitions + [partition])
         )
 
-        parted_graph = GraphFrame(vertices, graph.edges)
-        parted_graph.cache()
-        old_graph.unpersist()
+        if should_checkpoint and iteration % checkpoint_interval == 0:
+            # truncate logical plan to prevent out-of-memory on query plan
+            # string representation. The edges are reused every iteration
+            # and should not need to be checkpointed.
+            vertices.cache()
+            parted_graph = GraphFrame(vertices.localCheckpoint(eager=True), graph.edges)
+        else:
+            parted_graph = GraphFrame(vertices, graph.edges)
+
         return bipartition(parted_graph, partitions + [partition], iteration + 1)
 
     # initialize the recursive function
