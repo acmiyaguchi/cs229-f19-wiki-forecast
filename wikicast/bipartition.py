@@ -142,11 +142,15 @@ def recursive_bipartition(
         if iteration == max_iter:
             return graph
 
+        old_graph = graph.cache()
         if should_checkpoint:
             # truncate logical plan to prevent out-of-memory on query plan
             # string representation. The edges are reused every iteration
             # and should not need to be checkpointed.
-            graph.vertices.localCheckpoint(eager=True)
+            graph = GraphFrame(
+                old_graph.vertices.localCheckpoint(eager=True),
+                old_graph.edges.localCheckpoint(eager=True),
+            )
 
         # relabel all partitions for scipy.sparse performance and compute the
         # fiedler vector for each one
@@ -173,6 +177,8 @@ def recursive_bipartition(
         )
 
         parted_graph = GraphFrame(vertices, graph.edges)
+        parted_graph.cache()
+        old_graph.unpersist()
         return bipartition(parted_graph, partitions + [partition], iteration + 1)
 
     # initialize the recursive function
@@ -253,4 +259,4 @@ def main(
     print(f"graph has {num_vertices} vertices")
     vertices.printSchema()
 
-    print(spark.sparkContext.show_profiles())
+    spark.sparkContext.show_profiles()
