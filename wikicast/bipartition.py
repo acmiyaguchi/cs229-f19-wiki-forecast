@@ -204,7 +204,7 @@ def sample_graph(pages, pagelinks, sampling_ratio, relabel=True, ensure_connecte
         vertices = components.join(largest_component, on="component", how="inner").drop(
             "component"
         )
-        return induce_graph(GraphFrame(vertices, graph.edges))
+        return induce_graph(GraphFrame(vertices, graph.edges), relabel=relabel)
     else:
         return graph
 
@@ -220,7 +220,7 @@ def sample_graph(pages, pagelinks, sampling_ratio, relabel=True, ensure_connecte
     "--checkpoint-dir",
     default="file:///" + "/".join((Path(".").resolve() / "data/tmp").parts[1:]),
 )
-def main(
+def partition_recursive(
     sample_ratio,
     max_iter,
     pages_path,
@@ -257,3 +257,51 @@ def main(
     vertices.printSchema()
 
     spark.sparkContext.show_profiles()
+
+
+@click.command()
+@click.option("--sample-ratio", type=float, default=0.05)
+@click.option("--pages-path", default="data/enwiki/pages")
+@click.option("--pagelinks-path", default="data/enwiki/pagelinks")
+@click.option("--output-path", type=str, required=True)
+@click.option("--skip-connectivity-check/--no-skip-connectivity-check", default=False)
+@click.option(
+    "--checkpoint-dir",
+    default="file:///" + "/".join((Path(".").resolve() / "data/tmp").parts[1:]),
+)
+def partition_once(
+    sample_ratio,
+    max_iter,
+    pages_path,
+    output_path,
+    pagelinks_path,
+    checkpoint_dir,
+    skip_connectivity_check,
+):
+    spark = SparkSession.builder.appName("bipartition").getOrCreate()
+    spark.conf.set("spark.sql.execution.arrow.enabled", "true")
+    spark.sparkContext.setCheckpointDir(checkpoint_dir)
+
+    pages = spark.read.parquet(pages_path)
+    pagelinks = spark.read.parquet(pagelinks_path)
+
+    graph = sample_graph(
+        pages, pagelinks, sample_ratio, ensure_connected=not skip_connectivity_check
+    )
+    graph = induce_graph(graph, relabel=True)
+
+    start = time()
+    edges = graph.edges.toPandas()
+    smat = sparse_matrix_from_edgelist(edges)
+    vec = fiedler_vector(smat)
+    mapping = pd.DataFrame(vec, columns=["value"])
+    mapping["id"] = np.arange(vec.size)
+    result = undo_relabel(
+        graph.vertices.join(spark.createDataFrame(mapping), on="id", how="left")
+    )
+    result.withColumn("sign", F.expr("value >= 0").astype("boolean"))
+    result.repartition(4).write.parquet(output_path, mode="overwrite")
+    total_time = time() - start
+
+    nodes = spark.read.parquet(output_path).groupBy("sign").count().show()
+    print(f"clustering took {total_time} seconds")
