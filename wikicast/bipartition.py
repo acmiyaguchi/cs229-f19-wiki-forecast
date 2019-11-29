@@ -143,7 +143,7 @@ def recursive_bipartition(
             return graph
 
         old_graph = graph.cache()
-        if should_checkpoint:
+        if should_checkpoint and iteration % checkpoint_interval == 0:
             # truncate logical plan to prevent out-of-memory on query plan
             # string representation. The edges are reused every iteration
             # and should not need to be checkpointed.
