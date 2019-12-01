@@ -42,9 +42,14 @@ def laplacian_embedding(g, dim):
     return np.divide(v[:, :-1], np.sqrt(w[:-1]))[::-1]
 
 
-def create_dataset(ts, window_size=7, n_panes=14):
+def create_dataset(ts, window_size=7, n_panes=14, missing_value_default=1e-6,
+                   normalize=False):
     # fill missing days with very small values
-    X = ts.iloc[:, 1:].fillna(1e-6).values
+    X = ts.iloc[:, 1:].fillna(missing_value_default).values
+    
+    if normalize:
+      X = (X - X.mean(axis=1).reshape(-1, 1)) / (X.max(axis=1) - X.min(axis=1)).reshape(-1, 1)   
+    
     T = X.shape[1]
     window_size = 7
 
