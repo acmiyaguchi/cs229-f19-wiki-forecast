@@ -12,7 +12,7 @@ from sklearn.tree import DecisionTreeRegressor
 
 
 from .poisson import PoissonRegression
-from .data import rmse, mape, laplacian_embedding, create_dataset
+from .data import rmse, mape, laplacian_embedding, create_dataset, create_rolling_datasets
 
 
 def plot_top(y, y_pred):
@@ -161,6 +161,66 @@ def poisson_regression(train, validate, test, pagerank, emb):
     return results
 
 
+def run_rolling_trials(mapping, edges, ts, plot_scree=False):
+    embedding_size = 8
+    window_size = 7
+    num_windows = 54
+
+    datasets = create_rolling_datasets(ts, window_size, num_windows)
+
+    rolling_results = {}
+
+    g = nx.subgraph(
+            nx.from_pandas_edgelist(
+                edges, source="src", target="dst", create_using=nx.Graph
+            ),
+            ts.id,
+        )
+    print(nx.info(g))
+    if plot_scree:
+        plot_scree(g)
+        plt.show()
+    emb = laplacian_embedding(g, embedding_size)
+
+    for window, dataset in enumerate(datasets):
+
+        print("Running on Window {}".format(window))
+
+        train = dataset["train"]
+        validate = dataset["validate"]
+        test = dataset["test"]
+
+        # print(f"train shape: {train.shape}")
+        # print(f"validate shape: {validate.shape}")
+        # print(f"test shape: {test.shape}")
+
+        # (n,1) column so it can be stacked using hstack
+        pagerank = np.array([ts.merge(mapping).pagerank.values]).T
+
+        results = [
+            summarize("persistence", test, validate),
+            summarize("mean", test, (np.ones(test.shape).T * validate.mean(axis=1)).T),
+        ]
+
+        model = linear_model.LinearRegression()
+        results += run_ablation(
+            "linear regression", model, train, validate, test, pagerank, emb
+        )
+
+        # custom ablation
+        weighted_linear_regression(train, validate, test, pagerank, emb)
+        results += poisson_regression(train, validate, test, pagerank, emb)
+
+        model = DecisionTreeRegressor()
+        results += run_ablation(
+            "decision tree", model, train, validate, test, pagerank, emb
+        )
+
+        rolling_results["window " + str(window)] = results
+
+    return rolling_results
+
+
 def run_trial(mapping, edges, ts, plot_scree=False):
     embedding_size = 8
     window_size = 7
@@ -219,8 +279,13 @@ def main(mapping_path, edges_path, ts_path):
     mapping = pd.read_csv(mapping_path)
     edges = pd.read_csv(edges_path)
     ts = pd.read_csv(ts_path)
-    results = run_trial(mapping, edges, ts)
-    print(pd.DataFrame(results)[["name", "mape", "rmse"]])
+    # results = run_trial(mapping, edges, ts)
+    rolling_results = run_rolling_trials(mapping, edges, ts)
+    # print(pd.DataFrame(results)[["name", "mape", "rmse"]])
+    print(pd.DataFrame(rolling_results))
+    # for window, results in enumerate(rolling_results):
+    #     print("Window {}".format(window))
+    #     print(pd.DataFrame(results)[["name", "mape", "rmse"]])
 
 
 if __name__ == "__main__":

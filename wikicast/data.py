@@ -41,6 +41,37 @@ def laplacian_embedding(g, dim):
     w, v = ss.linalg.eigsh(L, k=dim + 1)
     return np.divide(v[:, :-1], np.sqrt(w[:-1]))[::-1]
 
+def create_rolling_datasets(ts, window_size=7, n_panes=14):
+    X = ts.iloc[:, 1:].fillna(1e-6).values
+    T = X.shape[1]
+
+    # Create a new matrix for every row that is matrix of size (T//window_size, window_size)
+    indexer = np.arange(window_size).reshape(1, -1) + window_size * np.arange(
+        T // window_size
+    ).reshape(-1, 1)
+
+    # A pane is made up of many windows
+    panes = X[:, indexer]
+    print("Panes", panes.shape)
+
+    # Create a list of datasets
+    datasets = []
+
+    for pane in range(2, n_panes):
+        # train on all previous data 
+        train = panes[:, : pane - 2, :] if pane > 2 else panes[:, pane - 2, :]
+
+        train = train.reshape(panes.shape[0], -1)
+
+        # validate on prior week's data
+        validate = panes[:, pane - 1, :]
+
+        # test on current week
+        test = panes[: , pane, :]
+
+        datasets.append({ "train": train, "validate": validate, "test": test })
+
+    return datasets
 
 def create_dataset(ts, window_size=7, n_panes=14):
     # fill missing days with very small values
