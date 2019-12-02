@@ -59,7 +59,8 @@ def create_dataset_from_parquet(pages, links, views):
 @click.option("--pagelinks-path", default="data/enwiki/pagelinks")
 @click.option("--pageviews-path", default="data/enwiki/pagecount_daily_v2")
 @click.option("--num-trials", default=1)
-def main(pages_path, pagelinks_path, pageviews_path, num_trials):
+@click.option("--output-summary-file", default="summary_results.csv")
+def main(pages_path, pagelinks_path, pageviews_path, num_trials, output_summary_file):
     pd.set_option("display.max_colwidth", -1)
 
     spark = SparkSession.builder.getOrCreate()
@@ -75,4 +76,6 @@ def main(pages_path, pagelinks_path, pageviews_path, num_trials):
         print(f"sampling took {time.time() - start} seconds")
 
         results += run_trial(mapping, edges, ts, trial_id=trial_id)
-    print(pd.DataFrame(results)[["name", "mape", "rmse", "trial_id"]])
+    df = pd.DataFrame(results)[["name", "mape", "rmse", "trial_id"]])
+    print(df)
+    df.to_csv(output_summary_file)
