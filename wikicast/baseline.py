@@ -168,7 +168,7 @@ def run_rolling_trials(mapping, edges, ts, plot_scree=False):
 
     datasets = create_rolling_datasets(ts, window_size, num_windows)
 
-    rolling_results = {}
+    results = []
 
     g = nx.subgraph(
             nx.from_pandas_edgelist(
@@ -197,28 +197,31 @@ def run_rolling_trials(mapping, edges, ts, plot_scree=False):
         # (n,1) column so it can be stacked using hstack
         pagerank = np.array([ts.merge(mapping).pagerank.values]).T
 
-        results = [
+        window_results = [
             summarize("persistence", test, validate),
             summarize("mean", test, (np.ones(test.shape).T * validate.mean(axis=1)).T),
         ]
 
         model = linear_model.LinearRegression()
-        results += run_ablation(
+        window_results += run_ablation(
             "linear regression", model, train, validate, test, pagerank, emb
         )
 
         # custom ablation
         weighted_linear_regression(train, validate, test, pagerank, emb)
-        results += poisson_regression(train, validate, test, pagerank, emb)
+        window_results += poisson_regression(train, validate, test, pagerank, emb)
 
         model = DecisionTreeRegressor()
-        results += run_ablation(
+        window_results += run_ablation(
             "decision tree", model, train, validate, test, pagerank, emb
         )
 
-        rolling_results["window " + str(window)] = results
+        for result in window_results:
+            result["window"] = window
 
-    return rolling_results
+        results += window_results
+
+    return results
 
 
 def run_trial(mapping, edges, ts, plot_scree=False):
@@ -280,9 +283,9 @@ def main(mapping_path, edges_path, ts_path):
     edges = pd.read_csv(edges_path)
     ts = pd.read_csv(ts_path)
     # results = run_trial(mapping, edges, ts)
-    rolling_results = run_rolling_trials(mapping, edges, ts)
-    # print(pd.DataFrame(results)[["name", "mape", "rmse"]])
-    print(pd.DataFrame(rolling_results))
+    results = run_rolling_trials(mapping, edges, ts)
+    results_df = pd.DataFrame(results)[["window", "name", "mape", "rmse"]]
+    results_df.to_csv(path_or_buf="./wikicast/results.csv", index=False)
     # for window, results in enumerate(rolling_results):
     #     print("Window {}".format(window))
     #     print(pd.DataFrame(results)[["name", "mape", "rmse"]])

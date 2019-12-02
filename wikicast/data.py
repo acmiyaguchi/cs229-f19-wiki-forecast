@@ -59,6 +59,8 @@ def create_rolling_datasets(ts, window_size=7, n_panes=14):
 
     for pane in range(2, n_panes):
         # train on all previous data 
+        # TODO: MAKE TRAINING DATASETS HAVE A FIXED SIZE
+        # STOP 1-2 MONTHS BEFORE END (keep for hold-out dataset)
         train = panes[:, : pane - 2, :] if pane > 2 else panes[:, pane - 2, :]
 
         train = train.reshape(panes.shape[0], -1)
