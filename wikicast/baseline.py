@@ -155,7 +155,7 @@ def poisson_regression(train, validate, test, pagerank, emb, trial_id=1):
     # Poisson model with the embedding as feature
     model = PoissonRegression()
     model.fit(emb, validate)
-    results.append(summarize("poisson regression emb", test, model.predict(emb)))
+    results.append(summarize("poisson regression emb", test, model.predict(emb), trial_id=trial_id))
 
     # Poisson model with pagerank + embedding as feature
     model = PoissonRegression()
