@@ -43,28 +43,21 @@ def induce_graph(graph, relabel=True, partitions=[]):
         "id", F.row_number().over(window).alias("rank")
     ).withColumn("rank", F.expr("rank - 1"))
 
-    vertices = graph.vertices.join(rank, on="id", how="left").withColumn(
-        "relabeled_id", F.col("id")
-    )
+    vertices = graph.vertices.join(rank, on="id", how="left")
 
-    edges = (
-        graph.edges.join(
-            vertices.selectExpr("id as src", "rank as rank_src"), on="src", how="inner"
-        )
-        .join(
-            vertices.selectExpr("id as dst", "rank as rank_dst"), on="dst", how="inner"
-        )
-        .withColumn("relabeled_src", F.col("src"))
-        .withColumn("relabeled_dst", F.col("dst"))
-    )
-
-    # if partitions:
-    #     edges = edges_with_partitions(GraphFrame(vertices, edges), partitions)
+    edges = graph.edges.join(
+        vertices.selectExpr("id as src", "rank as rank_src"), on="src", how="inner"
+    ).join(vertices.selectExpr("id as dst", "rank as rank_dst"), on="dst", how="inner")
 
     if relabel:
-        vertices = vertices.withColumn("id", F.col("rank"))
-        edges = edges.withColumn("src", F.col("rank_src")).withColumn(
-            "dst", F.col("rank_dst")
+        vertices = vertices.withColumn("relabeled_id", F.col("id")).withColumn(
+            "id", F.col("rank")
+        )
+        edges = (
+            edges.withColumn("relabeled_src", F.col("src"))
+            .withColumn("relabeled_dst", F.col("dst"))
+            .withColumn("src", F.col("rank_src"))
+            .withColumn("dst", F.col("rank_dst"))
         )
 
     vertices = vertices.drop("rank")
@@ -78,7 +71,7 @@ def undo_relabel(vertices, name="id", prefix="relabeled"):
 
 def edges_with_partitions(graph, partitions):
     """
-    Assign each edge to a partition. Edges must be named uniquely. 
+    Assign each edge to a partition. If the edge is between two partitions, it
     is removed from the set. The select and where clauses are manually
     specificed because two sets of joins lead to ambiguity in the partition
     column. e.g.
@@ -99,7 +92,6 @@ def edges_with_partitions(graph, partitions):
         lambda x, y: x & y, [F.col(c).isNotNull() for c in partitions]
     )
 
-    # TODO: support subtracting edges
     edges = (
         graph.edges.join(
             graph.vertices.select(
