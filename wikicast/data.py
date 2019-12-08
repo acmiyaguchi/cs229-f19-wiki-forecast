@@ -11,7 +11,7 @@ def rmse(y, y_pred):
 
 
 def mape(y, y_pred):
-    return np.sum(abs(np.divide(y - y_pred, y))) / y.size * 100
+    return np.sum(np.abs(np.ma.divide(y - y_pred, y).filled(1))) / y.size * 100
 
 
 def rmse_df(df, y="label", y_pred="prediction"):

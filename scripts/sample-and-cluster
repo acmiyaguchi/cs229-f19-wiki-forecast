@@ -1,0 +1,18 @@
+#!/bin/bash
+
+dir="data/clustered"
+
+if [[ -d $dir ]];
+then
+    echo "directory ${dir} already exists!"
+    exit 1
+fi
+
+for i in {1..10};
+do
+    time scripts/run-command \
+        bipartition \
+        --output-path ${dir}/sample_${i}_8_50 \
+        --max-iter 8 \
+        --sample-ratio 0.50
+done
