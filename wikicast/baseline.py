@@ -12,7 +12,13 @@ from sklearn.tree import DecisionTreeRegressor
 
 
 from .poisson import PoissonRegression
-from .data import rmse, mape, laplacian_embedding, create_dataset, create_rolling_datasets
+from .data import (
+    rmse,
+    mape,
+    laplacian_embedding,
+    create_dataset,
+    create_rolling_datasets,
+)
 
 
 def plot_top(y, y_pred):
@@ -171,11 +177,11 @@ def run_rolling_trials(mapping, edges, ts, plot_scree=False):
     results = []
 
     g = nx.subgraph(
-            nx.from_pandas_edgelist(
-                edges, source="src", target="dst", create_using=nx.Graph
-            ),
-            ts.id,
-        )
+        nx.from_pandas_edgelist(
+            edges, source="src", target="dst", create_using=nx.Graph
+        ),
+        ts.id,
+    )
     print(nx.info(g))
     if plot_scree:
         plot_scree(g)
