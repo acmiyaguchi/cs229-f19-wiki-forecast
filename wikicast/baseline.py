@@ -47,11 +47,11 @@ def plot_scree(g, k=64):
     plt.plot(np.arange(k), w[::-1])
 
 
-def run_ablation(name, model, train, validate, test, pagerank, emb, **kwargs):
+def run_ablation(
+    name, model, train, validate, test, pagerank, emb, trial_id=-1, **kwargs
+):
     results = []
     test_X = np.hstack([train[:, 7:], validate])
-    trial_id = kwargs["trial_id"]
-    del kwargs["trial_id"]
 
     z = np.hstack([train, pagerank, emb])
     model.fit(z, validate, **kwargs)
@@ -239,11 +239,6 @@ def run_rolling_trials(mapping, edges, ts, plot_scree=False):
         validate = dataset["validate"]
         test = dataset["test"]
 
-        # print(f"train shape: {train.shape}")
-        # print(f"validate shape: {validate.shape}")
-        # print(f"test shape: {test.shape}")
-
-        # (n,1) column so it can be stacked using hstack
         pagerank = np.array([ts.merge(mapping).pagerank.values]).T
 
         window_results = [
@@ -258,7 +253,6 @@ def run_rolling_trials(mapping, edges, ts, plot_scree=False):
 
         # custom ablation
         weighted_linear_regression(train, validate, test, pagerank, emb)
-        window_results += poisson_regression(train, validate, test, pagerank, emb)
 
         model = DecisionTreeRegressor()
         window_results += run_ablation(
