@@ -185,18 +185,19 @@ def normalized_linear_regression(ts, window_size, num_windows, **kwargs):
     results = []
     trial_id = kwargs["trial_id"]
     del kwargs["trial_id"]
-    train, validate, test = create_dataset(
-        ts, window_size, num_windows, missing_value_default=0, normalize=True
-    )
+    train, validate, test = create_dataset(ts, window_size, num_windows)
     model = linear_model.LinearRegression()
 
+    # avoid normalizing the output variables, otherwise the true prediction
+    # can't be recovered
+    normalize = lambda x: (x - train.mean()) / (train.max() - train.min())
     test_X = np.hstack([train[:, 7:], validate])
-    model.fit(train, validate, **kwargs)
+    model.fit(normalize(train), validate, **kwargs)
     results.append(
         summarize(
             f"linear regresson, history only, normalized data",
             test,
-            model.predict(test_X),
+            model.predict(normalize(test_X)),
             trial_id=trial_id,
         )
     )
