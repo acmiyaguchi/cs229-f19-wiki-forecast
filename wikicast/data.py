@@ -11,7 +11,7 @@ def rmse(y, y_pred):
 
 
 def mape(y, y_pred):
-    return np.sum(abs(np.divide(y - y_pred, y))) / y.size * 100
+    return np.sum(np.abs(np.ma.divide(y - y_pred, y).filled(1))) / y.size * 100
 
 
 def rmse_df(df, y="label", y_pred="prediction"):
@@ -42,14 +42,17 @@ def laplacian_embedding(g, dim):
     return np.divide(v[:, :-1], np.sqrt(w[:-1]))[::-1]
 
 
-def create_dataset(ts, window_size=7, n_panes=14, missing_value_default=1e-6,
-                   normalize=False):
+def create_dataset(
+    ts, window_size=7, n_panes=14, missing_value_default=1e-6, normalize=False
+):
     # fill missing days with very small values
     X = ts.iloc[:, 1:].fillna(missing_value_default).values
-    
+
     if normalize:
-      X = (X - X.mean(axis=1).reshape(-1, 1)) / (X.max(axis=1) - X.min(axis=1)).reshape(-1, 1)   
-    
+        X = (X - X.mean(axis=1).reshape(-1, 1)) / (
+            X.max(axis=1) - X.min(axis=1)
+        ).reshape(-1, 1)
+
     T = X.shape[1]
     window_size = 7
 

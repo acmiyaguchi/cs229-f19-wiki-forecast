@@ -10,7 +10,6 @@ from sklearn.neighbors import NearestNeighbors
 from sklearn.svm import SVR
 from sklearn.tree import DecisionTreeRegressor
 
-
 from .poisson import PoissonRegression
 from .data import rmse, mape, laplacian_embedding, create_dataset
 
@@ -182,30 +181,6 @@ def weighted_linear_regression(train, validate, test, pagerank, emb, trial_id=1)
     return pr_results + emb_results
 
 
-def poisson_regression(train, validate, test, pagerank, emb, trial_id=1):
-    results = []
-    # Poisson model with the embedding as feature
-    model = PoissonRegression()
-    model.fit(emb, validate)
-    results.append(
-        summarize("poisson regression emb", test, model.predict(emb), trial_id=trial_id)
-    )
-
-    # Poisson model with pagerank + embedding as feature
-    model = PoissonRegression()
-    z = np.hstack([pagerank, emb])
-    model.fit(z, validate)
-    results.append(
-        summarize(
-            "poisson regression pagerank + emb",
-            test,
-            model.predict(z),
-            trial_id=trial_id,
-        )
-    )
-    return results
-
-
 def normalized_linear_regression(ts, window_size, num_windows, **kwargs):
     results = []
     trial_id = kwargs["trial_id"]
@@ -275,11 +250,22 @@ def run_trial(mapping, edges, ts, plot_scree=False, trial_id=1):
         trial_id=trial_id,
     )
 
+    # run poisson,
+    poisson = PoissonRegression()
+    poisson.fit(train.mean(axis=1, keepdims=True), validate)
+    results += [
+        summarize(
+            "poisson",
+            test,
+            poisson.predict(
+                np.hstack([train[:, 7:], validate]).mean(axis=1, keepdims=True)
+            ),
+            trial_id=trial_id,
+        )
+    ]
+
     # custom ablation
     weighted_linear_regression(train, validate, test, pagerank, emb, trial_id=trial_id)
-    results += poisson_regression(
-        train, validate, test, pagerank, emb, trial_id=trial_id
-    )
 
     results += normalized_linear_regression(
         ts, window_size, num_windows, trial_id=trial_id
@@ -305,7 +291,7 @@ def main(mapping_path, edges_path, ts_path):
     edges = pd.read_csv(edges_path)
     ts = pd.read_csv(ts_path)
     results = run_trial(mapping, edges, ts)
-    print(pd.DataFrame(results)[["name", "mape", "rmse", "trial_id"]])
+    print(pd.DataFrame(results)[["trial_id", "name", "mape", "rmse"]])
 
 
 if __name__ == "__main__":
