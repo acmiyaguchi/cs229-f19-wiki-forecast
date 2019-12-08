@@ -1,4 +1,5 @@
 
+rm -r dist/
 python setup.py bdist_egg
 # write the file encoded in utf-8 without BOM
 $content = "from wikicast import __main__; __main__.cli()"

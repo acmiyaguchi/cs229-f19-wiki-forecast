@@ -181,6 +181,29 @@ def weighted_linear_regression(train, validate, test, pagerank, emb, trial_id=1)
     return pr_results + emb_results
 
 
+def normalized_linear_regression(ts, window_size, num_windows, **kwargs):
+    results = []
+    trial_id = kwargs["trial_id"]
+    del kwargs["trial_id"]
+    train, validate, test = create_dataset(ts, window_size, num_windows)
+    model = linear_model.LinearRegression()
+
+    # avoid normalizing the output variables, otherwise the true prediction
+    # can't be recovered
+    normalize = lambda x: (x - train.mean()) / (train.max() - train.min())
+    test_X = np.hstack([train[:, 7:], validate])
+    model.fit(normalize(train), validate, **kwargs)
+    results.append(
+        summarize(
+            f"linear regresson, history only, normalized data",
+            test,
+            model.predict(normalize(test_X)),
+            trial_id=trial_id,
+        )
+    )
+    return results
+
+
 def run_trial(mapping, edges, ts, plot_scree=False, trial_id=1):
     embedding_size = 8
     window_size = 7
@@ -245,6 +268,10 @@ def run_trial(mapping, edges, ts, plot_scree=False, trial_id=1):
     # custom ablation
     weighted_linear_regression(train, validate, test, pagerank, emb, trial_id=trial_id)
 
+    results += normalized_linear_regression(
+        ts, window_size, num_windows, trial_id=trial_id
+    )
+
     model = DecisionTreeRegressor()
     results += run_ablation(
         "decision tree", model, train, validate, test, pagerank, emb, trial_id=trial_id
@@ -265,7 +292,7 @@ def main(mapping_path, edges_path, ts_path):
     edges = pd.read_csv(edges_path)
     ts = pd.read_csv(ts_path)
     results = run_trial(mapping, edges, ts)
-    print(pd.DataFrame(results)["trial_id", "name", "mape", "rmse"])
+    print(pd.DataFrame(results)[["trial_id", "name", "mape", "rmse"]])
 
 
 if __name__ == "__main__":
