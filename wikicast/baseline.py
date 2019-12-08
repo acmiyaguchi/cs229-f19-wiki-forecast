@@ -357,11 +357,11 @@ def main(mapping_path, edges_path, ts_path, rolling_validation):
     ts = pd.read_csv(ts_path)
     if rolling_validation:
         results = run_rolling_trials(mapping, edges, ts)
-        results_df = pd.DataFrame(results)[["window", "name", "mape", "rmse"]]
+        results_df = pd.DataFrame(results)[["window", "mape", "rmse", "name"]]
         results_df.to_csv(path_or_buf="results.csv", index=False)
     else:
         results = run_trial(mapping, edges, ts)
-        print(pd.DataFrame(results)[["trial_id", "name", "mape", "rmse"]])
+        print(pd.DataFrame(results)[["trial_id", "mape", "rmse", "name"]])
 
 
 if __name__ == "__main__":
