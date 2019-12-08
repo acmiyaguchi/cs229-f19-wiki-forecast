@@ -89,32 +89,6 @@ def run_ablation(
     results.append(
         summarize(f"{name}: pagerank + emb", test, model.predict(z), trial_id=trial_id)
     )
-
-    z = np.hstack([train])
-    model.fit(train, validate, **kwargs)
-    z = np.hstack([test_X])
-    results.append(
-        summarize(f"{name}: history", test, model.predict(test_X), trial_id=trial_id)
-    )
-
-    z = np.hstack([train[:, -7:], pagerank])
-    model.fit(z, validate, **kwargs)
-    z = np.hstack([test_X[:, -7:], pagerank])
-    results.append(
-        summarize(f"{name}: pagerank", test, model.predict(z), trial_id=trial_id)
-    )
-
-    z = np.hstack([train[:, -7:], emb])
-    model.fit(z, validate, **kwargs)
-    z = np.hstack([test_X[:, -7:], emb])
-    results.append(summarize(f"{name}: emb", test, model.predict(z), trial_id))
-
-    model.fit(train[:, -7:], validate, **kwargs)
-    results.append(
-        summarize(
-            f"{name}: baseline", test, model.predict(test_X[:, -7:]), trial_id=trial_id
-        )
-    )
     return results
 
 
@@ -138,47 +112,12 @@ def weighted_linear_regression(train, validate, test, pagerank, emb, trial_id=1)
                 trial_id=trial_id,
             )
         )
-
-        z = np.hstack([train_X, pagerank])
-        model.fit(z, validate, weights)
-        z = np.hstack([test_X, pagerank])
-        results.append(
-            summarize(
-                f"weighted linear regression ({name}): pagerank",
-                test,
-                model.predict(z),
-                trial_id=trial_id,
-            )
-        )
-
-        # weights needs to be a 1d array
-        z = np.hstack([train_X, emb])
-        model.fit(z, validate, weights)
-        z = np.hstack([test_X, emb])
-        results.append(
-            summarize(
-                f"weighted linear regression ({name}): emb",
-                test,
-                model.predict(z),
-                trial_id=trial_id,
-            )
-        )
-
-        model.fit(train_X, validate, weights)
-        results.append(
-            summarize(
-                f"weighted linear regression ({name}): baseline",
-                test,
-                model.predict(test_X),
-                trial_id=trial_id,
-            )
-        )
         return results
 
     pr_results = run("pagerank", pagerank.T[0], trial_id=trial_id)
 
     # the L2-norm of the average embedding over k-nearest neighbors
-    # TODO: test over different parameters of
+    # TODO: test over different parameters of alpha
     tree = NearestNeighbors(n_neighbors=10, algorithm="ball_tree").fit(emb)
     _, ind = tree.kneighbors(emb)
     weights = np.linalg.norm(emb[ind[:, 1:]].mean(axis=1), axis=1)
@@ -252,7 +191,7 @@ def run_rolling_trials(mapping, edges, ts, plot_scree=False):
         )
 
         # custom ablation
-        weighted_linear_regression(train, validate, test, pagerank, emb)
+        results += weighted_linear_regression(train, validate, test, pagerank, emb)
 
         model = DecisionTreeRegressor()
         window_results += run_ablation(
@@ -329,7 +268,9 @@ def run_trial(mapping, edges, ts, plot_scree=False, trial_id=1):
     ]
 
     # custom ablation
-    weighted_linear_regression(train, validate, test, pagerank, emb, trial_id=trial_id)
+    results += weighted_linear_regression(
+        train, validate, test, pagerank, emb, trial_id=trial_id
+    )
 
     results += normalized_linear_regression(
         ts, window_size, num_windows, trial_id=trial_id

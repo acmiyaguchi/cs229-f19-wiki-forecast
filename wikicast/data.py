@@ -123,8 +123,3 @@ def denoise(vec: np.array, window_size=7, scale=True):
 
     k = window_size - 1
     return Vectors.dense(u[:, :k].dot(np.diag(s[:k])).dot(vh[:k]).reshape(-1))
-
-
-# TODO
-# def load_dataset(path, add_intercept: bool = False):
-#   pass
