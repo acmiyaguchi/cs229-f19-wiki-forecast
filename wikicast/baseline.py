@@ -288,13 +288,9 @@ def main(mapping_path, edges_path, ts_path):
     mapping = pd.read_csv(mapping_path)
     edges = pd.read_csv(edges_path)
     ts = pd.read_csv(ts_path)
-    # results = run_trial(mapping, edges, ts)
     results = run_rolling_trials(mapping, edges, ts)
     results_df = pd.DataFrame(results)[["window", "name", "mape", "rmse"]]
     results_df.to_csv(path_or_buf="./wikicast/results.csv", index=False)
-    # for window, results in enumerate(rolling_results):
-    #     print("Window {}".format(window))
-    #     print(pd.DataFrame(results)[["name", "mape", "rmse"]])
 
 
 if __name__ == "__main__":
