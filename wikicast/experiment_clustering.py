@@ -32,11 +32,11 @@ DATES = [
 SCHEMA = META + DEGREE + SIGN + VECTOR + DATES
 
 
-def run_trial(df, output_path, window_size, num_windows, sample_size=5 * 10 ** 4):
-    data = df.fillna(0).sample(sample_size)
-
-
+def run_trial(data, output, window_size, num_windows):
     train, validate, test = create_dataset(data[DATES], window_size, num_windows)
+    features = [data[DEGREE].values, data[SIGN].values, data[VECTOR].values]
+    features_dict = dict(zip(["degree", "sign", "vector"], features))
+
     print(f"train shape: {train.shape}")
     print(f"validate shape: {validate.shape}")
     print(f"test shape: {test.shape}")
@@ -46,10 +46,7 @@ def run_trial(df, output_path, window_size, num_windows, sample_size=5 * 10 ** 4
         summarize("mean", test, (np.ones(test.shape).T * validate.mean(axis=1)).T),
     ]
 
-    linreg = Ridge(alpha=0)
-    linreg.fit(train, validate)
-    test_X = np.hstack([train[:, window_size:], validate])
-    pred = linreg.predict(test_X)
+    pred = run_train_predict(Ridge(alpha=0), train, validate, test, [])
     results += [summarize("linear regression", test, pred)]
 
     scoring = {
@@ -69,9 +66,9 @@ def run_trial(df, output_path, window_size, num_windows, sample_size=5 * 10 ** 4
         return_train_score=False,
     )
     results += run_ablation(
-        "ridge regression", search_ridge, train, validate, test, pagerank, emb
+        "ridge regression", search_ridge, train, validate, test, features_dict
     )
-    write_search_results(search_ridge, f"{output_path}/ridge-random.csv")
+    write_search_results(search_ridge, f"{output}/ridge-random.csv")
 
     # closes over: train, pagerank, emb, validate, scoring
     def best_nn_grid(params, output, **kwargs):
@@ -87,7 +84,7 @@ def run_trial(df, output_path, window_size, num_windows, sample_size=5 * 10 ** 4
             return_train_score=False,
             **kwargs,
         )
-        search.fit(np.hstack([train, pagerank, emb]), validate)
+        search.fit(np.hstack([train] + features), validate)
         write_search_results(search, output)
         return search
 
@@ -104,38 +101,24 @@ def run_trial(df, output_path, window_size, num_windows, sample_size=5 * 10 ** 4
             return_train_score=False,
             **kwargs,
         )
-        search.fit(np.hstack([train, pagerank, emb]), validate)
-        write_results(search, output)
+        search.fit(np.hstack([train] + features), validate)
+        write_search_results(search, output)
         return search
 
-    # layers = [10, 100]
-    # params = {"activation": ["relu", "tanh"], "hidden_layer_sizes": layers}
-    # best_nn_grid(params, f"{output_path}/nn-activation.csv")
+    # 30 trials, should be reduced to 8 trials
+    layers = [(16, 16), (64, 128), (128, 8, 128), (64, 32, 8), (16, 8, 8, 8)]
+    params = {
+        "learning_rate_init": [3e-5, 8e-5],
+        "activation": ["relu"],
+        "hidden_layer_sizes": layers,
+        "alpha": [5e5, 5e4, 0.5],
+    }
+    search = best_nn_grid(params, f"{output}/nn-grid-layers-best.csv")
 
-    # layers = [10, 50, 100, 500]
-    # params = {"activation": ["relu"], "hidden_layer_sizes": layers}
-    # best_nn_grid(params, f"{output_path}/nn-grid-layers-1.csv")
-
-    # layers = [10, 50, 100]
-    # params = {
-    #     "activation": ["relu"],
-    #     "hidden_layer_sizes": list(chain(product(layers, repeat=2))),
-    # }
-    # best_nn_grid(params, f"{output_path}/nn-grid-layers-2.csv")
-
-    # 4-6 layers is best
-    # layers = [(10, 50, 10, 50, 10), (10, 10, 50, 10, 50, 10)]
-    # params = {
-    #     "activation": ["relu"],
-    #     "hidden_layer_sizes": layers,
-    #     "alpha": [0.017, 0.07, 0.001, 0.1],
-    # }
-    # search = best_nn_grid(params, f"{output_path}/nn-grid-layers-alpha-best.csv")
-
-    # best_nn = search.best_estimator_
-    # results += run_ablation(
-    #     "neural network", best_nn, train, validate, test, pagerank, emb
-    # )
+    best_nn = search.best_estimator_
+    results += run_ablation(
+        "neural network", best_nn, train, validate, test, features_dict
+    )
 
     print(pd.DataFrame(results))
     return results
@@ -157,12 +140,13 @@ def main(design_path, output_path):
     window_size = 7
     num_windows = 120 // window_size
 
-    df = pd.read_parquet(glob.glob(design_path)[0])
+    df = pd.read_parquet(glob.glob(design_path)[0]).fillna(0)
     pretty_columns = META + DEGREE + SIGN[:1] + VECTOR[:1] + DATES[:3]
     print(df.shape)
     print(df.loc[:, pretty_columns].sample(5))
 
-    run_trial(df, output_path, window_size, num_windows)
+    sample_size = 1 * 10 ** 4
+    run_trial(df.sample(sample_size), output_path, window_size, num_windows)
 
 
 if __name__ == "__main__":
