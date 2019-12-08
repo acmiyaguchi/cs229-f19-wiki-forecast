@@ -1,7 +1,7 @@
 import matplotlib.pyplot as plt
 import networkx as nx
 import numpy as np
-import scipy.sparse as ss
+import scipy.sparse as sp
 from pyspark.ml.linalg import Vectors, VectorUDT
 from pyspark.sql.functions import udf, col
 
@@ -11,7 +11,7 @@ def rmse(y, y_pred):
 
 
 def mape(y, y_pred):
-    return np.sum(np.abs(np.ma.divide(y - y_pred, y).filled(1))) / y.size * 100
+    return np.sum(np.abs(np.ma.divide(y - y_pred, y).filled(0))) / (y > 0).sum() * 100
 
 
 def rmse_df(df, y="label", y_pred="prediction"):
@@ -36,9 +36,10 @@ def generate_poisson(n_series, t_values, window_size, lambda_param):
     return train, validate, test
 
 
-def laplacian_embedding(g, dim):
-    L = nx.laplacian_matrix(g).astype("float64")
-    w, v = ss.linalg.eigsh(L, k=dim + 1)
+def laplacian_embedding(g_nx, dim):
+    """Compute the smallest-but-1 eigenvectors of the laplacian normalized by the variance."""
+    L = nx.laplacian_matrix(g_nx).astype("float64")
+    w, v = sp.linalg.eigsh(L, k=dim + 1)
     return np.divide(v[:, :-1], np.sqrt(w[:-1]))[::-1]
 
 
