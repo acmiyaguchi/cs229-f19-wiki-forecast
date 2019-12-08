@@ -31,7 +31,7 @@ def write_results(search, output):
 def run_trial(mapping, edges, ts, output_path="data/results", search_layer_sizes=False):
     embedding_size = 32
     window_size = 7
-    num_windows = 4 * 6
+    num_windows = 120 // window_size
 
     train, validate, test = create_dataset(ts, window_size, num_windows)
     print(f"train shape: {train.shape}")
@@ -56,7 +56,6 @@ def run_trial(mapping, edges, ts, output_path="data/results", search_layer_sizes
     linreg = Ridge(alpha=0)
     linreg.fit(train, validate)
     test_X = np.hstack([train[:, window_size:], validate])
-    print(train.shape, test_X.shape)
     pred = linreg.predict(test_X)
     results += [summarize("linear regression", test, pred)]
 
@@ -97,6 +96,7 @@ def run_trial(mapping, edges, ts, output_path="data/results", search_layer_sizes
         )
         search.fit(np.hstack([train, pagerank, emb]), validate)
         write_results(search, output)
+        return search
 
     def best_nn_random(params, output, **kwargs):
         print(f"running for {output}")
@@ -113,17 +113,17 @@ def run_trial(mapping, edges, ts, output_path="data/results", search_layer_sizes
         )
         search.fit(np.hstack([train, pagerank, emb]), validate)
         write_results(search, output)
+        return search
 
-    layers = [10, 50, 100]
+    layers = [10, 100]
     params = {"activation": ["relu", "tanh"], "hidden_layer_sizes": layers}
     best_nn_grid(params, f"{output_path}/nn-activation.csv")
 
-    params = {
-        "activation": ["relu"],
-        "hidden_layer_sizes": [5, 10, 20, 50, 100, 200, 500],
-    }
+    layers = [10, 50, 100, 500]
+    params = {"activation": ["relu"], "hidden_layer_sizes": layers}
     best_nn_grid(params, f"{output_path}/nn-grid-layers-1.csv")
 
+    layers = [10, 50, 100]
     params = {
         "activation": ["relu"],
         "hidden_layer_sizes": list(chain(product(layers, repeat=2))),
@@ -168,14 +168,15 @@ def run_trial(mapping, edges, ts, output_path="data/results", search_layer_sizes
         "hidden_layer_sizes": layers,
         "alpha": [0.017, 0.07, 0.001, 0.1],
     }
-    best_nn_grid(params, f"{output_path}/nn-grid-layers-alpha-best.csv")
+    search = best_nn_grid(params, f"{output_path}/nn-grid-layers-alpha-best.csv")
 
-    best_nn = .best_estimator_
+    best_nn = search.best_estimator_
     results += run_ablation(
         "neural network", best_nn, train, validate, test, pagerank, emb
     )
 
     print(pd.DataFrame(results))
+    return results
 
 
 @click.command()

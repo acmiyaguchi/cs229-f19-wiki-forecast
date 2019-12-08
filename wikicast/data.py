@@ -39,8 +39,9 @@ def generate_poisson(n_series, t_values, window_size, lambda_param):
 def laplacian_embedding(g_nx, dim):
     """Compute the smallest-but-1 eigenvectors of the laplacian normalized by the variance."""
     L = nx.laplacian_matrix(g_nx).astype("float64")
+    # returns ordered by the smallest eigenvalues
     w, v = sp.linalg.eigsh(L, k=dim + 1)
-    return np.divide(v[:, :-1], np.sqrt(w[:-1]))[::-1]
+    return np.divide(v[:, 1:], np.sqrt(w[1:]))[::-1]
 
 
 def create_rolling_datasets(ts, window_size=7, n_panes=14, holdout=2):

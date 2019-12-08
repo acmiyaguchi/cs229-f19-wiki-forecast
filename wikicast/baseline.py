@@ -51,7 +51,7 @@ def run_ablation(
     name, model, train, validate, test, pagerank, emb, trial_id=-1, **kwargs
 ):
     results = []
-    test_X = np.hstack([train[:, 7:], validate])
+    test_X = np.hstack([train[:, validate.shape[1] :], validate])
 
     z = np.hstack([train, pagerank, emb])
     model.fit(z, validate, **kwargs)
