@@ -1,3 +1,6 @@
+from itertools import chain, product
+from time import time
+
 import click
 import networkx as nx
 import numpy as np
@@ -7,7 +10,6 @@ from sklearn.linear_model import Ridge
 from sklearn.metrics import make_scorer
 from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
 from sklearn.neural_network import MLPRegressor
-from itertools import chain, product
 
 from .baseline import run_ablation, summarize
 from .data import create_dataset, laplacian_embedding, mape, rmse
