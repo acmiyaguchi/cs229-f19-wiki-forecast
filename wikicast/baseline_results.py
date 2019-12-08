@@ -17,11 +17,8 @@ def windowlabel(num_windows, num_models):
         )
 
 
-@click.command()
-@click.option("--input-path", default="results.csv")
-def main(input_path):
-    results = pd.read_csv(input_path)
-    # persistence_results = [model_name for model_name in results["name"] if model_name == "persistence"]
+def plot_bar(results):
+    width = 0.35
 
     num_windows = results["window"].max() + 1
     num_models = len(results) // num_windows
@@ -30,17 +27,9 @@ def main(input_path):
     mape_vals = results["mape"]
     rmse_vals = results["rmse"]
 
-    models_mape = {}
-    models_rmse = {}
-    for i in range(num_models):
-        models_mape[model_names[i]] = mape_vals[i::20]
-        models_rmse[model_names[i]] = rmse_vals[i::20]
-
     # set colors for different models
     rainbow = cm.get_cmap("gist_rainbow", num_models)
     colors = rainbow(range(num_models))
-
-    width = 0.35
 
     labels = model_names
     x = np.arange(len(results))
@@ -68,6 +57,25 @@ def main(input_path):
     plt.tight_layout()
     plt.show()
 
+
+def plot_line(results):
+    num_windows = results["window"].max() + 1
+    num_models = len(results) // num_windows
+
+    model_names = results["name"][:num_models]
+    mape_vals = results["mape"]
+    rmse_vals = results["rmse"]
+
+    models_mape = {}
+    models_rmse = {}
+    for i in range(num_models):
+        models_mape[model_names[i]] = mape_vals[i::20]
+        models_rmse[model_names[i]] = rmse_vals[i::20]
+
+    # set colors for different models
+    rainbow = cm.get_cmap("gist_rainbow", num_models)
+    colors = rainbow(range(num_models))
+
     # create a line graph
     fig, (rmse_plot, mape_plot) = plt.subplots(nrows=2, ncols=1)
     for i, model in enumerate(model_names):
@@ -93,6 +101,14 @@ def main(input_path):
     plt.xlabel("window")
     plt.tight_layout()
     plt.show()
+
+
+@click.command()
+@click.option("--input-path", default="results.csv")
+def main(input_path):
+    results = pd.read_csv(input_path)
+    plot_bar(results)
+    plot_line(results)
 
 
 if __name__ == "__main__":
