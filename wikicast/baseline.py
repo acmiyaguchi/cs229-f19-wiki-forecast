@@ -11,7 +11,13 @@ from sklearn.svm import SVR
 from sklearn.tree import DecisionTreeRegressor
 
 from .poisson import PoissonRegression
-from .data import rmse, mape, laplacian_embedding, create_dataset
+from .data import (
+    rmse,
+    mape,
+    laplacian_embedding,
+    create_dataset,
+    create_rolling_datasets,
+)
 
 
 def plot_top(y, y_pred):
@@ -41,11 +47,11 @@ def plot_scree(g, k=64):
     plt.plot(np.arange(k), w[::-1])
 
 
-def run_ablation(name, model, train, validate, test, pagerank, emb, **kwargs):
+def run_ablation(
+    name, model, train, validate, test, pagerank, emb, trial_id=-1, **kwargs
+):
     results = []
     test_X = np.hstack([train[:, 7:], validate])
-    trial_id = kwargs["trial_id"]
-    del kwargs["trial_id"]
 
     z = np.hstack([train, pagerank, emb])
     model.fit(z, validate, **kwargs)
@@ -204,6 +210,63 @@ def normalized_linear_regression(ts, window_size, num_windows, **kwargs):
     return results
 
 
+def run_rolling_trials(mapping, edges, ts, plot_scree=False):
+    embedding_size = 8
+    window_size = 7
+    num_windows = 54
+
+    datasets = create_rolling_datasets(ts, window_size, num_windows)
+
+    results = []
+
+    g = nx.subgraph(
+        nx.from_pandas_edgelist(
+            edges, source="src", target="dst", create_using=nx.Graph
+        ),
+        ts.id,
+    )
+    print(nx.info(g))
+    if plot_scree:
+        plot_scree(g)
+        plt.show()
+    emb = laplacian_embedding(g, embedding_size)
+
+    for window, dataset in enumerate(datasets):
+
+        print("Running on Window {}".format(window))
+
+        train = dataset["train"]
+        validate = dataset["validate"]
+        test = dataset["test"]
+
+        pagerank = np.array([ts.merge(mapping).pagerank.values]).T
+
+        window_results = [
+            summarize("persistence", test, validate),
+            summarize("mean", test, (np.ones(test.shape).T * validate.mean(axis=1)).T),
+        ]
+
+        model = linear_model.LinearRegression()
+        window_results += run_ablation(
+            "linear regression", model, train, validate, test, pagerank, emb
+        )
+
+        # custom ablation
+        weighted_linear_regression(train, validate, test, pagerank, emb)
+
+        model = DecisionTreeRegressor()
+        window_results += run_ablation(
+            "decision tree", model, train, validate, test, pagerank, emb
+        )
+
+        for result in window_results:
+            result["window"] = window
+
+        results += window_results
+
+    return results
+
+
 def run_trial(mapping, edges, ts, plot_scree=False, trial_id=1):
     embedding_size = 8
     window_size = 7
@@ -284,15 +347,21 @@ def run_trial(mapping, edges, ts, plot_scree=False, trial_id=1):
 @click.option("--mapping-path", default="sample_data/trial_6/mapping.csv")
 @click.option("--edges-path", default="sample_data/trial_6/edges.csv")
 @click.option("--ts-path", default="sample_data/trial_6/ts.csv")
-def main(mapping_path, edges_path, ts_path):
+@click.option("--rolling-validation/--no-rolling-validation", default=False)
+def main(mapping_path, edges_path, ts_path, rolling_validation):
     """Run experiments on a sampled graph that fits into memory"""
     pd.set_option("display.max_colwidth", -1)
 
     mapping = pd.read_csv(mapping_path)
     edges = pd.read_csv(edges_path)
     ts = pd.read_csv(ts_path)
-    results = run_trial(mapping, edges, ts)
-    print(pd.DataFrame(results)[["trial_id", "name", "mape", "rmse"]])
+    if rolling_validation:
+        results = run_rolling_trials(mapping, edges, ts)
+        results_df = pd.DataFrame(results)[["window", "mape", "rmse", "name"]]
+        results_df.to_csv(path_or_buf="results.csv", index=False)
+    else:
+        results = run_trial(mapping, edges, ts)
+        print(pd.DataFrame(results)[["trial_id", "mape", "rmse", "name"]])
 
 
 if __name__ == "__main__":
