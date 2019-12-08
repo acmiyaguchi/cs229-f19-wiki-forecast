@@ -10,7 +10,6 @@ from sklearn.neighbors import NearestNeighbors
 from sklearn.svm import SVR
 from sklearn.tree import DecisionTreeRegressor
 
-
 from .poisson import PoissonRegression
 from .data import (
     rmse,
@@ -31,9 +30,14 @@ def plot_top(y, y_pred):
         plt.legend()
 
 
-def summarize(model_name, y, y_pred):
+def summarize(model_name, y, y_pred, trial_id=1):
     """Return a dictionary of results"""
-    return {"mape": mape(y, y_pred), "rmse": rmse(y, y_pred), "name": model_name}
+    return {
+        "mape": mape(y, y_pred),
+        "rmse": rmse(y, y_pred),
+        "name": model_name,
+        "trial_id": trial_id,
+    }
 
 
 def plot_scree(g, k=64):
@@ -46,54 +50,79 @@ def plot_scree(g, k=64):
 def run_ablation(name, model, train, validate, test, pagerank, emb, **kwargs):
     results = []
     test_X = np.hstack([train[:, 7:], validate])
+    trial_id = kwargs["trial_id"]
+    del kwargs["trial_id"]
 
     z = np.hstack([train, pagerank, emb])
     model.fit(z, validate, **kwargs)
     z = np.hstack([test_X, pagerank, emb])
     results.append(
-        summarize(f"{name}: history + pagerank + emb", test, model.predict(z))
+        summarize(
+            f"{name}: history + pagerank + emb",
+            test,
+            model.predict(z),
+            trial_id=trial_id,
+        )
     )
 
     z = np.hstack([train, pagerank])
     model.fit(z, validate, **kwargs)
     z = np.hstack([test_X, pagerank])
-    results.append(summarize(f"{name}: history + pagerank", test, model.predict(z)))
+    results.append(
+        summarize(
+            f"{name}: history + pagerank", test, model.predict(z), trial_id=trial_id
+        )
+    )
 
     z = np.hstack([train, emb])
     model.fit(train, validate, **kwargs)
     z = np.hstack([test_X, emb])
-    results.append(summarize(f"{name}: history + emb", test, model.predict(test_X)))
+    results.append(
+        summarize(
+            f"{name}: history + emb", test, model.predict(test_X), trial_id=trial_id
+        )
+    )
 
     z = np.hstack([train[:, -7:], pagerank, emb])
     model.fit(z, validate, **kwargs)
     z = np.hstack([test_X[:, -7:], pagerank, emb])
-    results.append(summarize(f"{name}: pagerank + emb", test, model.predict(z)))
+    results.append(
+        summarize(f"{name}: pagerank + emb", test, model.predict(z), trial_id=trial_id)
+    )
 
     z = np.hstack([train])
     model.fit(train, validate, **kwargs)
     z = np.hstack([test_X])
-    results.append(summarize(f"{name}: history", test, model.predict(test_X)))
+    results.append(
+        summarize(f"{name}: history", test, model.predict(test_X), trial_id=trial_id)
+    )
 
     z = np.hstack([train[:, -7:], pagerank])
     model.fit(z, validate, **kwargs)
     z = np.hstack([test_X[:, -7:], pagerank])
-    results.append(summarize(f"{name}: pagerank", test, model.predict(z)))
+    results.append(
+        summarize(f"{name}: pagerank", test, model.predict(z), trial_id=trial_id)
+    )
 
     z = np.hstack([train[:, -7:], emb])
     model.fit(z, validate, **kwargs)
     z = np.hstack([test_X[:, -7:], emb])
-    results.append(summarize(f"{name}: emb", test, model.predict(z)))
+    results.append(summarize(f"{name}: emb", test, model.predict(z), trial_id))
 
     model.fit(train[:, -7:], validate, **kwargs)
-    results.append(summarize(f"{name}: baseline", test, model.predict(test_X[:, -7:])))
+    results.append(
+        summarize(
+            f"{name}: baseline", test, model.predict(test_X[:, -7:]), trial_id=trial_id
+        )
+    )
     return results
 
 
-def weighted_linear_regression(train, validate, test, pagerank, emb):
+def weighted_linear_regression(train, validate, test, pagerank, emb, trial_id=1):
     train_X = train[:, -7:]
     test_X = np.hstack([validate])
 
-    def run(name, weights):
+    def run(name, weights, trial_id=1):
         results = []
         # weights needs to be a 1d array
         model = linear_model.Ridge(alpha=0)
@@ -106,6 +135,7 @@ def weighted_linear_regression(train, validate, test, pagerank, emb):
                 f"weighted linear regression ({name}): pagerank + emb",
                 test,
                 model.predict(z),
+                trial_id=trial_id,
             )
         )
 
@@ -114,7 +144,10 @@ def weighted_linear_regression(train, validate, test, pagerank, emb):
         z = np.hstack([test_X, pagerank])
         results.append(
             summarize(
-                f"weighted linear regression ({name}): pagerank", test, model.predict(z)
+                f"weighted linear regression ({name}): pagerank",
+                test,
+                model.predict(z),
+                trial_id=trial_id,
             )
         )
 
@@ -124,7 +157,10 @@ def weighted_linear_regression(train, validate, test, pagerank, emb):
         z = np.hstack([test_X, emb])
         results.append(
             summarize(
-                f"weighted linear regression ({name}): emb", test, model.predict(z)
+                f"weighted linear regression ({name}): emb",
+                test,
+                model.predict(z),
+                trial_id=trial_id,
             )
         )
 
@@ -134,11 +170,12 @@ def weighted_linear_regression(train, validate, test, pagerank, emb):
                 f"weighted linear regression ({name}): baseline",
                 test,
                 model.predict(test_X),
+                trial_id=trial_id,
             )
         )
         return results
 
-    pr_results = run("pagerank", pagerank.T[0])
+    pr_results = run("pagerank", pagerank.T[0], trial_id=trial_id)
 
     # the L2-norm of the average embedding over k-nearest neighbors
     # TODO: test over different parameters of
@@ -146,23 +183,29 @@ def weighted_linear_regression(train, validate, test, pagerank, emb):
     _, ind = tree.kneighbors(emb)
     weights = np.linalg.norm(emb[ind[:, 1:]].mean(axis=1), axis=1)
 
-    emb_results = run("avg emb", weights)
+    emb_results = run("avg emb", weights, trial_id=trial_id)
     return pr_results + emb_results
 
 
-def poisson_regression(train, validate, test, pagerank, emb):
+def normalized_linear_regression(ts, window_size, num_windows, **kwargs):
     results = []
-    # Poisson model with the embedding as feature
-    model = PoissonRegression()
-    model.fit(emb, validate)
-    results.append(summarize("poisson regression emb", test, model.predict(emb)))
+    trial_id = kwargs["trial_id"]
+    del kwargs["trial_id"]
+    train, validate, test = create_dataset(ts, window_size, num_windows)
+    model = linear_model.LinearRegression()
 
-    # Poisson model with pagerank + embedding as feature
-    model = PoissonRegression()
-    z = np.hstack([pagerank, emb])
-    model.fit(z, validate)
+    # avoid normalizing the output variables, otherwise the true prediction
+    # can't be recovered
+    normalize = lambda x: (x - train.mean()) / (train.max() - train.min())
+    test_X = np.hstack([train[:, 7:], validate])
+    model.fit(normalize(train), validate, **kwargs)
     results.append(
-        summarize("poisson regression pagerank + emb", test, model.predict(z))
+        summarize(
+            f"linear regresson, history only, normalized data",
+            test,
+            model.predict(normalize(test_X)),
+            trial_id=trial_id,
+        )
     )
     return results
 
@@ -230,7 +273,7 @@ def run_rolling_trials(mapping, edges, ts, plot_scree=False):
     return results
 
 
-def run_trial(mapping, edges, ts, plot_scree=False):
+def run_trial(mapping, edges, ts, plot_scree=False, trial_id=1):
     embedding_size = 8
     window_size = 7
     num_windows = 54
@@ -256,22 +299,51 @@ def run_trial(mapping, edges, ts, plot_scree=False):
     pagerank = np.array([ts.merge(mapping).pagerank.values]).T
 
     results = [
-        summarize("persistence", test, validate),
-        summarize("mean", test, (np.ones(test.shape).T * validate.mean(axis=1)).T),
+        summarize("persistence", test, validate, trial_id=trial_id),
+        summarize(
+            "mean",
+            test,
+            (np.ones(test.shape).T * validate.mean(axis=1)).T,
+            trial_id=trial_id,
+        ),
     ]
 
     model = linear_model.LinearRegression()
     results += run_ablation(
-        "linear regression", model, train, validate, test, pagerank, emb
+        "linear regression",
+        model,
+        train,
+        validate,
+        test,
+        pagerank,
+        emb,
+        trial_id=trial_id,
     )
 
+    # run poisson,
+    poisson = PoissonRegression()
+    poisson.fit(train.mean(axis=1, keepdims=True), validate)
+    results += [
+        summarize(
+            "poisson",
+            test,
+            poisson.predict(
+                np.hstack([train[:, 7:], validate]).mean(axis=1, keepdims=True)
+            ),
+            trial_id=trial_id,
+        )
+    ]
+
     # custom ablation
-    weighted_linear_regression(train, validate, test, pagerank, emb)
-    results += poisson_regression(train, validate, test, pagerank, emb)
+    weighted_linear_regression(train, validate, test, pagerank, emb, trial_id=trial_id)
+
+    results += normalized_linear_regression(
+        ts, window_size, num_windows, trial_id=trial_id
+    )
 
     model = DecisionTreeRegressor()
     results += run_ablation(
-        "decision tree", model, train, validate, test, pagerank, emb
+        "decision tree", model, train, validate, test, pagerank, emb, trial_id=trial_id
     )
 
     return results
@@ -281,16 +353,21 @@ def run_trial(mapping, edges, ts, plot_scree=False):
 @click.option("--mapping-path", default="sample_data/trial_6/mapping.csv")
 @click.option("--edges-path", default="sample_data/trial_6/edges.csv")
 @click.option("--ts-path", default="sample_data/trial_6/ts.csv")
-def main(mapping_path, edges_path, ts_path):
+@click.option("--rolling-validation/--no-rolling-validation", default=False)
+def main(mapping_path, edges_path, ts_path, rolling_validation):
     """Run experiments on a sampled graph that fits into memory"""
     pd.set_option("display.max_colwidth", -1)
 
     mapping = pd.read_csv(mapping_path)
     edges = pd.read_csv(edges_path)
     ts = pd.read_csv(ts_path)
-    results = run_rolling_trials(mapping, edges, ts)
-    results_df = pd.DataFrame(results)[["window", "name", "mape", "rmse"]]
-    results_df.to_csv(path_or_buf="./wikicast/results.csv", index=False)
+    if rolling_validation:
+        results = run_rolling_trials(mapping, edges, ts)
+        results_df = pd.DataFrame(results)[["window", "name", "mape", "rmse"]]
+        results_df.to_csv(path_or_buf="results.csv", index=False)
+    else:
+        results = run_trial(mapping, edges, ts)
+        print(pd.DataFrame(results)[["trial_id", "name", "mape", "rmse"]])
 
 
 if __name__ == "__main__":

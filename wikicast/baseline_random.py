@@ -58,7 +58,9 @@ def create_dataset_from_parquet(pages, links, views):
 @click.option("--pages-path", default="data/enwiki/pages")
 @click.option("--pagelinks-path", default="data/enwiki/pagelinks")
 @click.option("--pageviews-path", default="data/enwiki/pagecount_daily_v2")
-def main(pages_path, pagelinks_path, pageviews_path):
+@click.option("--num-trials", default=1)
+@click.option("--output-summary-file", default="summary_results.csv")
+def main(pages_path, pagelinks_path, pageviews_path, num_trials, output_summary_file):
     pd.set_option("display.max_colwidth", -1)
 
     spark = SparkSession.builder.getOrCreate()
@@ -67,9 +69,13 @@ def main(pages_path, pagelinks_path, pageviews_path):
     pagelinks = spark.read.parquet(pagelinks_path)
     pageviews = spark.read.parquet(pageviews_path)
 
-    start = time.time()
-    mapping, edges, ts = create_dataset_from_parquet(pages, pagelinks, pageviews)
-    print(f"sampling took {time.time() - start} seconds")
+    results = []
+    for trial_id in range(num_trials):
+        start = time.time()
+        mapping, edges, ts = create_dataset_from_parquet(pages, pagelinks, pageviews)
+        print(f"sampling took {time.time() - start} seconds")
+        results += run_trial(mapping, edges, ts, trial_id=trial_id)
 
-    results = run_trial(mapping, edges, ts)
-    print(pd.DataFrame(results)[["name", "mape", "rmse"]])
+    df = pd.DataFrame(results)[["name", "mape", "rmse", "trial_id"]]
+    print(df)
+    df.to_csv(output_summary_file)

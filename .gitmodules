@@ -1,3 +1,6 @@
 [submodule "external/sparkwiki"]
 	path = external/sparkwiki
 	url = git@github.com:epfl-lts2/sparkwiki.git
+[submodule "external/exp-trmf-nips16"]
+	path = external/exp-trmf-nips16
+	url = https://github.com/rofuyu/exp-trmf-nips16.git
