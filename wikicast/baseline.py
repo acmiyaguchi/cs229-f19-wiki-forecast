@@ -27,7 +27,12 @@ def plot_top(y, y_pred):
 
 def summarize(model_name, y, y_pred, trial_id=1):
     """Return a dictionary of results"""
-    return {"mape": mape(y, y_pred), "rmse": rmse(y, y_pred), "name": model_name, "trial_id": trial_id}
+    return {
+        "mape": mape(y, y_pred),
+        "rmse": rmse(y, y_pred),
+        "name": model_name,
+        "trial_id": trial_id,
+    }
 
 
 def plot_scree(g, k=64):
@@ -40,40 +45,59 @@ def plot_scree(g, k=64):
 def run_ablation(name, model, train, validate, test, pagerank, emb, **kwargs):
     results = []
     test_X = np.hstack([train[:, 7:], validate])
-    trial_id=kwargs["trial_id"]
+    trial_id = kwargs["trial_id"]
     del kwargs["trial_id"]
 
     z = np.hstack([train, pagerank, emb])
     model.fit(z, validate, **kwargs)
     z = np.hstack([test_X, pagerank, emb])
     results.append(
-        summarize(f"{name}: history + pagerank + emb", test, model.predict(z), trial_id=trial_id)
+        summarize(
+            f"{name}: history + pagerank + emb",
+            test,
+            model.predict(z),
+            trial_id=trial_id,
+        )
     )
 
     z = np.hstack([train, pagerank])
     model.fit(z, validate, **kwargs)
     z = np.hstack([test_X, pagerank])
-    results.append(summarize(f"{name}: history + pagerank", test, model.predict(z), trial_id=trial_id))
+    results.append(
+        summarize(
+            f"{name}: history + pagerank", test, model.predict(z), trial_id=trial_id
+        )
+    )
 
     z = np.hstack([train, emb])
     model.fit(train, validate, **kwargs)
     z = np.hstack([test_X, emb])
-    results.append(summarize(f"{name}: history + emb", test, model.predict(test_X), trial_id=trial_id))
+    results.append(
+        summarize(
+            f"{name}: history + emb", test, model.predict(test_X), trial_id=trial_id
+        )
+    )
 
     z = np.hstack([train[:, -7:], pagerank, emb])
     model.fit(z, validate, **kwargs)
     z = np.hstack([test_X[:, -7:], pagerank, emb])
-    results.append(summarize(f"{name}: pagerank + emb", test, model.predict(z), trial_id=trial_id))
+    results.append(
+        summarize(f"{name}: pagerank + emb", test, model.predict(z), trial_id=trial_id)
+    )
 
     z = np.hstack([train])
     model.fit(train, validate, **kwargs)
     z = np.hstack([test_X])
-    results.append(summarize(f"{name}: history", test, model.predict(test_X), trial_id=trial_id))
+    results.append(
+        summarize(f"{name}: history", test, model.predict(test_X), trial_id=trial_id)
+    )
 
     z = np.hstack([train[:, -7:], pagerank])
     model.fit(z, validate, **kwargs)
     z = np.hstack([test_X[:, -7:], pagerank])
-    results.append(summarize(f"{name}: pagerank", test, model.predict(z), trial_id=trial_id))
+    results.append(
+        summarize(f"{name}: pagerank", test, model.predict(z), trial_id=trial_id)
+    )
 
     z = np.hstack([train[:, -7:], emb])
     model.fit(z, validate, **kwargs)
@@ -81,7 +105,11 @@ def run_ablation(name, model, train, validate, test, pagerank, emb, **kwargs):
     results.append(summarize(f"{name}: emb", test, model.predict(z), trial_id))
 
     model.fit(train[:, -7:], validate, **kwargs)
-    results.append(summarize(f"{name}: baseline", test, model.predict(test_X[:, -7:]), trial_id=trial_id))
+    results.append(
+        summarize(
+            f"{name}: baseline", test, model.predict(test_X[:, -7:]), trial_id=trial_id
+        )
+    )
     return results
 
 
@@ -102,7 +130,7 @@ def weighted_linear_regression(train, validate, test, pagerank, emb, trial_id=1)
                 f"weighted linear regression ({name}): pagerank + emb",
                 test,
                 model.predict(z),
-                trial_id=trial_id
+                trial_id=trial_id,
             )
         )
 
@@ -111,8 +139,10 @@ def weighted_linear_regression(train, validate, test, pagerank, emb, trial_id=1)
         z = np.hstack([test_X, pagerank])
         results.append(
             summarize(
-                f"weighted linear regression ({name}): pagerank", test, model.predict(z),
-                trial_id=trial_id
+                f"weighted linear regression ({name}): pagerank",
+                test,
+                model.predict(z),
+                trial_id=trial_id,
             )
         )
 
@@ -122,8 +152,10 @@ def weighted_linear_regression(train, validate, test, pagerank, emb, trial_id=1)
         z = np.hstack([test_X, emb])
         results.append(
             summarize(
-                f"weighted linear regression ({name}): emb", test, model.predict(z),
-                trial_id=trial_id
+                f"weighted linear regression ({name}): emb",
+                test,
+                model.predict(z),
+                trial_id=trial_id,
             )
         )
 
@@ -133,7 +165,7 @@ def weighted_linear_regression(train, validate, test, pagerank, emb, trial_id=1)
                 f"weighted linear regression ({name}): baseline",
                 test,
                 model.predict(test_X),
-                trial_id=trial_id
+                trial_id=trial_id,
             )
         )
         return results
@@ -155,29 +187,46 @@ def poisson_regression(train, validate, test, pagerank, emb, trial_id=1):
     # Poisson model with the embedding as feature
     model = PoissonRegression()
     model.fit(emb, validate)
-    results.append(summarize("poisson regression emb", test, model.predict(emb), trial_id=trial_id))
+    results.append(
+        summarize("poisson regression emb", test, model.predict(emb), trial_id=trial_id)
+    )
 
     # Poisson model with pagerank + embedding as feature
     model = PoissonRegression()
     z = np.hstack([pagerank, emb])
     model.fit(z, validate)
     results.append(
-        summarize("poisson regression pagerank + emb", test, model.predict(z), trial_id=trial_id)
+        summarize(
+            "poisson regression pagerank + emb",
+            test,
+            model.predict(z),
+            trial_id=trial_id,
+        )
     )
     return results
+
 
 def normalized_linear_regression(ts, window_size, num_windows, **kwargs):
     results = []
     trial_id = kwargs["trial_id"]
     del kwargs["trial_id"]
-    train, validate, test = create_dataset(ts, window_size, num_windows,
-        missing_value_default=0, normalize=True)
+    train, validate, test = create_dataset(
+        ts, window_size, num_windows, missing_value_default=0, normalize=True
+    )
     model = linear_model.LinearRegression()
 
     test_X = np.hstack([train[:, 7:], validate])
     model.fit(train, validate, **kwargs)
-    results.append(summarize(f"linear regresson, history only, normalized data", test, model.predict(test_X), trial_id=trial_id))
+    results.append(
+        summarize(
+            f"linear regresson, history only, normalized data",
+            test,
+            model.predict(test_X),
+            trial_id=trial_id,
+        )
+    )
     return results
+
 
 def run_trial(mapping, edges, ts, plot_scree=False, trial_id=1):
     embedding_size = 8
@@ -206,20 +255,35 @@ def run_trial(mapping, edges, ts, plot_scree=False, trial_id=1):
 
     results = [
         summarize("persistence", test, validate, trial_id=trial_id),
-        summarize("mean", test, (np.ones(test.shape).T * validate.mean(axis=1)).T, trial_id=trial_id),
+        summarize(
+            "mean",
+            test,
+            (np.ones(test.shape).T * validate.mean(axis=1)).T,
+            trial_id=trial_id,
+        ),
     ]
 
     model = linear_model.LinearRegression()
     results += run_ablation(
-        "linear regression", model, train, validate, test, pagerank, emb, trial_id=trial_id
+        "linear regression",
+        model,
+        train,
+        validate,
+        test,
+        pagerank,
+        emb,
+        trial_id=trial_id,
     )
-    
-    
+
     # custom ablation
     weighted_linear_regression(train, validate, test, pagerank, emb, trial_id=trial_id)
-    results += poisson_regression(train, validate, test, pagerank, emb, trial_id=trial_id)
-    
-    results += normalized_linear_regression(ts, window_size, num_windows, trial_id=trial_id)
+    results += poisson_regression(
+        train, validate, test, pagerank, emb, trial_id=trial_id
+    )
+
+    results += normalized_linear_regression(
+        ts, window_size, num_windows, trial_id=trial_id
+    )
 
     model = DecisionTreeRegressor()
     results += run_ablation(
