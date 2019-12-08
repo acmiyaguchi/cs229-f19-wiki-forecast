@@ -74,8 +74,8 @@ def main(pages_path, pagelinks_path, pageviews_path, num_trials, output_summary_
         start = time.time()
         mapping, edges, ts = create_dataset_from_parquet(pages, pagelinks, pageviews)
         print(f"sampling took {time.time() - start} seconds")
-
         results += run_trial(mapping, edges, ts, trial_id=trial_id)
+
     df = pd.DataFrame(results)[["name", "mape", "rmse", "trial_id"]]
     print(df)
     df.to_csv(output_summary_file)
