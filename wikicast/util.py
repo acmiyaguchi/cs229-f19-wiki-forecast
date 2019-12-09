@@ -1,6 +1,11 @@
 import numpy as np
 import pandas as pd
-from .data import rmse, mape
+from matplotlib import pyplot as plt
+from sklearn.model_selection import learning_curve
+from sklearn.metrics import make_scorer
+
+
+from .data import mape, rmse
 
 
 def summarize(model_name, y, y_pred, trial_id=1):
@@ -52,3 +57,39 @@ def write_search_results(search, output, verbose=True):
         ] + params
         print(df[view_cols])
     return df
+
+
+def plot_learning_curve(
+    model, train, test, output, scoring=make_scorer(rmse, greater_is_better=False)
+):
+    train_sizes, train_scores, test_scores = learning_curve(
+        model, train, test, scoring=scoring
+    )
+
+    train_scores_mean = np.mean(train_scores, axis=1)
+    train_scores_std = np.std(train_scores, axis=1)
+    test_scores_mean = np.mean(test_scores, axis=1)
+    test_scores_std = np.std(test_scores, axis=1)
+
+    # Plot learning curve
+    plt.grid()
+    plt.fill_between(
+        train_sizes,
+        train_scores_mean - train_scores_std,
+        train_scores_mean + train_scores_std,
+        alpha=0.1,
+        color="r",
+    )
+    plt.fill_between(
+        train_sizes,
+        test_scores_mean - test_scores_std,
+        test_scores_mean + test_scores_std,
+        alpha=0.1,
+        color="g",
+    )
+    plt.plot(train_sizes, train_scores_mean, "o-", color="r", label="Training score")
+    plt.plot(
+        train_sizes, test_scores_mean, "o-", color="g", label="Cross-validation score"
+    )
+    plt.legend(loc="best")
+    plt.savefig(output)
