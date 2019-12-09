@@ -2,14 +2,14 @@ import click
 
 from . import baseline, baseline_random, poisson, pipeline, bipartition, experiment_embedding
 from . import experiment_embedding_random
-#from .subgraph.cli import subgraph
+from .subgraph.cli import subgraph
 
 @click.group()
 def cli():
     pass
 
 
-#cli.add_command(subgraph)
+cli.add_command(subgraph)
 cli.add_command(poisson.main, "poisson")
 cli.add_command(baseline.main, "baseline")
 cli.add_command(baseline_random.main, "baseline-random")
