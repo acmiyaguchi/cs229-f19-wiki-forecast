@@ -67,7 +67,7 @@ def run_trial(data, output, window_size, num_windows):
     }
 
     ridge = Ridge()
-    params = dict(alpha=stats.reciprocal(a=1e5, b=1e8))
+    params = dict(alpha=stats.reciprocal(a=1e5, b=1e9))
     search_ridge = RandomizedSearchCV(
         estimator=ridge,
         param_distributions=params,
@@ -77,23 +77,18 @@ def run_trial(data, output, window_size, num_windows):
         n_iter=10,
         return_train_score=False,
     )
-    # params = dict(alpha=[1e6, 5e5, 5e6])
-    # search_ridge = GridSearchCV(
-    #     estimator=ridge,
-    #     param_grid=params,
-    #     scoring=scoring,
-    #     refit="rmse",
-    #     cv=5,
-    #     return_train_score=False,
-    # )
+
     results += run_ablation(
         "ridge regression", search_ridge, train, validate, test, features_dict
     )
     write_search_results(search_ridge, f"{output}/ridge-random.csv")
 
+    # use lbfgs when the dataset is small, does not require a learning rate
+    solver = "adam"
+
     def best_nn_grid(params, output, **kwargs):
         print(f"running for {output}")
-        nn = MLPRegressor(solver="lbfgs", early_stopping=True)
+        nn = MLPRegressor(solver=solver, early_stopping=True)
         search = GridSearchCV(
             estimator=nn,
             param_grid=params,
@@ -110,7 +105,7 @@ def run_trial(data, output, window_size, num_windows):
 
     def best_nn_random(params, output, **kwargs):
         print(f"running for {output}")
-        nn = MLPRegressor(solver="lbfgs", early_stopping=True)
+        nn = MLPRegressor(solver=solver, early_stopping=True)
         search = RandomizedSearchCV(
             estimator=nn,
             param_distributions=params,
@@ -140,12 +135,13 @@ def run_trial(data, output, window_size, num_windows):
     # }
     # search = best_nn_random(params, f"{output}/nn-grid-layers-random.csv", n_iter=10)
 
-    layers = [(16, 8, 8, 8)]
-    params = {
-        "activation": ["relu"],
-        "hidden_layer_sizes": layers,
-        "alpha": [5e4, 5e5, 5e6],
-    }
+    layers = [
+        np.hstack([train] + features).shape[1],
+        (128, 8, 128),
+        (16, 8, 8, 8),
+        (64, 32, 64, 16),
+    ]
+    params = {"activation": ["relu"], "hidden_layer_sizes": layers}
     search = best_nn_grid(params, f"{output}/nn-grid-layers-best.csv")
 
     best_nn = search.best_estimator_
@@ -164,7 +160,7 @@ def run_trial(data, output, window_size, num_windows):
 @click.command()
 @click.option(
     "--design-path",
-    default="data/design_matrix/sample_6_8_50/*.parquet",
+    default="data/design_matrix/sample_3_8_50/*.parquet",
     help="path (include globs) to the design matrix",
 )
 @click.option(
@@ -176,15 +172,18 @@ def run_trial(data, output, window_size, num_windows):
 def main(design_path, output_path, sample_ratio):
     """Run experiments on a sampled graph that fits into memory"""
     window_size = 7
-    num_windows = 120 // window_size
+    num_windows = 60
 
     df = pd.read_parquet(glob.glob(design_path)[0]).fillna(0)
     pretty_columns = META + DEGREE + SIGN[:1] + VECTOR[:1] + DATES[:3]
     print(df.shape)
     print(df.loc[:, pretty_columns].sample(5))
 
+    start = time()
     sample_size = int(df.shape[0] * sample_ratio)
-    run_trial(df.sample(sample_size), output_path, window_size, num_windows)
+    results = run_trial(df.sample(sample_size), output_path, window_size, num_windows)
+    pd.DataFrame(results).to_csv(f"{output_path}/results.csv")
+    print(f"took {time()-start} seconds!")
 
 
 if __name__ == "__main__":
