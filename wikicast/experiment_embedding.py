@@ -30,7 +30,7 @@ def write_results(search, output):
     return df
 
 
-def run_trial(mapping, edges, ts, output_path="data/results", search_layer_sizes=False):
+def run_trial(mapping, edges, ts, output_path="data/results", search_layer_sizes=False, trial_id=1):
     embedding_size = 32
     window_size = 7
     num_windows = 120 // window_size
@@ -51,15 +51,15 @@ def run_trial(mapping, edges, ts, output_path="data/results", search_layer_sizes
     pagerank = np.array([ts.merge(mapping).pagerank.values]).T
 
     results = [
-        summarize("persistence", test, validate),
-        summarize("mean", test, (np.ones(test.shape).T * validate.mean(axis=1)).T),
+        summarize("persistence", test, validate, trial_id=trial_id),
+        summarize("mean", test, (np.ones(test.shape).T * validate.mean(axis=1)).T, trial_id=trial_id),
     ]
 
     linreg = Ridge(alpha=0)
     linreg.fit(train, validate)
     test_X = np.hstack([train[:, window_size:], validate])
     pred = linreg.predict(test_X)
-    results += [summarize("linear regression", test, pred)]
+    results += [summarize("linear regression", test, pred, trial_id=trial_id)]
 
     scoring = {
         "rmse": make_scorer(rmse, greater_is_better=False),
@@ -78,9 +78,9 @@ def run_trial(mapping, edges, ts, output_path="data/results", search_layer_sizes
         return_train_score=False,
     )
     results += run_ablation(
-        "ridge regression", search_ridge, train, validate, test, pagerank, emb
+        "ridge regression", search_ridge, train, validate, test, pagerank, emb, trial_id=trial_id
     )
-    write_results(search_ridge, f"{output_path}/ridge-random.csv")
+    write_results(search_ridge, f"{output_path}/ridge-random-{trial_id:03d}.csv")
 
     # closes over: train, pagerank, emb, validate, scoring
     def best_nn_grid(params, output, **kwargs):
@@ -119,49 +119,49 @@ def run_trial(mapping, edges, ts, output_path="data/results", search_layer_sizes
 
     layers = [10, 100]
     params = {"activation": ["relu", "tanh"], "hidden_layer_sizes": layers}
-    best_nn_grid(params, f"{output_path}/nn-activation.csv")
+    best_nn_grid(params, f"{output_path}/nn-activation-{trial_id:03d}.csv")
 
     layers = [10, 50, 100, 500]
     params = {"activation": ["relu"], "hidden_layer_sizes": layers}
-    best_nn_grid(params, f"{output_path}/nn-grid-layers-1.csv")
+    best_nn_grid(params, f"{output_path}/nn-grid-layers-1-{trial_id:03d}.csv")
 
     layers = [10, 50, 100]
     params = {
         "activation": ["relu"],
         "hidden_layer_sizes": list(chain(product(layers, repeat=2))),
     }
-    best_nn_grid(params, f"{output_path}/nn-grid-layers-2.csv")
+    best_nn_grid(params, f"{output_path}/nn-grid-layers-2-{trial_id:03d}.csv")
 
     if search_layer_sizes:
         params = {
             "activation": ["relu"],
             "hidden_layer_sizes": list(chain(product(layers, repeat=3))),
         }
-        best_nn_grid(params, f"{output_path}/nn-grid-layers-3.csv")
+        best_nn_grid(params, f"{output_path}/nn-grid-layers-3-{trial_id:03d}.csv")
 
         params = {
             "activation": ["relu"],
             "hidden_layer_sizes": list(chain(product(layers[:2], repeat=4))),
         }
-        best_nn_grid(params, f"{output_path}/nn-grid-layers-4.csv")
+        best_nn_grid(params, f"{output_path}/nn-grid-layers-4-{trail_id:03d}.csv")
 
         params = {
             "activation": ["relu"],
             "hidden_layer_sizes": list(chain(product(layers[:2], repeat=5))),
         }
-        best_nn_random(params, f"{output_path}/nn-grid-layers-5-rnd.csv", n_iter=20)
+        best_nn_random(params, f"{output_path}/nn-grid-layers-5-{trial_id:03d}-rnd.csv", n_iter=20)
 
         params = {
             "activation": ["relu"],
             "hidden_layer_sizes": list(chain(product(layers[:2], repeat=6))),
         }
-        best_nn_random(params, f"{output_path}/nn-grid-layers-6-rnd.csv", n_iter=20)
+        best_nn_random(params, f"{output_path}/nn-grid-layers-6-{trial_id:03d}-rnd.csv", n_iter=20)
 
         params = {
             "activation": ["relu"],
             "hidden_layer_sizes": list(chain(product(layers[:2], repeat=7))),
         }
-        best_nn_random(params, f"{output_path}/nn-grid-layers-7-rnd.csv", n_iter=20)
+        best_nn_random(params, f"{output_path}/nn-grid-layers-7-{trial_id:03d}-rnd.csv", n_iter=20)
 
     # 4-6 layers is best
     layers = [(10, 50, 10, 50, 10), (10, 10, 50, 10, 50, 10)]
@@ -170,11 +170,11 @@ def run_trial(mapping, edges, ts, output_path="data/results", search_layer_sizes
         "hidden_layer_sizes": layers,
         "alpha": [0.017, 0.07, 0.001, 0.1],
     }
-    search = best_nn_grid(params, f"{output_path}/nn-grid-layers-alpha-best.csv")
+    search = best_nn_grid(params, f"{output_path}/nn-grid-layers-alpha-best-{trial_id:03d}.csv")
 
     best_nn = search.best_estimator_
     results += run_ablation(
-        "neural network", best_nn, train, validate, test, pagerank, emb
+        "neural network", best_nn, train, validate, test, pagerank, emb, trial_id=trial_id
     )
 
     print(pd.DataFrame(results))

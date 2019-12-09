@@ -1,6 +1,7 @@
 import click
 
 from . import baseline, baseline_random, poisson, pipeline, bipartition, experiment_embedding
+from . import experiment_embedding_random
 #from .subgraph.cli import subgraph
 
 @click.group()
@@ -16,6 +17,7 @@ cli.add_command(pipeline.main, "pipeline")
 cli.add_command(bipartition.partition_recursive, "bipartition")
 cli.add_command(bipartition.partition_once, "bipartition-once")
 cli.add_command(experiment_embedding.main, "experiment-embedding")
+cli.add_command(experiment_embedding_random.main, "experiment-embedding-random")
 
 if __name__ == "__main__":
     cli()
