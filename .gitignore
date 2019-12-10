@@ -1,4 +1,4 @@
-data
+data/
 .ipynb_checkpoints
 *.pyc
 dist/
