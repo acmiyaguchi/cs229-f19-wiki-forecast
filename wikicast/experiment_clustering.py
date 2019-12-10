@@ -2,6 +2,7 @@ import glob
 from datetime import datetime, timedelta
 from itertools import chain, product
 from time import time
+import warnings
 
 import click
 import networkx as nx
@@ -22,6 +23,16 @@ from .util import (
     write_search_results,
     plot_learning_curve,
 )
+
+# Turn off warning in this experiment
+# FutureWarning: The default value of multioutput (not exposed in score method)
+# will change from 'variance_weighted' to 'uniform_average' in 0.23 to keep
+# consistent with 'metrics.r2_score'. To specify the default value manually and
+# avoid the warning, please either call 'metrics.r2_score' directly or make a
+# custom scorer with 'metrics.make_scorer' (the built-in scorer 'r2' uses
+# multioutput='uniform_average').
+warnings.filterwarnings("ignore")
+
 
 N_CUTS = 8
 START_DATE = datetime.strptime("2018-01-01", "%Y-%m-%d")
@@ -58,30 +69,31 @@ def run_trial(data, output, window_size, num_windows):
         summarize("mean", test, (np.ones(test.shape).T * validate.mean(axis=1)).T),
     ]
 
-    pred = run_train_predict(Ridge(alpha=0), train, validate, test, [])
-    results += [summarize("linear regression", test, pred)]
+    pred = run_train_predict(Ridge(alpha=0), train[:, -window_size:], validate, test, [])
+    results += [summarize("linear regression (no history)", test, pred)]
 
     scoring = {
         "rmse": make_scorer(rmse, greater_is_better=False),
         "mape": make_scorer(mape, greater_is_better=False),
     }
 
-    ridge = Ridge()
-    params = dict(alpha=stats.reciprocal(a=1e5, b=1e9))
-    search_ridge = RandomizedSearchCV(
-        estimator=ridge,
-        param_distributions=params,
-        scoring=scoring,
-        refit="rmse",
-        cv=5,
-        n_iter=10,
-        return_train_score=False,
-    )
-
-    results += run_ablation(
-        "ridge regression", search_ridge, train, validate, test, features_dict
-    )
-    write_search_results(search_ridge, f"{output}/ridge-random.csv")
+    print("starting ridge")
+    ridge = Ridge(solver="lsqr", alpha=1.8e8)
+    # params = dict(alpha=stats.reciprocal(a=1e5, b=1e9))
+    # search_ridge = RandomizedSearchCV(
+    #     estimator=ridge,
+    #     param_distributions=params,
+    #     scoring=scoring,
+    #     refit="rmse",
+    #     cv=5,
+    #     n_iter=5,
+    #     return_train_score=False,
+    # )
+    search_ridge = ridge
+    # results += run_ablation(
+    #     "ridge regression", search_ridge, train, validate, test, features_dict
+    # )
+    # write_search_results(search_ridge, f"{output}/ridge-random.csv")
 
     # use lbfgs when the dataset is small, does not require a learning rate
     solver = "adam"
@@ -128,21 +140,21 @@ def run_trial(data, output, window_size, num_windows):
     #     "hidden_layer_sizes": layers,
     #     "alpha": [5e5, 5e4, 0.5],
     # }
-    # params = {
-    #     "activation": ["relu"],
-    #     "hidden_layer_sizes": layers,
-    #     "alpha": stats.reciprocal(1e3, 1e6),
-    # }
-    # search = best_nn_random(params, f"{output}/nn-grid-layers-random.csv", n_iter=10)
+    layers = [(64, 32, 64, 16)]
+    params = {
+        "hidden_layer_sizes": layers,
+        #"alpha": stats.reciprocal(1e-3, 1e6),
+    }
+    search = best_nn_grid(params, f"{output}/nn-grid-no-regularization.csv")
 
-    layers = [
-        np.hstack([train] + features).shape[1],
-        (128, 8, 128),
-        (16, 8, 8, 8),
-        (64, 32, 64, 16),
-    ]
-    params = {"activation": ["relu"], "hidden_layer_sizes": layers}
-    search = best_nn_grid(params, f"{output}/nn-grid-layers-best.csv")
+    # layers = [
+    #     np.hstack([train] + features).shape[1],
+    #     (128, 8, 128),
+    #     (16, 8, 8, 8),
+    #     (64, 32, 64, 16),
+    # ]
+    # params = {"hidden_layer_sizes": layers, "alpha": stats.reciprocal(1e2, 1e8)}
+    # search = best_nn_random(params, f"{output}/nn-grid-layers-best.csv")
 
     best_nn = search.best_estimator_
     results += run_ablation(

@@ -33,6 +33,10 @@ def run_ablation(name, model, train, validate, test, features_dict, trial_id=-1)
     pred = run_train_predict(model, train, validate, test, list(features_dict.values()))
     results.append(summarize(name, test, pred, trial_id=trial_id))
 
+    # run without history
+    pred = run_train_predict(model, train[:, -validate.shape[0]:], validate, test, list(features_dict.values()))
+    results.append(summarize(f"{name}: without history", test, pred, trial_id=trial_id))
+
     # run without a single feature
     for feature_name in features_dict.keys():
         features_list = [v for k, v in features_dict.items() if k != feature_name]

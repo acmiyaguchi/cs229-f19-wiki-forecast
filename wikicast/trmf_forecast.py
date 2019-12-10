@@ -27,9 +27,9 @@ if __name__ == "__main__":
     # lags = itertools.chain(
     #     range(1, 8), range(7 * 4, 8 * 4), range(7 * 8, 8 * 8)
     # )
-    lags = list(range(1,8))
+    lags = list(range(1, 8))
     lag_set = sp.array(list(lags), dtype=sp.uint32)
-    k = 128
+    k = 64
     lambdaI = 2
     lambdaAR = 625
     lambdaLag = 0.5
