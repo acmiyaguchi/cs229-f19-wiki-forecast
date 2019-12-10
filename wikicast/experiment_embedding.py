@@ -87,7 +87,7 @@ def run_trial(mapping, edges, ts, output_path="data/results", search_layer_sizes
     def best_nn_grid(params, output, **kwargs):
         print(f"running for {output}")
         #nn = MLPRegressor(solver="lbfgs")
-        nn = MLPRegressor(solver="adam", alpha=params.get('alpha', 0.0001))
+        nn = MLPRegressor(solver="adam")
         search = GridSearchCV(
             estimator=nn,
             param_grid=params,
@@ -105,7 +105,7 @@ def run_trial(mapping, edges, ts, output_path="data/results", search_layer_sizes
     def best_nn_random(params, output, **kwargs):
         print(f"running for {output}")
         #nn = MLPRegressor(solver="lbfgs")
-        nn = MLPRegressor(solver="adam", alpha=params.get('alpha', 0.0001))
+        nn = MLPRegressor(solver="adam")
         
         search = RandomizedSearchCV(
             estimator=nn,
