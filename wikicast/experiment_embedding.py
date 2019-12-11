@@ -33,7 +33,8 @@ def write_results(search, output):
 def run_trial(mapping, edges, ts, output_path="data/results", search_layer_sizes=False, trial_id=1):
     embedding_size = 32
     window_size = 7
-    num_windows = 120 // window_size
+    #num_windows = 120 // window_size
+    num_windows = 60 // window_size
 
     train, validate, test = create_dataset(ts, window_size, num_windows)
     print(f"train shape: {train.shape}")
@@ -85,7 +86,8 @@ def run_trial(mapping, edges, ts, output_path="data/results", search_layer_sizes
     # closes over: train, pagerank, emb, validate, scoring
     def best_nn_grid(params, output, **kwargs):
         print(f"running for {output}")
-        nn = MLPRegressor(solver="lbfgs")
+        #nn = MLPRegressor(solver="lbfgs")
+        nn = MLPRegressor(solver="adam")
         search = GridSearchCV(
             estimator=nn,
             param_grid=params,
@@ -102,7 +104,9 @@ def run_trial(mapping, edges, ts, output_path="data/results", search_layer_sizes
 
     def best_nn_random(params, output, **kwargs):
         print(f"running for {output}")
-        nn = MLPRegressor(solver="lbfgs")
+        #nn = MLPRegressor(solver="lbfgs")
+        nn = MLPRegressor(solver="adam")
+        
         search = RandomizedSearchCV(
             estimator=nn,
             param_distributions=params,
@@ -117,20 +121,20 @@ def run_trial(mapping, edges, ts, output_path="data/results", search_layer_sizes
         write_results(search, output)
         return search
 
-    layers = [10, 100]
-    params = {"activation": ["relu", "tanh"], "hidden_layer_sizes": layers}
-    best_nn_grid(params, f"{output_path}/nn-activation-{trial_id:03d}.csv")
+    # layers = [10, 100]
+    # params = {"activation": ["relu", "tanh"], "hidden_layer_sizes": layers}
+    # best_nn_grid(params, f"{output_path}/nn-activation-{trial_id:03d}.csv")
 
-    layers = [10, 50, 100, 500]
-    params = {"activation": ["relu"], "hidden_layer_sizes": layers}
-    best_nn_grid(params, f"{output_path}/nn-grid-layers-1-{trial_id:03d}.csv")
+    # layers = [10, 50, 100, 500]
+    # params = {"activation": ["relu"], "hidden_layer_sizes": layers}
+    # best_nn_grid(params, f"{output_path}/nn-grid-layers-1-{trial_id:03d}.csv")
 
-    layers = [10, 50, 100]
-    params = {
-        "activation": ["relu"],
-        "hidden_layer_sizes": list(chain(product(layers, repeat=2))),
-    }
-    best_nn_grid(params, f"{output_path}/nn-grid-layers-2-{trial_id:03d}.csv")
+    # layers = [10, 50, 100]
+    # params = {
+        # "activation": ["relu"],
+        # "hidden_layer_sizes": list(chain(product(layers, repeat=2))),
+    # }
+    # best_nn_grid(params, f"{output_path}/nn-grid-layers-2-{trial_id:03d}.csv")
 
     if search_layer_sizes:
         params = {
@@ -143,7 +147,7 @@ def run_trial(mapping, edges, ts, output_path="data/results", search_layer_sizes
             "activation": ["relu"],
             "hidden_layer_sizes": list(chain(product(layers[:2], repeat=4))),
         }
-        best_nn_grid(params, f"{output_path}/nn-grid-layers-4-{trail_id:03d}.csv")
+        best_nn_grid(params, f"{output_path}/nn-grid-layers-4-{trial_id:03d}.csv")
 
         params = {
             "activation": ["relu"],
@@ -164,7 +168,8 @@ def run_trial(mapping, edges, ts, output_path="data/results", search_layer_sizes
         best_nn_random(params, f"{output_path}/nn-grid-layers-7-{trial_id:03d}-rnd.csv", n_iter=20)
 
     # 4-6 layers is best
-    layers = [(10, 50, 10, 50, 10), (10, 10, 50, 10, 50, 10)]
+    # layers = [(10, 50, 10, 50, 10), (10, 10, 50, 10, 50, 10)]
+    layers = [ (100, 50, 50), (50, 10, 10, 10)]
     params = {
         "activation": ["relu"],
         "hidden_layer_sizes": layers,
