@@ -90,9 +90,9 @@ def run_trial(data, output, window_size, num_windows):
     #     return_train_score=False,
     # )
     search_ridge = ridge
-    # results += run_ablation(
-    #     "ridge regression", search_ridge, train, validate, test, features_dict
-    # )
+    results += run_ablation(
+        "ridge regression", search_ridge, train, validate, test, features_dict
+    )
     # write_search_results(search_ridge, f"{output}/ridge-random.csv")
 
     # use lbfgs when the dataset is small, does not require a learning rate
@@ -143,18 +143,18 @@ def run_trial(data, output, window_size, num_windows):
     layers = [(64, 32, 64, 16)]
     params = {
         "hidden_layer_sizes": layers,
-        #"alpha": stats.reciprocal(1e-3, 1e6),
+        "alpha": [0.002, 20],
     }
-    search = best_nn_grid(params, f"{output}/nn-grid-no-regularization.csv")
+    search = best_nn_grid(params, f"{output}/nn-grid-regularization.csv")
 
     # layers = [
-    #     np.hstack([train] + features).shape[1],
-    #     (128, 8, 128),
-    #     (16, 8, 8, 8),
+    #     #np.hstack([train] + features).shape[1],
+    #     #(128, 8, 128),
+    #     #(16, 8, 8, 8),
     #     (64, 32, 64, 16),
     # ]
-    # params = {"hidden_layer_sizes": layers, "alpha": stats.reciprocal(1e2, 1e8)}
-    # search = best_nn_random(params, f"{output}/nn-grid-layers-best.csv")
+    # params = {"hidden_layer_sizes": layers, "alpha": stats.reciprocal(1e-4, 1e2)}
+    # search = best_nn_random(params, f"{output}/nn-grid-layers-best.csv", n_iter=10)
 
     best_nn = search.best_estimator_
     results += run_ablation(
