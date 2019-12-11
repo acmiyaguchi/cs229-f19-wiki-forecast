@@ -1,0 +1,16 @@
+#!/bin/bash
+
+set -x 
+
+input_dir="data/design_matrix"
+output_dir="data/results"
+
+for i in {1..10};
+do
+    output="$output_dir/experiment_clustering_trial_2_$i"
+    mkdir -p $output
+    time python -m wikicast.experiment_clustering \
+        --design-path ${input_dir}/sample_${i}_8_50/'*.parquet' \
+        --output-path $output \
+        --sample-ratio 1
+done
