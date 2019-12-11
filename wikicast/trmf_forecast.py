@@ -22,24 +22,25 @@ SCHEMA = META + DEGREE + SIGN + VECTOR + DATES
 
 if __name__ == "__main__":
     df = pd.read_parquet("data/design_matrix/sample_10_8_50")
-    Y = df[DATES].values.astype(sp.float32).T
+    Y = df[DATES].iloc[:50000,7:7*60].fillna(0).values.astype(sp.float32).T
     print(Y.shape)
-    # lags = itertools.chain(
-    #     range(1, 8), range(7 * 4, 8 * 4), range(7 * 8, 8 * 8)
-    # )
-    lags = list(range(1, 8))
+    lags = list(itertools.chain(
+        range(1, 8), range(7 * 4, 8 * 4), range(7 * 8, 8 * 8)
+    ))
+    print(list(lags))
+    #lags = list(range(1, 8))
     lag_set = sp.array(list(lags), dtype=sp.uint32)
-    k = 64
+    k = 40
     lambdaI = 2
     lambdaAR = 625
     lambdaLag = 0.5
-    window_size = 7 * 12
-    nr_windows = 7
+    window_size = 7
+    nr_windows = 1
     max_iter = 40
     threshold = 0
     threads = 40
     seed = 0
-    missing = True
+    missing = False
     transform = True
     threshold = None
 
