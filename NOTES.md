@@ -145,3 +145,11 @@ for i in {0..6}; do scripts/run-command subgraph pageview --artifact-path sample
 ```bash
 gsutil -m rsync -d -r data/design_matrix gs://wiki-forecast-data/design_matrix
 ```
+
+```bash
+docker run -v `PWD`:/app -v `realpath ../wikipedia-dump`:/app/data -it trmf
+
+pip install pandas pyarrow
+pip install -e external/exp-trmf-nips16/python
+python -m wikicast.trmf_forecast
+```

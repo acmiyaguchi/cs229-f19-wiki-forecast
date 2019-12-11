@@ -7,11 +7,14 @@ from pyspark.sql.functions import udf, col
 
 
 def rmse(y, y_pred):
-    return np.sqrt(np.sum((y - y_pred) ** 2) / y.size)
+    # this is actually the normalized RMSE, but there's too much code to change,
+    # and too little time. This is to be consistent with the metrics in TRMF
+    # FIXME
+    return np.sqrt(np.sum((y - y_pred) ** 2) / y.size) / np.abs(y).mean()
 
 
 def mape(y, y_pred):
-    return np.sum(np.abs(np.ma.divide(y - y_pred, y).filled(0))) / (y > 0).sum() * 100
+    return np.sum(np.abs(np.ma.divide(y - y_pred, y).filled(0))) / (y >= 0).sum() * 100
 
 
 def rmse_df(df, y="label", y_pred="prediction"):
