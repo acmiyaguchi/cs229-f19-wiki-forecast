@@ -196,7 +196,10 @@ def main(mapping_path, edges_path, ts_path):
     mapping = pd.read_csv(mapping_path)
     edges = pd.read_csv(edges_path)
     ts = pd.read_csv(ts_path)
-    run_trial(mapping, edges, ts)
+    #run_trial(mapping, edges, ts)
+    results = run_trial(mapping, edges, ts)
+    df = pd.DataFrame(results)[["trial_id", "mape", "rmse", "name"]]
+    df.to_csv("out_summary_embedding.csv")
 
 
 if __name__ == "__main__":

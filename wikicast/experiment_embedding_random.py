@@ -14,7 +14,7 @@ from .baseline_random import sample_random, create_dataset_from_parquet
 @click.option("--pagelinks-path", default="data/enwiki/pagelinks")
 @click.option("--pageviews-path", default="data/enwiki/pagecount_daily_v2")
 @click.option("--num-trials", default=1)
-@click.option("--output-summary-file", default="embedding_random_summary_results.csv")
+@click.option("--output-summary-file", default="data/results/embedding_random_summary_results.csv")
 def main(pages_path, pagelinks_path, pageviews_path, num_trials, output_summary_file):
     pd.set_option("display.max_colwidth", -1)
 
