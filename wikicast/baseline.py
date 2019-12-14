@@ -9,6 +9,9 @@ from sklearn import linear_model, metrics
 from sklearn.neighbors import NearestNeighbors
 from sklearn.svm import SVR
 from sklearn.tree import DecisionTreeRegressor
+from sklearn.metrics import make_scorer
+from sklearn.model_selection import GridSearchCV, RandomizedSearchCV
+from sklearn.neural_network import MLPRegressor
 
 from .poisson import PoissonRegression
 from .data import (
@@ -19,6 +22,19 @@ from .data import (
     create_rolling_datasets,
 )
 
+def write_results(search, output):
+    df = pd.DataFrame(search.cv_results_).sort_values("rank_test_rmse")
+    df.to_csv(output)
+    params = [c for c in df.columns if c.startswith("param_")]
+    view_cols = [
+        "mean_test_rmse",
+        "mean_test_mape",
+        "rank_test_rmse",
+        "rank_test_mape",
+        "mean_fit_time",
+    ] + params
+    print(df[view_cols])
+    return df
 
 def plot_top(y, y_pred):
     """Creates a 2x4 plot of individual series with prediction overlay."""
@@ -280,7 +296,42 @@ def run_trial(mapping, edges, ts, plot_scree=False, trial_id=1):
     results += run_ablation(
         "decision tree", model, train, validate, test, pagerank, emb, trial_id=trial_id
     )
+    
+    def best_nn_grid(params, output, **kwargs):
+        print(f"running for {output}")
+        #nn = MLPRegressor(solver="lbfgs")
+        scoring = {
+        "rmse": make_scorer(rmse, greater_is_better=False),
+        "mape": make_scorer(mape, greater_is_better=False),
+        }
+        nn = MLPRegressor(solver="adam")
+        search = GridSearchCV(
+            estimator=nn,
+            param_grid=params,
+            scoring=scoring,
+            refit="rmse",
+            cv=5,
+            n_jobs=-1,
+            return_train_score=False,
+            **kwargs,
+        )
+        search.fit(np.hstack([train, pagerank, emb]), validate)
+        write_results(search, output)
+        return search
+        
+    layers = [ (100, 50, 50), (50, 10, 10, 10)]
+    params = {
+        "activation": ["relu"],
+        "hidden_layer_sizes": layers,
+        "alpha": [0.017, 0.07, 0.001, 0.1],
+    }
+    search = best_nn_grid(params, f"nn-grid-layers-alpha-best-{trial_id:03d}.csv")
 
+    model = search.best_estimator_
+    results += run_ablation(
+        "neural network", model, train, validate, test, pagerank, emb, trial_id=trial_id
+    )
+    
     return results
 
 
@@ -302,7 +353,10 @@ def main(mapping_path, edges_path, ts_path, rolling_validation):
         results_df.to_csv(path_or_buf="results.csv", index=False)
     else:
         results = run_trial(mapping, edges, ts)
-        print(pd.DataFrame(results)[["trial_id", "mape", "rmse", "name"]])
+        #print(pd.DataFrame(results)[["trial_id", "mape", "rmse", "name"]])
+        df = pd.DataFrame(results)[["trial_id", "mape", "rmse", "name"]]
+        df.to_csv("out_summary.csv")
+
 
 
 if __name__ == "__main__":
