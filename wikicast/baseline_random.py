@@ -79,3 +79,24 @@ def main(pages_path, pagelinks_path, pageviews_path, num_trials, output_summary_
     df = pd.DataFrame(results)[["name", "mape", "rmse", "trial_id"]]
     print(df)
     df.to_csv(output_summary_file)
+
+
+@click.command()
+@click.option("--pages-path", default="data/enwiki/pages")
+@click.option("--pagelinks-path", default="data/enwiki/pagelinks")
+@click.option("--pageviews-path", default="data/enwiki/pagecount_daily_v2")
+@click.option("--output", default="data/results/sampled_1")
+def write_sample(pages_path, pagelinks_path, pageviews_path, output):
+
+    spark = SparkSession.builder.getOrCreate()
+
+    pages = spark.read.parquet(pages_path)
+    pagelinks = spark.read.parquet(pagelinks_path)
+    pageviews = spark.read.parquet(pageviews_path)
+    mapping, edges, ts = create_dataset_from_parquet(pages, pagelinks, pageviews)
+    mapping.to_csv(f"{output}/mapping.csv")
+    edges.to_csv(f"{output}/edges.csv")
+    ts.to_csv(f"{output}/ts.csv")
+
+if __name__ == "__main__":
+    write_sample()

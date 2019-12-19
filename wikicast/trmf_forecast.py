@@ -20,15 +20,14 @@ DATES = [
 
 SCHEMA = META + DEGREE + SIGN + VECTOR + DATES
 
-if __name__ == "__main__":
-    df = pd.read_parquet("data/design_matrix/sample_10_8_50")
-    Y = df[DATES].iloc[:50000,7:7*60].fillna(0).values.astype(sp.float32).T
+def run_trial(path):
+    print(f"running {path}")
+    df = pd.read_parquet(path)
+    Y = df[DATES].iloc[:,7:7*60].fillna(0).values.astype(sp.float32).T
     print(Y.shape)
     lags = list(itertools.chain(
         range(1, 8), range(7 * 4, 8 * 4), range(7 * 8, 8 * 8)
     ))
-    print(list(lags))
-    #lags = list(range(1, 8))
     lag_set = sp.array(list(lags), dtype=sp.uint32)
     k = 40
     lambdaI = 2
@@ -60,4 +59,15 @@ if __name__ == "__main__":
         seed=seed,
         missing=missing,
     )
-    print(metrics)
+    return metrics
+
+if __name__ == "__main__":
+    results = []
+    for i in range(1, 11):
+        path = f"data/design_matrix/sample_{i}_8_50"
+        metrics = run_trial(path)
+        # results.append(metrics)
+        results.append({"mape": metrics.my_mape, "nrmse": metrics.my_rmse})
+    df = pd.DataFrame(results)
+    print(df)
+    df.to_csv("trmf_trials.csv")

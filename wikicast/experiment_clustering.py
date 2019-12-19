@@ -153,7 +153,7 @@ def run_trial(data, output, window_size, num_windows):
     #     #(16, 8, 8, 8),
     #     (64, 32, 64, 16),
     # ]
-    # params = {"hidden_layer_sizes": layers, "alpha": stats.reciprocal(1e-4, 1e2)}
+    # params = {"hidden_layer_sizes": layers, "alpha": stats.reciprocal(1e-5, 1e5)}
     # search = best_nn_random(params, f"{output}/nn-grid-layers-best.csv", n_iter=10)
 
     best_nn = search.best_estimator_

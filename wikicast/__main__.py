@@ -18,6 +18,7 @@ cli.add_command(bipartition.partition_recursive, "bipartition")
 cli.add_command(bipartition.partition_once, "bipartition-once")
 cli.add_command(experiment_embedding.main, "experiment-embedding")
 cli.add_command(experiment_embedding_random.main, "experiment-embedding-random")
+cli.add_command(baseline_random.write_sample, "write_sample")
 
 if __name__ == "__main__":
     cli()
