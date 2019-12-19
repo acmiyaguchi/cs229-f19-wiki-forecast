@@ -1,3 +1,4 @@
+data
 data/
 .ipynb_checkpoints
 *.pyc
@@ -6,3 +7,5 @@ build/
 *.egg-info/
 derby.log
 metastore_db/
+.DS_store
+.vscode/
